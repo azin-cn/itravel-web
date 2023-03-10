@@ -9,6 +9,7 @@ import directive from './directive';
 import './mock';
 import App from './App.vue';
 import '@arco-design/web-vue/dist/arco.css';
+import '@/assets/style/tailwind.css';
 import '@/assets/style/global.less';
 import '@/api/interceptor';
 
