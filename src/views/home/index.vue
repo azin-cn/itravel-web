@@ -220,7 +220,6 @@
 
     // 第一个参数必须与 options.geo.map 一致
     echarts.registerMap('china', CN as object);
-    mapEl.clear();
     mapEl.setOption(options);
 
     mapEl.off('click'); // 防止graph里频繁添加click事件，在添加click事件之前先全部清空掉
@@ -250,15 +249,7 @@
         echarts.registerMap(name, json);
         options.geo.zoom = 0.8;
         options.geo.map = name;
-        // mapEl.clear();
-        mapEl.setOption({
-          ...options,
-          geo: {
-            ...options.geo,
-            left: '13%',
-            top: 'center',
-          },
-        }); // rerender
+        mapEl.setOption(options, true); // rerender, it has not animation, see https://github.com/apache/echarts/issues/14069
         geoJson.value = json; // update
       };
 
