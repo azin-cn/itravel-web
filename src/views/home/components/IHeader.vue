@@ -3,25 +3,20 @@
 </script>
 
 <template>
-  <div class="navbar bg-base-100 pl-36 pr-36 pt-4 pb-4">
+  <div class="navbar bg-opacity-50 pl-36 pr-36 pt-4 pb-4">
     <div class="flex-1">
+      <!-- Title -->
       <router-link to="/" class="btn btn-ghost normal-case text-2xl">
         {{ settings?.title }}
       </router-link>
 
-      <div class="tabs space-x-8 ml-24">
-        <router-link to="/home" class="tab tab-active text-base font-semibold">
+      <div class="tabs md:space-x-8 md:ml-24">
+        <router-link to="/home" class="router-link tab-active">
           Home
         </router-link>
-        <router-link to="/about" class="tab text-base font-semibold">
-          About
-        </router-link>
-        <router-link to="/explore" class="tab text-base font-semibold">
-          Explore
-        </router-link>
-        <router-link to="/contact" class="tab text-base font-semibold">
-          Contact
-        </router-link>
+        <router-link to="/about" class="router-link"> About </router-link>
+        <router-link to="/explore" class="router-link"> Explore </router-link>
+        <router-link to="/contact" class="router-link"> Contact </router-link>
       </div>
     </div>
     <div class="flex-none gap-2">
@@ -64,3 +59,9 @@
     </div>
   </div>
 </template>
+
+<style scoped>
+  .router-link {
+    @apply tab text-base font-semibold;
+  }
+</style>
