@@ -3,7 +3,10 @@
 </script>
 
 <template>
-  <div class="navbar bg-opacity-50 pl-36 pr-36 pt-4 pb-4">
+  <div
+    class="navbar bg-opacity-50 pl-36 pr-36 pt-4 pb-4"
+    style="position: sticky; top: 0; z-index: 1"
+  >
     <div class="flex-1">
       <!-- Title -->
       <router-link to="/" class="btn btn-ghost normal-case text-2xl">
