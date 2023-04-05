@@ -74,7 +74,7 @@ export default function useECharts() {
     top: 'center',
     // zoom: 1,
     scaleLimit: {
-      min: 0.7,
+      min: 0.8,
       max: 3,
     },
     label: {
@@ -111,13 +111,13 @@ export default function useECharts() {
       show: true, // 是否展示左下角，即是是false，也仅是不显示，不影响数据的映射
       text: ['高', '低'], // 上下端文字
       min: 0, // 最小值和最大值，必须指定
-      max: 6000,
+      max: 2000,
       left: '10%', // 位置
       bottom: '10%',
       calculable: true, // 是否展示滑块
       seriesIndex: [0], // 指定映射的数据，对应的是options.series，这里根据自己的实际需要进行配置
       inRange: {
-        color: ['#00467F', '#A5CC82'], // 从下到上的颜色
+        color: ['#467', '#93ebf8'], // 从下到上的颜色
       },
       textStyle: {
         color: '#fff', // 字体颜色
