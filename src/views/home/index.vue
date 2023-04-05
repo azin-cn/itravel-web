@@ -1,29 +1,32 @@
 <script lang="ts" setup>
   import { ref, onMounted } from 'vue';
+  import { useRouter } from 'vue-router';
   import * as echarts from 'echarts';
   import { EChartsResizeOption } from 'echarts';
   import CN from '@/assets/map/china_without_south_sea.json';
-  import { getSeriesData } from '@/api/map';
   import type { FeatureCollection } from '@/types/geo';
+  import { SpotCountModel, getSpotCount } from '@/api/spot';
   import useMap from './use-map';
   import useECharts from './use-echarts';
   import useSeries from './use-series';
   import IHeader from './components/IHeader.vue';
   import IFooter from './components/IFooter.vue';
 
+  const router = useRouter();
   const { getNewMap } = useMap();
   const { optionsTooltip, optionsGeo, optionsVisualMap } = useECharts();
-  const { genSeriesAndLegends } = useSeries();
+  const { genSeriesAndLegends, formatLegends } = useSeries();
   const headerRef = ref();
   const mapRef = ref();
   const geoJson = ref(CN as FeatureCollection);
 
   const init = async () => {
-    const mapEl = echarts.init(mapRef.value);
     const { series, legends } = await genSeriesAndLegends();
+    const mapEl = echarts.init(mapRef.value);
 
     const options = {
       // 背景颜色
+      // backgroundColor: 'rgb(121,145,100)',
       backgroundColor: '#404a59',
       // backgroundColor: '#4195a4',
       animation: true,
@@ -49,10 +52,11 @@
             font: 'normal 1rem "Microsoft YaHei", sans-serif', // 字体粗细、大小、字体
             fill: '#fff', // 字体颜色
           },
-          onclick: () => {
+          onclick: async () => {
             options.graphic.splice(1); // 清除除China后续节点
             options.geo.zoom = 1;
             options.geo.map = 'china';
+            options.series[0].data = (await getSpotCount()).data;
             echarts.registerMap('china', CN);
             mapEl.setOption(options, true); // rerender
             geoJson.value = CN as FeatureCollection; // update
@@ -63,7 +67,7 @@
       visualMap: optionsVisualMap,
     } as any; // ECharts的TS类型还有很多问题，大部分定义为object
 
-    const setSeriesData = (data: any) => {
+    const setSeriesData = (data: SpotCountModel[]) => {
       options.series[0].data = data;
     };
     const setLegendSelected = (selected: any) => {
@@ -105,7 +109,11 @@
     // mapEl.on('click', console.log);
     mapEl.off('click'); // 防止graph里频繁添加click事件，在添加click事件之前先全部清空掉
     mapEl.on('click', 'series', async (params: any) => {
-      const { name } = params;
+      const { name, data } = params as {
+        name: string;
+        data: SpotCountModel;
+      };
+      console.log('params', params);
       // new map json
       const json = await getNewMap(name, geoJson.value);
 
@@ -116,11 +124,12 @@
       }
 
       /**
-       * function update 应放在 options 更新后 如 options.graphic.push 后执行，因为 echarts 通过 setOptions 进行更新，需要注意闭包
+       * function update 应放在 options 更新后
+       * 如 options.graphic.push 后执行，因为 echarts 通过 setOptions 进行更新，需要注意闭包
        * @param void
        * @return void
        */
-      const update = () => {
+      const update = async () => {
         // 先清理，后更新
         clear(name);
         // 更新 options.geo
@@ -128,6 +137,10 @@
         options.geo.map = name;
         // update and remember
         geoJson.value = json;
+        setSeriesData(
+          (await getSpotCount(data ? { [data.level]: data.id } : undefined))
+            .data
+        );
         // rerender, it has not animation, see https://github.com/apache/echarts/issues/14069
         render(name, options, json, true);
       };
@@ -151,9 +164,10 @@
     const legendselectchanged = async (params: any) => {
       const { selected } = params;
       setLegendSelected(selected);
+      const legendParams = formatLegends(selected);
 
       // 请求api重新渲染更新数据
-      const { data } = await getSeriesData();
+      const { data } = await getSpotCount(legendParams);
       setSeriesData(data);
       mapEl.setOption(options, true);
     };
@@ -168,10 +182,11 @@
       const { innerHeight, innerWidth } = window; // 当前作用域，不会沿着作用域链查找
       const h = innerHeight - parseFloat(height.slice(0, -2)) - 4;
       return {
-        width: innerWidth,
-        height: h,
+        width: `${innerWidth - 17}px`,
+        height: `${h}px`,
       };
     };
+
     mapEl.resize(autoResize());
 
     window.addEventListener('resize', () => {
@@ -186,6 +201,13 @@
     return str;
   };
 
+  const redirectArticle = (articleId: string) => {
+    router.push({
+      name: 'article',
+      params: { articleId },
+    });
+  };
+
   onMounted(async () => {
     init();
   });
@@ -193,9 +215,9 @@
 
 <template>
   <!--   -->
-  <div style="width: 100vw">
+  <div style="max-width: 100vw">
     <IHeader ref="headerRef" style="background-color: rgb(141 170 185)" />
-    <div id="echarts" ref="mapRef" style="border-radius: 20%" />
+    <div id="echarts" ref="mapRef" style="width: 100%; border-radius: 20%" />
   </div>
 
   <div class="2xl:container mx-auto">
@@ -217,7 +239,11 @@
               布达拉宫的主体建筑群坐落在海拔3700多米的玛布日山上，建于公元7世纪，历经唐、宋、元、明、清等多个朝代的修建和扩建，是世界上现存规模最大、最完整的古代宫殿建筑之一，被誉为“世界屋脊”的象征。
               布达拉宫的主体建筑群坐落在海拔3700多米的玛布日山上，建于公元7世纪，历经唐、宋、元、明、清等多个朝代的修建和扩建，是世界上现存规模最大、最完整的古代宫殿建筑之一，被誉为“世界屋脊”的象征。
             </p>
-            <button class="btn btn-primary">Get Started</button>
+            <button
+              class="btn btn-primary"
+              @click.stop="redirectArticle('12312312312')"
+              >Get Started</button
+            >
           </div>
         </div>
       </div>
@@ -280,7 +306,7 @@
       <div class="flex justify-around">
         <div
           class="card w-1/4 bg-base-100 p-4 hover-card"
-          style="height: 380px"
+          style="height: 400px"
         >
           <img
             src="../../assets/images/A.jpg"
@@ -298,7 +324,7 @@
         </div>
         <div
           class="card w-1/4 bg-base-100 p-4 hover-card"
-          style="height: 380px"
+          style="height: 400px"
         >
           <img
             src="../../assets/images/A.jpg"
@@ -316,7 +342,7 @@
         </div>
         <div
           class="card w-1/4 bg-base-100 p-4 hover-card"
-          style="height: 380px"
+          style="height: 400px"
         >
           <img
             src="../../assets/images/A.jpg"
@@ -334,7 +360,7 @@
         </div>
         <div
           class="card w-1/4 bg-base-100 p-4 hover-card"
-          style="height: 380px"
+          style="height: 400px"
         >
           <img
             src="../../assets/images/A.jpg"
@@ -380,9 +406,6 @@
   }
 
   .hover-img:hover {
-    transform: scale(1.2);
-  }
-
-  .overflow-ellipsis {
+    transform: scale(1.14);
   }
 </style>
