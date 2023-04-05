@@ -33,6 +33,7 @@ const dataset = {
     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
     'mountain', 'water', 'forest', 'grass', 'sand', 'soil', 'humanity', 'modern'
   ],
+  name: 区域名称
   source: [
     {
       name: '广东', value: 433,
