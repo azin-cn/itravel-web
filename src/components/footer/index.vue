@@ -1,8 +1,10 @@
-<template>
-  <a-layout-footer class="footer">Arco Pro</a-layout-footer>
-</template>
+<script lang="ts" setup>
+  import * as settings from '@/config/settings.json';
+</script>
 
-<script lang="ts" setup></script>
+<template>
+  <a-layout-footer class="footer">© {{ settings.title }}</a-layout-footer>
+</template>
 
 <style lang="less" scoped>
   .footer {
