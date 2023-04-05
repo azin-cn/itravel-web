@@ -16,6 +16,7 @@ setupMock({
       if (isLogin()) {
         const role = window.localStorage.getItem('userRole') || 'admin';
         return successResponseWrap({
+          id: '1232-2312-23232-32123-1232',
           name: '王立群',
           avatar:
             '//lf1-xgcdn-tos.pstatp.com/obj/vcloud/vadmin/start.8e0e4855ee346a46ccff8ff3e24db27b.png',
