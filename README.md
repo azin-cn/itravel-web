@@ -52,3 +52,36 @@ const dataset = {
   ]
 },
 ```
+
+## 利用闭包解决网络时延问题
+
+在对同一个接口快速请求多次时，由于网络时延的问题，前一次请求的数据不一定比后一次请求的数据先返回。此时由于前一次请求的数据后返回，会把后一次返回的数据覆盖，形成数据错乱。
+
+### 分析原因
+
+这是由于网络时延和快速触发的行为共同造成的
+
+### 解决方案
+
+- 点击以后只有数据返回了才能继续点击
+- 全局记录一个数据 counter，每点击一次请求 counter 自增 1
+  - 在函数内记录当前的 counter，请求完成后对比前后的 counter，一致则赋值，否则取消赋值
+
+```ts
+const counter = ref(0);
+
+const request = async () => {
+  counter.value += 1;
+  const inner = counter.value;
+  const { data } = await getData();
+  if (inner === counter.value) {
+    setData(data);
+  }
+};
+```
+
+## 记录一次响应式设计
+
+home/components/hot-tours.vue:mainTours
+lg:self-center
+md:self-start
