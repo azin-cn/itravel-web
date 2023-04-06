@@ -159,7 +159,7 @@ export default function useSeries() {
       // Pick<SpotModel, 'months'> & Pick<SpotModel, 'features'>
     );
 
-    console.log(params.months, params.features);
+    // console.log(params.months, params.features);
     return params;
   };
 
