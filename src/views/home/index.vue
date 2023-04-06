@@ -11,6 +11,7 @@
   import useSeries from './use-series';
   import IHeader from './components/IHeader.vue';
   import IFooter from './components/IFooter.vue';
+  import HotTours from './components/hot-tours.vue';
 
   const router = useRouter();
   const { getNewMap } = useMap();
@@ -29,6 +30,7 @@
     months: [],
     features: [],
   });
+  const counter = ref(0);
 
   const init = async () => {
     const { series, legends } = await genSeriesAndLegends();
@@ -181,11 +183,19 @@
         console.log(regionValue);
         const { level = 'province', id } = regionValue;
         query.value[level] = id;
+        console.log(query.value);
 
+        counter.value += 1;
+        const innerCount = counter.value;
         const { data } = await getSpotCount(query.value);
-
-        setSeriesData(data);
-        setVisualMapMax(data);
+        if (innerCount === counter.value) {
+          /**
+           * 解决网络时延问题
+           * 因为有await，利用闭包记录count和counter的关系
+           */
+          setSeriesData(data);
+          setVisualMapMax(data);
+        }
 
         // rerender, it has not animation, see https://github.com/apache/echarts/issues/14069
         render(name, options, json, true);
@@ -218,8 +228,15 @@
        * 请求api重新渲染更新数据
        * legend选择变化时，visualMap的max值不进行更新
        */
+      counter.value += 1;
+      const count = counter.value;
       const { data } = await getSpotCount(query.value);
-      setSeriesData(data);
+      if (count === counter.value) {
+        /**
+         * 因为有await，使用闭包记录count和counter的关系
+         */
+        setSeriesData(data);
+      }
       mapEl.setOption(options, true);
     };
 
@@ -273,83 +290,9 @@
 
   <div class="2xl:container mx-auto">
     <section>
-      <h2 class="text-xl m-12"> 热门旅游景点</h2>
+      <h2 class="text-xl m-12"> 热门旅游景点 </h2>
       <!-- 主要景点 -->
-      <div class="hero min-h-0 p-12 pt-6">
-        <div class="hero-content flex-col lg:flex-row-reverse">
-          <img
-            src="../../assets/images/C.jpg"
-            class="max-w-lg rounded-lg shadow-2xl hover-img"
-            width="448"
-            height="290"
-            style="display: block; width: 50%; height: 290px; object-fit: cover"
-          />
-          <div>
-            <h2 class="text-4xl font-bold"> 西藏布达拉宫 </h2>
-            <p class="py-6" style="text-indent: 2em">
-              布达拉宫的主体建筑群坐落在海拔3700多米的玛布日山上，建于公元7世纪，历经唐、宋、元、明、清等多个朝代的修建和扩建，是世界上现存规模最大、最完整的古代宫殿建筑之一，被誉为“世界屋脊”的象征。
-              布达拉宫的主体建筑群坐落在海拔3700多米的玛布日山上，建于公元7世纪，历经唐、宋、元、明、清等多个朝代的修建和扩建，是世界上现存规模最大、最完整的古代宫殿建筑之一，被誉为“世界屋脊”的象征。
-            </p>
-            <button
-              class="btn btn-primary"
-              @click.stop="redirectArticle('12312312312')"
-              >Get Started</button
-            >
-          </div>
-        </div>
-      </div>
-
-      <!-- 次要的两个景点 -->
-      <div
-        class="flex justify-around p-12 max-w-screen-xl mx-auto"
-        style="height: 340px"
-      >
-        <!-- 一 -->
-        <div class="card md:card-side bg-base-100 p-2" style="width: 54%">
-          <img
-            src="../../assets/images/B.jpg"
-            class="rounded-lg shadow-xl hover-img"
-            alt="Movie"
-            style="width: 52%"
-            loading="lazy"
-          />
-          <div class="card-body">
-            <h2 class="card-title">
-              <div class="truncate"> 珠峰 </div>
-            </h2>
-            <p style="max-height: 110px; text-indent: 2rem">
-              {{
-                formatChars(
-                  '珠穆朗玛峰，高度8844.43米，为海拔世界第一高峰。穆朗玛峰，简称峰，高度8844.43米，为海拔世界第一高峰。'
-                )
-              }}
-            </p>
-            <div class="card-actions justify-end">
-              <button class="btn btn-primary">Watch</button>
-            </div>
-          </div>
-        </div>
-        <!-- 二 -->
-        <div class="card md:card-side bg-base-100 p-2" style="width: 44%">
-          <img
-            src="../../assets/images/A.jpg"
-            class="rounded-lg shadow-xl hover-img"
-            style="width: 48%"
-            alt="Movie"
-          />
-          <div class="card-body">
-            <h2 class="card-title">
-              <div class="truncate"> 俯瞰纳木错 </div>
-            </h2>
-            <p style="max-height: 110px; text-indent: 2rem">
-              “纳木错”为藏语，蒙古语名称为“腾格里海”，都是“天湖”之意。纳木错是西藏的“三大圣湖”之一，也是古象雄雍仲苯教的第一神湖。
-            </p>
-            <div class="card-actions justify-end">
-              <button class="btn btn-primary">Watch</button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <HotTours></HotTours>
     </section>
 
     <section>
