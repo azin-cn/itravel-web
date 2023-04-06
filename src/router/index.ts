@@ -29,13 +29,13 @@ const router = createRouter({
     },
     {
       path: '/article',
-      name: 'article',
       component: DEFAULT_LAYOUT,
       meta: {
         requiresAuth: false,
       },
       children: [
         {
+          name: 'article',
           path: ':articleId',
           component: () => import('@/views/article/index.vue'),
           meta: {
