@@ -151,7 +151,7 @@ export default function useSeries() {
          */
         if (remoteMonthMap.has(name))
           target.months.push(remoteMonthMap.get(name)?.id as string);
-        else target.months.push(remoteSpecialMap.get(name)?.id as string);
+        else target.features.push(remoteSpecialMap.get(name)?.id as string);
 
         return target;
       },
