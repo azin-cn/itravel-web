@@ -5,7 +5,7 @@
   import { EChartsResizeOption } from 'echarts';
   import CN from '@/assets/map/china_without_south_sea.json';
   import type { FeatureCollection } from '@/types/geo';
-  import { SpotCountModel, getSpotCount } from '@/api/spot';
+  import { SpotModel, RegionModel, getSpotCount } from '@/api/spot';
   import useMap from './use-map';
   import useECharts from './use-echarts';
   import useSeries from './use-series';
@@ -19,6 +19,16 @@
   const headerRef = ref();
   const mapRef = ref();
   const geoJson = ref(CN as FeatureCollection);
+  const query = ref<Partial<SpotModel>>({
+    id: undefined,
+    name: undefined,
+    district: undefined,
+    city: undefined,
+    province: undefined,
+    country: undefined,
+    months: [],
+    features: [],
+  });
 
   const init = async () => {
     const { series, legends } = await genSeriesAndLegends();
@@ -57,6 +67,7 @@
             options.geo.zoom = 1;
             options.geo.map = 'china';
             options.series[0].data = (await getSpotCount()).data;
+            options.visualMap[0].max = 2000;
             echarts.registerMap('china', CN);
             mapEl.setOption(options, true); // rerender
             geoJson.value = CN as FeatureCollection; // update
@@ -67,13 +78,40 @@
       visualMap: optionsVisualMap,
     } as any; // ECharts的TS类型还有很多问题，大部分定义为object
 
-    const setSeriesData = (data: SpotCountModel[]) => {
+    /**
+     * 动态设置最大值
+     * @param data
+     */
+    const setVisualMapMax = (data: RegionModel[]) => {
+      let max = 0;
+      options.series[0].data = data.map((item) => {
+        console.log(max, item.value, item.name);
+        max = Math.max(max, item.value);
+        return item;
+      });
+      options.visualMap[0].max = max;
+    };
+    /**
+     * 设置数据
+     * @param data
+     */
+    const setSeriesData = (data: RegionModel[]) => {
       options.series[0].data = data;
     };
+    /**
+     * 记录设置
+     * @param selected
+     */
     const setLegendSelected = (selected: any) => {
       options.legend.forEach((item: any) => {
         item.selected = selected;
       });
+      /**
+       * 记录条件
+       */
+      const { months, features } = formatLegends(selected);
+      query.value.months = months;
+      query.value.features = features;
     };
 
     /**
@@ -109,12 +147,15 @@
     // mapEl.on('click', console.log);
     mapEl.off('click'); // 防止graph里频繁添加click事件，在添加click事件之前先全部清空掉
     mapEl.on('click', 'series', async (params: any) => {
-      const { name, data } = params as {
+      const { name, data: regionValue = {} } = params as {
         name: string;
-        data: SpotCountModel;
+        data: Partial<RegionModel>;
       };
       console.log('params', params);
-      // new map json
+
+      /**
+       * 新的地图json
+       */
       const json = await getNewMap(name, geoJson.value);
 
       if (Object.keys(json).length === 0) {
@@ -137,10 +178,15 @@
         options.geo.map = name;
         // update and remember
         geoJson.value = json;
-        setSeriesData(
-          (await getSpotCount(data ? { [data.level]: data.id } : undefined))
-            .data
-        );
+        console.log(regionValue);
+        const { level = 'province', id } = regionValue;
+        query.value[level] = id;
+
+        const { data } = await getSpotCount(query.value);
+
+        setSeriesData(data);
+        setVisualMapMax(data);
+
         // rerender, it has not animation, see https://github.com/apache/echarts/issues/14069
         render(name, options, json, true);
       };
@@ -164,10 +210,15 @@
     const legendselectchanged = async (params: any) => {
       const { selected } = params;
       setLegendSelected(selected);
-      const legendParams = formatLegends(selected);
+      const { months, features } = formatLegends(selected);
+      query.value.months = months;
+      query.value.features = features;
 
-      // 请求api重新渲染更新数据
-      const { data } = await getSpotCount(legendParams);
+      /**
+       * 请求api重新渲染更新数据
+       * legend选择变化时，visualMap的max值不进行更新
+       */
+      const { data } = await getSpotCount(query.value);
       setSeriesData(data);
       mapEl.setOption(options, true);
     };

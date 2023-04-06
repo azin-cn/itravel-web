@@ -1,7 +1,7 @@
 import { ref } from 'vue';
 import type { Ref } from 'vue';
 import {
-  SpotCountModel,
+  RegionModel,
   getMonths,
   getSpecials,
   getSpotCount,
@@ -94,7 +94,7 @@ export default function useSeries() {
       name,
       type: 'map',
       geoIndex: 0, // geo
-      data: [] as SpotCountModel[],
+      data: [] as RegionModel[],
     }));
     series.unshift(mainSerie); // seriesIndex[0]
 
