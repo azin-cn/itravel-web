@@ -1,21 +1,20 @@
 import axios from 'axios';
-import qs from 'query-string';
+import qs from 'qs';
 
 export const baseURL = 'http://localhost:7000';
 
 /**
  * 景点基础数据类型
  */
-export interface SpotBaseModel {
+export interface BaseModel {
   id: string;
   name: string;
-  fullName: string;
 }
 
 /**
  * 完整景点数据类型
  */
-export interface SpotModel extends SpotBaseModel {
+export interface SpotModel extends BaseModel {
   description: string;
   country: string;
   province: string;
@@ -25,10 +24,13 @@ export interface SpotModel extends SpotBaseModel {
   features: string[];
 }
 
+export type PartialSpotModel = Partial<SpotModel>;
+
 /**
  * 景点数量数据类型
  */
-export interface RegionModel extends SpotBaseModel {
+export interface RegionModel extends BaseModel {
+  fullName: string;
   level: 'country' | 'province' | 'city' | 'district';
   value: number;
 }
@@ -39,11 +41,17 @@ export interface RegionModel extends SpotBaseModel {
  * @returns
  */
 export function getSpotCount(params: Partial<SpotModel> = {}) {
+  params = Object.keys(params).reduce((target, key: string) => {
+    const k = key as keyof SpotModel;
+    const value = params[k];
+    if (value instanceof Array) {
+      target[k] = value.join();
+    }
+    return target;
+  }, {} as any);
+
   return axios.get<RegionModel[]>(`${baseURL}/spot/area_counts`, {
     params,
-    paramsSerializer: (ps) => {
-      return qs.stringify(ps, { arrayFormat: 'bracket-separator' });
-    },
   });
 }
 
@@ -66,10 +74,33 @@ export type SpecialModel = Partial<MonthORFeatureBaseModel>;
 export function getMonths() {
   return axios.get<MonthModel[]>(`${baseURL}/month`);
 }
+
 /**
  * 特色数组
  * @returns
  */
 export function getSpecials() {
   return axios.get<SpecialModel[]>(`${baseURL}/feature`);
+}
+
+/**
+ * 排行旅游景点类型
+ */
+export interface ITour {
+  id: string;
+  name: string;
+  description: string;
+  thumbUrl: string;
+  region: string;
+  level: string;
+  weight: number;
+}
+
+/**
+ * 获取热门的景点信息
+ * @param params
+ * @returns
+ */
+export function getHotSpots(params: PartialSpotModel = {}) {
+  return axios.get<ITour[]>(`${baseURL}/spot/area_spots`, { params });
 }
