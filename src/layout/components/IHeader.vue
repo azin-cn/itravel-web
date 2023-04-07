@@ -51,7 +51,6 @@
           </router-link>
           <router-link to="/about" class="router-link"> 关于 </router-link>
           <router-link to="/explore" class="router-link"> 探索 </router-link>
-          <router-link to="/contact" class="router-link"> 联系 </router-link>
         </div>
       </div>
       <div class="flex-none gap-2">
