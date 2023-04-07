@@ -85,3 +85,13 @@ const request = async () => {
 home/components/hot-tours.vue:mainTours
 lg:self-center
 md:self-start
+
+## 当地区没有数据时，可以选择不允许进去地区查看
+
+```ts
+mapEl.on('click', 'series');
+/**
+ * 如果数据不存在，则可以选择不允许进入
+ * if(!data) { Message.warning("没有数据") }
+ */
+```

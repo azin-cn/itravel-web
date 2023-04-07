@@ -6,7 +6,12 @@
   import { Message } from '@arco-design/web-vue';
   import CN from '@/assets/map/china_without_south_sea.json';
   import type { FeatureCollection } from '@/types/geo';
-  import { SpotModel, RegionModel, getSpotCount } from '@/api/spot';
+  import {
+    SpotModel,
+    RegionModel,
+    getSpotCount,
+    PartialSpotModel,
+  } from '@/api/spot';
   import IHeader from '@/layout/components/IHeader.vue';
   import IFooter from '@/layout/components/IFooter.vue';
   import useMap from './use-map';
@@ -160,12 +165,22 @@
     /**
      * function clear
      * 点击某一个 graphic 节点时，此 graphic 删除后续的节点
+     * 地区是从小到大排序，需要将小地区删除，最后只传大地区
      */
     const clear = (area: string) => {
       const index = options.graphic.findIndex(
         (item: any) => item.style.text === area
       );
       options.graphic.splice(index + 1);
+
+      /**
+       * 解决因多级记录产生的参数覆盖问题
+       */
+      ['city', 'province', 'country'].forEach((item: string, idx) => {
+        if (idx < options.graphic.length) {
+          (query.value as any)[item] = undefined;
+        }
+      });
     };
 
     // mapEl.on('click', console.log);
@@ -189,6 +204,11 @@
         Message.warning('筛选条件为空');
         return;
       }
+
+      /**
+       * 如果数据不存在，则可以选择不允许进入
+       * if(!data) { Message.warning("没有数据") }
+       */
 
       /**
        * 新的地图json
