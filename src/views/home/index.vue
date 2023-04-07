@@ -6,17 +6,12 @@
   import { Message } from '@arco-design/web-vue';
   import CN from '@/assets/map/china_without_south_sea.json';
   import type { FeatureCollection } from '@/types/geo';
-  import {
-    SpotModel,
-    PartialSpotModel,
-    RegionModel,
-    getSpotCount,
-  } from '@/api/spot';
+  import { SpotModel, RegionModel, getSpotCount } from '@/api/spot';
+  import IHeader from '@/layout/components/IHeader.vue';
+  import IFooter from '@/layout/components/IFooter.vue';
   import useMap from './use-map';
   import useECharts from './use-echarts';
   import useSeries from './use-series';
-  import IHeader from './components/IHeader.vue';
-  import IFooter from './components/IFooter.vue';
   import HotTours from './components/hot-tours.vue';
   import MoreTours from './components/more-tours.vue';
 
@@ -330,13 +325,24 @@
 
   <div class="2xl:container mx-auto">
     <section>
-      <h2 class="text-xl m-12"> 热门旅游景点 </h2>
+      <div class="m-12">
+        <h2 class="text-xl">
+          <IconFont type="icon-remen"></IconFont>
+          热门旅游景点
+        </h2>
+      </div>
       <!-- 主要景点 -->
       <HotTours></HotTours>
     </section>
 
     <section>
-      <h2 class="text-xl m-12" @click.stop="() => {}"> 更多旅游景点 </h2>
+      <div class="m-12">
+        <h2 class="text-xl link link-hover inline-block" @click.stop="() => {}">
+          <IconFont type="icon-zhilupai"></IconFont>
+          更多旅游景点
+          <IconFont type="icon-youjiantou4"></IconFont>
+        </h2>
+      </div>
       <MoreTours></MoreTours>
     </section>
   </div>
@@ -359,7 +365,7 @@
 
   .hover-card,
   .hover-img {
-    transition: all 0.2s;
+    transition: all 0.3s;
   }
 
   .hover-card:hover {

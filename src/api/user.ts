@@ -2,6 +2,12 @@ import axios from 'axios';
 import type { RouteRecordNormalized } from 'vue-router';
 import { UserState } from '@/store/modules/user/types';
 
+export const LOGIN_TYPE = {
+  ACCOUNT: 1,
+  MOBILE: 2,
+  THIRD: 3,
+};
+
 export interface LoginData {
   username: string;
   password: string;
