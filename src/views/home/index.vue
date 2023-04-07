@@ -3,9 +3,15 @@
   import { useRouter } from 'vue-router';
   import * as echarts from 'echarts';
   import { EChartsResizeOption } from 'echarts';
+  import { Message } from '@arco-design/web-vue';
   import CN from '@/assets/map/china_without_south_sea.json';
   import type { FeatureCollection } from '@/types/geo';
-  import { SpotModel, RegionModel, getSpotCount } from '@/api/spot';
+  import {
+    SpotModel,
+    PartialSpotModel,
+    RegionModel,
+    getSpotCount,
+  } from '@/api/spot';
   import useMap from './use-map';
   import useECharts from './use-echarts';
   import useSeries from './use-series';
@@ -27,8 +33,8 @@
     city: undefined,
     province: undefined,
     country: undefined,
-    months: [],
-    features: [],
+    months: undefined,
+    features: undefined,
   });
   const counter = ref(0);
 
@@ -68,7 +74,14 @@
             options.graphic.splice(1); // 清除除China后续节点
             options.geo.zoom = 1;
             options.geo.map = 'china';
-            options.series[0].data = (await getSpotCount()).data;
+            query.value.country = undefined;
+            query.value.province = undefined;
+            query.value.city = undefined;
+            query.value.district = undefined;
+            /**
+             * 不需要重新判断是否为空，因为原有的数据已经被覆盖
+             */
+            options.series[0].data = (await getSpotCount(query.value)).data;
             options.visualMap[0].max = 2000;
             echarts.registerMap('china', CN);
             mapEl.setOption(options, true); // rerender
@@ -87,7 +100,7 @@
     const setVisualMapMax = (data: RegionModel[]) => {
       let max = 0;
       options.series[0].data = data.map((item) => {
-        console.log(max, item.value, item.name);
+        // console.log(max, item.value, item.name);
         max = Math.max(max, item.value);
         return item;
       });
@@ -98,7 +111,20 @@
      * @param data
      */
     const setSeriesData = (data: RegionModel[]) => {
-      options.series[0].data = data;
+      const { length } = data;
+      if (length) {
+        options.series[0].data = data;
+      } else {
+        /**
+         * 特别处理无数据的情况，需要保留原有的level和id
+         */
+        options.series[0].data = options.series[0].data.map(
+          (item: RegionModel) => ({
+            ...item,
+            value: 0,
+          })
+        );
+      }
     };
     /**
      * 记录设置
@@ -156,6 +182,19 @@
       console.log('params', params);
 
       /**
+       * 如果筛选条件为空，不允许进入下一层
+       * 如果存在 （province 或 city） 和 （月份 或 特色）
+       */
+      const { months, features } = query.value;
+      const hasConditions = months?.length && features?.length;
+      const isDefaultConditions =
+        months === undefined || features === undefined;
+      if (!hasConditions && !isDefaultConditions) {
+        Message.warning('筛选条件为空');
+        return;
+      }
+
+      /**
        * 新的地图json
        */
       const json = await getNewMap(name, geoJson.value);
@@ -183,11 +222,11 @@
         console.log(regionValue);
         const { level = 'province', id } = regionValue;
         query.value[level] = id;
-        console.log(query.value);
 
         counter.value += 1;
         const innerCount = counter.value;
         const { data } = await getSpotCount(query.value);
+        console.log(query.value);
         if (innerCount === counter.value) {
           /**
            * 解决网络时延问题
@@ -236,6 +275,20 @@
          * 因为有await，使用闭包记录count和counter的关系
          */
         setSeriesData(data);
+
+        /**
+         * 如果最大值为0，则进行更新，这是由于进入时，所有数据都为0的情况
+         * 如果最大值小于最新的最大值，则进行更新，这是由于进入时，筛选出的数据少于当前的情况
+         */
+        const max = data.reduce((target, item) => {
+          target = Math.max(target, item.value);
+          return target;
+        }, 0);
+
+        if (options.visualMap[0].max === 0 || options.visualMap[0].max < max) {
+          setVisualMapMax(data);
+          setVisualMapMax(data);
+        }
       }
       mapEl.setOption(options, true);
     };
@@ -267,13 +320,6 @@
       return `${str.substring(0, maxLen - 3)}...`;
     }
     return str;
-  };
-
-  const redirectArticle = (articleId: string) => {
-    router.push({
-      name: 'article',
-      params: { articleId },
-    });
   };
 
   onMounted(async () => {
