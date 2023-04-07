@@ -18,6 +18,7 @@
   import IHeader from './components/IHeader.vue';
   import IFooter from './components/IFooter.vue';
   import HotTours from './components/hot-tours.vue';
+  import MoreTours from './components/more-tours.vue';
 
   const router = useRouter();
   const { getNewMap } = useMap();
@@ -315,13 +316,6 @@
     });
   };
 
-  const formatChars = (str: string, maxLen = 128) => {
-    if (str.length > maxLen) {
-      return `${str.substring(0, maxLen - 3)}...`;
-    }
-    return str;
-  };
-
   onMounted(async () => {
     init();
   });
@@ -342,81 +336,8 @@
     </section>
 
     <section>
-      <h2 class="text-xl m-12"> 更多旅游景点 </h2>
-      <div class="flex justify-around">
-        <div
-          class="card w-1/4 bg-base-100 p-4 hover-card"
-          style="height: 400px"
-        >
-          <img
-            src="../../assets/images/A.jpg"
-            class="shadow-xl h-1/2 rounded-lg"
-            style="object-fit: cover"
-            alt="Shoes"
-          />
-          <div class="card-body">
-            <h2 class="card-title">Shoes!</h2>
-            <p>If a dog chews shoes whose shoes does he choose?</p>
-            <div class="card-actions justify-end">
-              <button class="btn btn-primary">Watch</button>
-            </div>
-          </div>
-        </div>
-        <div
-          class="card w-1/4 bg-base-100 p-4 hover-card"
-          style="height: 400px"
-        >
-          <img
-            src="../../assets/images/A.jpg"
-            class="shadow-xl h-1/2 rounded-lg"
-            style="object-fit: cover"
-            alt="Shoes"
-          />
-          <div class="card-body">
-            <h2 class="card-title">Shoes!</h2>
-            <p>If a dog chews shoes whose shoes does he choose?</p>
-            <div class="card-actions justify-end">
-              <button class="btn btn-primary">Watch</button>
-            </div>
-          </div>
-        </div>
-        <div
-          class="card w-1/4 bg-base-100 p-4 hover-card"
-          style="height: 400px"
-        >
-          <img
-            src="../../assets/images/A.jpg"
-            class="shadow-xl h-1/2 rounded-lg"
-            style="object-fit: cover"
-            alt="Shoes"
-          />
-          <div class="card-body">
-            <h2 class="card-title">Shoes!</h2>
-            <p>If a dog chews shoes whose shoes does he choose?</p>
-            <div class="card-actions justify-end">
-              <button class="btn btn-primary">Watch</button>
-            </div>
-          </div>
-        </div>
-        <div
-          class="card w-1/4 bg-base-100 p-4 hover-card"
-          style="height: 400px"
-        >
-          <img
-            src="../../assets/images/A.jpg"
-            class="shadow-xl h-1/2 rounded-lg"
-            style="object-fit: cover"
-            alt="Shoes"
-          />
-          <div class="card-body">
-            <h2 class="card-title">Shoes!</h2>
-            <p>If a dog chews shoes whose shoes does he choose?</p>
-            <div class="card-actions justify-end">
-              <button class="btn btn-primary">Watch</button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <h2 class="text-xl m-12" @click.stop="() => {}"> 更多旅游景点 </h2>
+      <MoreTours></MoreTours>
     </section>
   </div>
 
