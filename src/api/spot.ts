@@ -93,9 +93,12 @@ export interface ITour {
   name: string;
   description: string;
   thumbUrl: string;
+  level: string; // 区域等级
   region: string;
-  level: string;
+  regionId: string;
   weight: number;
+  createdTime?: string;
+  updatedTime?: string;
 }
 
 /**
@@ -105,4 +108,13 @@ export interface ITour {
  */
 export function getHotSpots(params: PartialSpotModel = {}) {
   return axios.get<ITour[]>(`${baseURL}/spot/area_spots`, { params });
+}
+
+/**
+ * 获取更多的景点
+ * @param params
+ * @returns
+ */
+export function getRandSpots(params: PartialSpotModel = {}) {
+  return axios.get<ITour[]>(`${baseURL}/spot/recom_spots/rand`, { params });
 }
