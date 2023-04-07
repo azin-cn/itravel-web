@@ -20,14 +20,14 @@ export interface MapQueryRecord {
 }
 
 export async function getMapJsonWithCode(code = 100000, isFull = true) {
-  const name = `${code}${isFull ? '_full' : ''}`;
-  const json = (await axios.get(
-    `https://geo.datav.aliyun.com/areas_v3/bound/${name}.json`
-  )) as any;
+  // const name = `${code}${isFull ? '_full' : ''}`;
+  // const json = (await axios.get(
+  //   `https://geo.datav.aliyun.com/areas_v3/bound/${name}.json`
+  // )) as any;
 
-  return {
-    data: json as FeatureCollection,
-  };
+  // return {
+  //   data: json as FeatureCollection,
+  // };
 
   return axios.get<FeatureCollection>('https://itravel.todayto.com/map', {
     params: { code },
