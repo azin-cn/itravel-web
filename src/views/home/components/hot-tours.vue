@@ -77,6 +77,7 @@
         style="height: 340px"
       >
         <template v-for="(item, index) in secondaryTours" :key="item.id">
+          <!-- 前两个 -->
           <div
             v-if="index < 2"
             class="card md:card-side bg-base-100 p-2"
@@ -121,6 +122,7 @@
         style="height: 340px"
       >
         <template v-for="(item, index) in secondaryTours" :key="item.id">
+          <!-- 后两个 -->
           <div
             v-if="index > 1"
             class="card md:card-side bg-base-100 p-2"
