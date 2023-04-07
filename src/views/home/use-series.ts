@@ -138,7 +138,7 @@ export default function useSeries() {
   };
 
   const formatLegends = (selected: Record<string, boolean>) => {
-    console.log(selected);
+    // console.log(selected);
     const params = Object.keys(selected).reduce(
       (target, name: string) => {
         /**

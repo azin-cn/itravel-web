@@ -46,6 +46,8 @@ export function getSpotCount(params: Partial<SpotModel> = {}) {
     const value = params[k];
     if (value instanceof Array) {
       target[k] = value.join();
+    } else {
+      target[k] = value;
     }
     return target;
   }, {} as any);
