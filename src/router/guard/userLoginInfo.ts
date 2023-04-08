@@ -13,7 +13,7 @@ export default function setupUserLoginInfoGuard(router: Router) {
      * 特殊跳转配置
      */
     if (
-      ['article', 'userinfo'].includes(from?.name as string) &&
+      ['article', 'spot', 'userinfo'].includes(from?.name as string) &&
       to.name === 'login'
     ) {
       to.redirectedFrom = from;
