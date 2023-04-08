@@ -98,6 +98,17 @@ export const redirectArticle = async (articleId: string) => {
 };
 
 /**
+ * 重定向到spot景点
+ * @param spotId
+ */
+export const redirectSpot = async (spotId: string) => {
+  router.push({
+    name: 'spot',
+    params: { spotId },
+  });
+};
+
+/**
  * 重定向userinfo
  * @param userId
  */
