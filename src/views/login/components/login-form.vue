@@ -8,7 +8,7 @@
   import { useUserStore } from '@/store';
   import useLoading from '@/hooks/loading';
   import { LOGIN_TYPE } from '@/api/user';
-  import type { LoginData } from '@/api/user';
+  import type { AuthData } from '@/api/user';
   import { isMobile } from '@/utils/validate';
   import { redirectHomeOrDefault } from '@/router/utils';
 
@@ -24,7 +24,7 @@
     password: '',
   });
 
-  const userInfo = reactive<LoginData>({
+  const userInfo = reactive<AuthData>({
     account: loginConfig.value.account,
     password: loginConfig.value.password,
     phone: '',
@@ -64,7 +64,7 @@
     if (!errors) {
       setLoading(true);
       try {
-        await userStore.login(values as LoginData);
+        await userStore.login(values as AuthData);
         const { redirectedFrom } = router.currentRoute.value;
 
         if (redirectedFrom) {

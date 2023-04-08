@@ -3,7 +3,7 @@ import {
   login as userLogin,
   logout as userLogout,
   getUserInfo,
-  LoginData,
+  AuthData,
 } from '@/api/user';
 import {
   setToken,
@@ -67,8 +67,15 @@ const useUserStore = defineStore('user', {
       this.setInfo(res.data);
     },
 
+    /**
+     * 注册
+     */
+    async register(form: AuthData) {
+      //
+    },
+
     // Login
-    async login(loginForm: LoginData) {
+    async login(loginForm: AuthData) {
       try {
         const { data } = await userLogin(loginForm);
         setToken(data.token);
@@ -87,13 +94,12 @@ const useUserStore = defineStore('user', {
     },
 
     logoutCallBack() {
-      const appStore = useAppStore();
       this.resetInfo();
       clearToken();
       clearUserID();
       removeRouteListener();
-      appStore.clearServerMenu();
     },
+
     // Logout
     async logout() {
       try {

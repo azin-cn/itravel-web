@@ -10,7 +10,7 @@ export const LOGIN_TYPE = {
   THIRD: 3,
 };
 
-export interface LoginData {
+export interface AuthData {
   account: string;
   password: string;
   phone: string;
@@ -28,7 +28,7 @@ export interface LoginRes {
  * @param data
  * @returns
  */
-export function login(data: Partial<LoginData>) {
+export function login(data: Partial<AuthData>) {
   data = useCloned(data).cloned.value;
   const { type } = data;
   delete data.type;
