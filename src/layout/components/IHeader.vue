@@ -49,8 +49,8 @@
           <router-link to="/home" class="router-link tab-active">
             主页
           </router-link>
-          <router-link to="/about" class="router-link"> 关于 </router-link>
           <router-link to="/explore" class="router-link"> 探索 </router-link>
+          <router-link to="/about" class="router-link"> 关于 </router-link>
         </div>
       </div>
       <div class="flex-none gap-2">
