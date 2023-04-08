@@ -1,6 +1,8 @@
 <template>
   <a-config-provider :locale="locale">
-    <router-view />
+    <transition name="fade" mode="out-in">
+      <router-view />
+    </transition>
     <global-setting />
   </a-config-provider>
 </template>
@@ -24,3 +26,15 @@
     }
   });
 </script>
+
+<style scoped>
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.3s;
+  }
+
+  .fade-enter,
+  .fade-leave-to {
+    opacity: 0;
+  }
+</style>
