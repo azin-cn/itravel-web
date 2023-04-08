@@ -1,57 +1,23 @@
 <script lang="ts" setup>
   import { ref, reactive } from 'vue';
-  import { useRouter } from 'vue-router';
   import { Message } from '@arco-design/web-vue';
   import { ValidatedError } from '@arco-design/web-vue/es/form/interface';
-  import { useI18n } from 'vue-i18n';
-  import { useStorage } from '@vueuse/core';
   import { useUserStore } from '@/store';
   import useLoading from '@/hooks/loading';
-  import { LOGIN_TYPE } from '@/api/user';
+  import { AUTH_TYPE } from '@/api/user';
   import type { AuthData } from '@/api/user';
-  import { isMobile } from '@/utils/validate';
-  import { redirectHomeOrDefault } from '@/router/utils';
+  import { isEmail } from '@/utils/validate';
+  import { replaceLogin, redirectLogin } from '@/router/utils';
 
-  const router = useRouter();
-  const { t } = useI18n();
-  const errorMessage = ref('');
   const { loading, setLoading } = useLoading();
   const userStore = useUserStore();
 
-  const loginConfig = useStorage('login-config', {
-    rememberPassword: true,
-    account: '',
+  const userInfo = reactive<Partial<AuthData>>({
+    username: '',
+    email: '',
     password: '',
+    type: AUTH_TYPE.ACCOUNT,
   });
-
-  const userInfo = reactive<AuthData>({
-    account: loginConfig.value.account,
-    password: loginConfig.value.password,
-    phone: '',
-    captcha: '',
-    type: 1,
-  });
-
-  const state = reactive({
-    captchaTime: 0,
-    loginType: 'account',
-  });
-
-  const onCaptchaClick = async () => {
-    if (!isMobile(userInfo.phone)) {
-      Message.error('请输入正确的手机号');
-      return;
-    }
-
-    state.captchaTime = 60;
-    // await getCaptcha(userInfo.phone);
-    const timer = setInterval(() => {
-      state.captchaTime -= 1;
-      if (state.captchaTime === 0) {
-        clearInterval(timer);
-      }
-    }, 1000);
-  };
 
   const handleSubmit = async ({
     errors,
@@ -64,36 +30,16 @@
     if (!errors) {
       setLoading(true);
       try {
+        Message.info('开始注册');
         await userStore.login(values as AuthData);
-        const { redirectedFrom } = router.currentRoute.value;
-
-        if (redirectedFrom) {
-          router.push({
-            path: redirectedFrom.fullPath,
-          });
-        } else {
-          redirectHomeOrDefault();
-        }
-
-        Message.success(t('login.form.login.success'));
-        const { rememberPassword } = loginConfig.value;
-        const { account, password } = values;
-        // 实际生产环境需要进行加密存储。
-        // The actual production environment requires encrypted storage.
-        loginConfig.value.account = rememberPassword ? account : '';
-        loginConfig.value.password = rememberPassword ? password : '';
+        replaceLogin();
+        Message.success('注册成功，请前往邮箱激活账户');
       } catch (err) {
-        errorMessage.value = (err as Error).message;
+        Message.error((err as Error).message);
       } finally {
         setLoading(false);
       }
     }
-  };
-  const setRememberPassword = (value: boolean) => {
-    loginConfig.value.rememberPassword = value;
-  };
-  const changeLoginType = (type: 1 | 2 | 3) => {
-    userInfo.type = type;
   };
 </script>
 
@@ -105,144 +51,74 @@
     layout="vertical"
     @submit="handleSubmit"
   >
-    <a-form-item class="mb-2"> 登录 Itravel </a-form-item>
-
-    <a-form-item>
-      <div class="tabs">
-        <a
-          class="tab tab-bordered"
-          :class="userInfo.type === LOGIN_TYPE.ACCOUNT ? 'tab-active' : ''"
-          @click="changeLoginType(1)"
-        >
-          账号登录
-        </a>
-        <a
-          class="tab tab-bordered"
-          :class="userInfo.type === LOGIN_TYPE.MOBILE ? 'tab-active' : ''"
-          @click="changeLoginType(2)"
-        >
-          短信登录
-        </a>
-      </div>
+    <a-form-item class="mb-2">
+      <a-tooltip content="登录页">
+        <a-button size="mini" class="mr-2" @click.stop="replaceLogin">
+          <template #icon>
+            <IconFont type="icon-arrow_left_fat"></IconFont>
+          </template>
+        </a-button>
+      </a-tooltip>
+      注册 Itravel
     </a-form-item>
-    <!-- 账户登录 -->
-    <template v-if="userInfo.type === LOGIN_TYPE.ACCOUNT">
-      <a-form-item
-        field="account"
-        :rules="[{ required: true, message: $t('login.form.userName.errMsg') }]"
-        :validate-trigger="['change', 'blur']"
-        hide-label
-      >
-        <a-input
-          v-model="userInfo.account"
-          placeholder="请输入用户名"
-          allow-clear
-        >
-          <template #prefix>
-            <icon-user />
-          </template>
-        </a-input>
-      </a-form-item>
-      <a-form-item
-        field="password"
-        :rules="[{ required: true, message: $t('login.form.password.errMsg') }]"
-        :validate-trigger="['change', 'blur']"
-        hide-label
-      >
-        <a-input-password
-          v-model="userInfo.password"
-          placeholder="请输入密码"
-          allow-clear
-        >
-          <template #prefix>
-            <icon-lock />
-          </template>
-        </a-input-password>
-      </a-form-item>
-    </template>
 
-    <!-- 手机验证码登录 -->
-    <div v-if="userInfo.type === LOGIN_TYPE.MOBILE">
-      <a-form-item
-        field="phone"
-        :rules="[{ required: true, message: $t('请输入手机号') }]"
-        :validate-trigger="['change', 'blur']"
-        hide-label
+    <a-form-item
+      field="username"
+      :rules="[{ required: true, message: '请输入用户名' }]"
+      :validate-trigger="['change', 'blur']"
+      hide-label
+    >
+      <a-input
+        v-model="userInfo.username"
+        placeholder="请输入用户名"
+        allow-clear
       >
-        <a-input
-          v-model="userInfo.phone"
-          placeholder="请输入手机号"
-          allow-clear
-        >
-          <template #prefix>
-            <icon-mobile />
-          </template>
-        </a-input>
-      </a-form-item>
-      <a-form-item
-        field="captcha"
-        :rules="[{ required: true, message: '请输入验证码' }]"
-        :validate-trigger="['change', 'blur']"
-        hide-label
+        <template #prefix>
+          <icon-user />
+        </template>
+      </a-input>
+    </a-form-item>
+
+    <a-form-item
+      field="email"
+      :rules="[{ required: true, message: '请输入邮箱' }]"
+      :validate-trigger="['change', 'blur']"
+      hide-label
+    >
+      <a-input v-model="userInfo.email" placeholder="请输入邮箱" allow-clear>
+        <template #prefix>
+          <icon-email />
+        </template>
+      </a-input>
+    </a-form-item>
+
+    <a-form-item
+      field="password"
+      :rules="[{ required: true, message: '请输入密码' }]"
+      :validate-trigger="['change', 'blur']"
+      hide-label
+    >
+      <a-input-password
+        v-model="userInfo.password"
+        placeholder="请输入密码"
+        allow-clear
       >
-        <a-input
-          v-model="userInfo.captcha"
-          placeholder="请输入验证码"
-          allow-clear
-        >
-          <template #prefix>
-            <icon-lock />
-          </template>
-          <template #append>
-            <a-button
-              :disabled="state.captchaTime !== 0"
-              size="mini"
-              long
-              @click="onCaptchaClick"
-            >
-              {{ state.captchaTime !== 0 ? `${state.captchaTime}s` : '' }}
-              获取验证码
-            </a-button>
-          </template>
-        </a-input>
-      </a-form-item>
-    </div>
+        <template #prefix>
+          <icon-lock />
+        </template>
+      </a-input-password>
+    </a-form-item>
 
     <a-space :size="16" class="justify-around">
-      <a-checkbox
-        v-if="userInfo.type === LOGIN_TYPE.ACCOUNT"
-        checked="rememberPassword"
-        :model-value="loginConfig.rememberPassword"
-        @change="setRememberPassword as any"
+      <a-button
+        type="text"
+        html-type="submit"
+        long
+        fill
+        class="login-form-register-btn"
       >
-        {{ $t('login.form.rememberPassword') }}
-      </a-checkbox>
-
-      <a-button type="primary" html-type="submit" long :loading="loading">
-        登录
+        点我注册
       </a-button>
-
-      <a-button type="text" long class="login-form-register-btn">
-        注册
-      </a-button>
-    </a-space>
-
-    <div class="divider mt-6 mb-6"> OR </div>
-
-    <a-space :size="24" fill align="center" class="justify-center">
-      <a-tooltip content="微信" mini>
-        <icon-wechat size="18" style="cursor: pointer" />
-        <!-- @click="customerLogin('wx')" -->
-      </a-tooltip>
-      <a-tooltip content="QQ" mini>
-        <icon-qq size="18" style="cursor: pointer" />
-      </a-tooltip>
-      <a-tooltip content="Github" mini>
-        <icon-github size="18" style="cursor: pointer" />
-      </a-tooltip>
-      <a-tooltip content="微博" mini>
-        <icon-weibo size="18" style="cursor: pointer" />
-      </a-tooltip>
     </a-space>
   </a-form>
 </template>
