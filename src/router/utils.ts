@@ -10,18 +10,63 @@ export function redirectHome() {
   const { othersQuery } = getRouteQueries();
 
   router.push({
-    name: 'filelist',
+    name: 'home',
     query: othersQuery,
   });
 }
 
 export function redirectHomeOrDefault() {
   const { redirect, othersQuery } = getRouteQueries();
+  console.log('redirect', redirect);
   router.push({
-    name: (redirect as string) || 'filelist',
+    name: (redirect as string) || 'home',
     query: {
       ...othersQuery,
     },
+  });
+}
+
+/**
+ * redirectRegister 注册
+ */
+export function redirectRegister() {
+  const { othersQuery } = getRouteQueries();
+  router.push({
+    name: 'register',
+    query: othersQuery,
+  });
+}
+
+/**
+ * redirectRegister 注册页或默认
+ */
+export function redirectRegisterOrDefault() {
+  const { redirect, othersQuery } = getRouteQueries();
+  router.push({
+    name: (redirect as string) || 'register',
+    query: othersQuery,
+  });
+}
+
+/**
+ * replaceLogin
+ */
+export function replaceLogin() {
+  const { othersQuery } = getRouteQueries();
+  router.replace({
+    name: 'login',
+    query: othersQuery,
+  });
+}
+
+/**
+ * replaceLoginOrDefault
+ */
+export function replaceLoginOrDefault() {
+  const { redirect, othersQuery } = getRouteQueries();
+  router.replace({
+    name: (redirect as string) || 'login',
+    query: othersQuery,
   });
 }
 
@@ -70,4 +115,8 @@ export default {
   redirectLoginOrDefault,
   redirectUserInfo,
   redirectArticle,
+  redirectRegister,
+  redirectRegisterOrDefault,
+  replaceLogin,
+  replaceLoginOrDefault,
 };
