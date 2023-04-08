@@ -1,8 +1,4 @@
-import {
-  createRouter,
-  createWebHistory,
-  createWebHashHistory,
-} from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 import NProgress from 'nprogress'; // progress bar
 import 'nprogress/nprogress.css';
 
@@ -26,6 +22,23 @@ const router = createRouter({
       meta: {
         requiresAuth: false,
       },
+    },
+    {
+      path: '/spot',
+      component: DEFAULT_LAYOUT,
+      meta: {
+        requiresAuth: false,
+      },
+      children: [
+        {
+          name: 'spot',
+          path: ':spotId',
+          component: () => import('@/views/article/index.vue'),
+          meta: {
+            requiresAuth: false,
+          },
+        },
+      ],
     },
     {
       path: '/article',
