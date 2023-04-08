@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useCloned } from '@vueuse/core';
+import { cloneDeep } from 'lodash';
 import type { RouteRecordNormalized } from 'vue-router';
 import { UserState } from '@/store/modules/user/types';
 import { prefix } from './base';
@@ -20,6 +20,28 @@ export interface AuthData {
   type: number;
 }
 
+/**
+ * 使用邮件注册
+ * @param data
+ * @returns
+ */
+export function registerWithEmail(data: Partial<AuthData>) {
+  data = cloneDeep(data);
+  const { type } = data;
+  delete data.type;
+  delete data.phone;
+  delete data.captcha;
+  delete data.account;
+  return axios.post(`${prefix}/auth/register`, data, { params: { type } });
+}
+
+/**
+ * @param data
+ */
+export function register(data: Partial<AuthData>) {
+  return registerWithEmail(data);
+}
+
 export interface LoginRes {
   token: string;
   user: Pick<UserState, 'id' | 'role' | 'avatar'>;
@@ -31,7 +53,7 @@ export interface LoginRes {
  * @returns
  */
 export function login(data: Partial<AuthData>) {
-  data = useCloned(data).cloned.value;
+  data = cloneDeep(data);
   const { type } = data;
   delete data.type;
 

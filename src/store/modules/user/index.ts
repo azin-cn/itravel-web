@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import {
   login as userLogin,
   logout as userLogout,
+  register as userRegister,
   getUserInfo,
   AuthData,
 } from '@/api/user';
@@ -14,7 +15,6 @@ import {
 } from '@/utils/auth';
 import { removeRouteListener } from '@/utils/route-listener';
 import { UserState } from './types';
-import useAppStore from '../app';
 
 const useUserStore = defineStore('user', {
   state: (): UserState => ({
@@ -71,7 +71,14 @@ const useUserStore = defineStore('user', {
      * 注册
      */
     async register(form: AuthData) {
-      //
+      try {
+        const res = await userRegister(form);
+        return res;
+      } catch (err) {
+        clearToken();
+        clearUserID();
+        throw err;
+      }
     },
 
     // Login
@@ -82,6 +89,7 @@ const useUserStore = defineStore('user', {
         setUserID(data.user.id as string);
       } catch (err) {
         clearToken();
+        clearUserID();
         throw err;
       }
     },

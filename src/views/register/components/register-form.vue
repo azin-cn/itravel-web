@@ -8,6 +8,7 @@
   import type { AuthData } from '@/api/user';
   import { isEmail } from '@/utils/validate';
   import { replaceLogin, redirectLogin } from '@/router/utils';
+  import { Callback } from '@/types/global';
 
   const { loading, setLoading } = useLoading();
   const userStore = useUserStore();
@@ -31,11 +32,11 @@
       setLoading(true);
       try {
         Message.info('开始注册');
-        await userStore.login(values as AuthData);
+        await userStore.register(values as AuthData);
         replaceLogin();
         Message.success('注册成功，请前往邮箱激活账户');
       } catch (err) {
-        Message.error((err as Error).message);
+        // Message.error((err as Error).message);
       } finally {
         setLoading(false);
       }
@@ -81,7 +82,14 @@
 
     <a-form-item
       field="email"
-      :rules="[{ required: true, message: '请输入邮箱' }]"
+      :rules="[{ required: true, message: '请输入邮箱' }, 
+      {validator: (value: string, cb: Callback) => {
+        if(!isEmail(value)) {
+          cb('请输入正确的邮箱')
+        } else {
+          cb()
+        }
+      }}]"
       :validate-trigger="['change', 'blur']"
       hide-label
     >
@@ -111,6 +119,7 @@
 
     <a-space :size="16" class="justify-around">
       <a-button
+        :loading="loading"
         type="text"
         html-type="submit"
         long
@@ -186,6 +195,10 @@
     }
   }
 
+  .arco-space-item .login-form-register-btn {
+    color: white;
+  }
+
   :deep(.arco-checkbox:hover .arco-checkbox-icon-hover::before) {
     background-color: unset;
   }
@@ -212,8 +225,10 @@
   :deep(
       .arco-btn-primary:active,
       .arco-btn-primary[type='button']:active,
-      .arco-btn-primary[type='submit']:active
+      .arco-btn-primary[type='submit']:active,
+
     ) {
+    color: white;
     background-color: rgb(57 88 69 / 40%);
   }
 
