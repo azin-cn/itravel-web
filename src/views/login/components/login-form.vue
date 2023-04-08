@@ -10,6 +10,7 @@
   import { LOGIN_TYPE } from '@/api/user';
   import type { LoginData } from '@/api/user';
   import { isMobile } from '@/utils/validate';
+  import { redirectHomeOrDefault } from '@/router/utils';
 
   const router = useRouter();
   const { t } = useI18n();
@@ -19,12 +20,12 @@
 
   const loginConfig = useStorage('login-config', {
     rememberPassword: true,
-    username: undefined,
-    password: undefined,
+    account: '',
+    password: '',
   });
 
-  const userInfo = reactive({
-    username: loginConfig.value.username,
+  const userInfo = reactive<LoginData>({
+    account: loginConfig.value.account,
     password: loginConfig.value.password,
     phone: '',
     captcha: '',
@@ -64,19 +65,22 @@
       setLoading(true);
       try {
         await userStore.login(values as LoginData);
-        const { redirect, ...othersQuery } = router.currentRoute.value.query;
-        router.push({
-          name: (redirect as string) || 'Workplace',
-          query: {
-            ...othersQuery,
-          },
-        });
+        const { redirectedFrom } = router.currentRoute.value;
+
+        if (redirectedFrom) {
+          router.push({
+            path: redirectedFrom.fullPath,
+          });
+        } else {
+          redirectHomeOrDefault();
+        }
+
         Message.success(t('login.form.login.success'));
         const { rememberPassword } = loginConfig.value;
-        const { username, password } = values;
+        const { account, password } = values;
         // 实际生产环境需要进行加密存储。
         // The actual production environment requires encrypted storage.
-        loginConfig.value.username = rememberPassword ? username : '';
+        loginConfig.value.account = rememberPassword ? account : '';
         loginConfig.value.password = rememberPassword ? password : '';
       } catch (err) {
         errorMessage.value = (err as Error).message;
@@ -124,13 +128,13 @@
     <!-- 账户登录 -->
     <template v-if="userInfo.type === LOGIN_TYPE.ACCOUNT">
       <a-form-item
-        field="username"
+        field="account"
         :rules="[{ required: true, message: $t('login.form.userName.errMsg') }]"
         :validate-trigger="['change', 'blur']"
         hide-label
       >
         <a-input
-          v-model="userInfo.username"
+          v-model="userInfo.account"
           placeholder="请输入用户名"
           allow-clear
         >
@@ -289,6 +293,7 @@
 
   .login-form input::placeholder {
     color: #3d5245;
+    background: none;
   }
 
   .login-form button {
@@ -298,11 +303,11 @@
     background-color: rgb(57 88 69 / 40%);
     cursor: pointer;
     transition: 0.4s;
-  }
 
-  .login-form button:hover {
-    color: white;
-    background-color: rgb(12 80 38 / 67%);
+    &:hover {
+      color: white;
+      background-color: rgb(12 80 38 / 67%);
+    }
   }
 
   :deep(.arco-checkbox:hover .arco-checkbox-icon-hover::before) {
@@ -315,16 +320,17 @@
 
   :deep(.arco-input-wrapper) {
     border: none;
-  }
 
-  :deep(
-      .arco-input-wrapper:focus-within,
-      .arco-input-wrapper.arco-input-focus
-    ) {
-    border: none;
-    border-color: unset;
-    outline: none;
-    box-shadow: none;
+    &:focus-within,
+    &.arco-input-focus {
+      border: none;
+      outline: none;
+      box-shadow: none;
+    }
+
+    .arco-input {
+      background: none;
+    }
   }
 
   :deep(
