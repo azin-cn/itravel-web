@@ -334,6 +334,8 @@
   onMounted(async () => {
     init();
   });
+
+  document.title = 'Itravel 首页';
 </script>
 
 <template>
