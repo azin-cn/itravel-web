@@ -12,6 +12,8 @@
 <script lang="ts" setup>
   import Footer from '@/components/footer/index.vue';
   import LoginForm from './components/login-form.vue';
+
+  document.title = 'Itravel 登录页';
 </script>
 
 <style lang="less" scoped>
