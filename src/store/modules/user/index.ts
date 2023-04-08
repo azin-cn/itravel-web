@@ -5,7 +5,13 @@ import {
   getUserInfo,
   LoginData,
 } from '@/api/user';
-import { setToken, clearToken } from '@/utils/auth';
+import {
+  setToken,
+  clearToken,
+  setUserID,
+  getUserID,
+  clearUserID,
+} from '@/utils/auth';
 import { removeRouteListener } from '@/utils/route-listener';
 import { UserState } from './types';
 import useAppStore from '../app';
@@ -56,25 +62,35 @@ const useUserStore = defineStore('user', {
 
     // Get user's information
     async info() {
-      const res = await getUserInfo();
-
+      const id = getUserID();
+      const res = await getUserInfo(id as string);
       this.setInfo(res.data);
     },
 
     // Login
     async login(loginForm: LoginData) {
       try {
-        const res = await userLogin(loginForm);
-        setToken(res.data.token);
+        const { data } = await userLogin(loginForm);
+        setToken(data.token);
+        setUserID(data.user.id as string);
       } catch (err) {
         clearToken();
         throw err;
       }
     },
+
+    /**
+     * 第三方登录
+     */
+    async loginWithThird() {
+      //
+    },
+
     logoutCallBack() {
       const appStore = useAppStore();
       this.resetInfo();
       clearToken();
+      clearUserID();
       removeRouteListener();
       appStore.clearServerMenu();
     },
