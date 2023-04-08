@@ -1,6 +1,8 @@
 import axios from 'axios';
+import { useCloned } from '@vueuse/core';
 import type { RouteRecordNormalized } from 'vue-router';
 import { UserState } from '@/store/modules/user/types';
+import { prefix } from './base';
 
 export const LOGIN_TYPE = {
   ACCOUNT: 1,
@@ -9,25 +11,59 @@ export const LOGIN_TYPE = {
 };
 
 export interface LoginData {
-  username: string;
+  account: string;
   password: string;
+  phone: string;
+  captcha: string;
+  type: number;
 }
 
 export interface LoginRes {
   token: string;
-}
-export function login(data: LoginData) {
-  return axios.post<LoginRes>('/api/user/login', data);
+  user: Pick<UserState, 'id' | 'role' | 'avatar'>;
 }
 
+/**
+ * 用户登录
+ * @param data
+ * @returns
+ */
+export function login(data: Partial<LoginData>) {
+  data = useCloned(data).cloned.value;
+  const { type } = data;
+  delete data.type;
+
+  if (type === LOGIN_TYPE.ACCOUNT) {
+    /**
+     * 账户登录
+     */
+    delete data.phone;
+    delete data.captcha;
+  } else if (type === LOGIN_TYPE.MOBILE) {
+    /**
+     * 验证码登录
+     */
+    delete data.account;
+    delete data.password;
+  }
+
+  return axios.post<LoginRes>(`${prefix}/auth/login`, data, {
+    params: { type },
+  });
+}
+
+/**
+ * 用户注销
+ * @returns
+ */
 export function logout() {
-  return axios.post<LoginRes>('/api/user/logout');
+  return axios.post<null>(`${prefix}/auth/logout`);
 }
 
-export function getUserInfo() {
-  return axios.post<UserState>('/api/user/info');
-}
-
-export function getMenuList() {
-  return axios.post<RouteRecordNormalized[]>('/api/user/menu');
+/**
+ * 用户信息
+ * @returns
+ */
+export function getUserInfo(id: string) {
+  return axios.get<UserState>(`${prefix}/user/${id}`);
 }
