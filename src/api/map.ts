@@ -2,7 +2,7 @@ import axios from 'axios';
 import type { FeatureCollection } from '@/types/geo';
 import type { ListResult } from '@/types/global';
 import type { HttpResponse } from '@/types/request';
-
+import { prefix } from './base';
 /**
  *
  * @param {any} params
