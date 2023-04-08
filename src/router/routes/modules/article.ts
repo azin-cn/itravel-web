@@ -1,17 +1,17 @@
 import { RouteRecordRaw } from 'vue-router';
 import { DEFAULT_LAYOUT } from '../base';
 
-const SPOT_ROUTE: RouteRecordRaw = {
-  path: '/spot',
+const ARTICLE_ROUTE: RouteRecordRaw = {
+  path: '/article',
   component: DEFAULT_LAYOUT,
   meta: {
     requiresAuth: false,
   },
   children: [
     {
-      path: ':spotId',
-      name: 'spot',
-      component: () => import('@/views/spot/index.vue'),
+      name: 'article',
+      path: ':articleId',
+      component: () => import('@/views/article/index.vue'),
       meta: {
         requiresAuth: false,
       },
@@ -19,4 +19,4 @@ const SPOT_ROUTE: RouteRecordRaw = {
   ],
 };
 
-export default SPOT_ROUTE;
+export default ARTICLE_ROUTE;

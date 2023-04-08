@@ -23,40 +23,7 @@ const router = createRouter({
         requiresAuth: false,
       },
     },
-    {
-      path: '/spot',
-      component: DEFAULT_LAYOUT,
-      meta: {
-        requiresAuth: false,
-      },
-      children: [
-        {
-          name: 'spot',
-          path: ':spotId',
-          component: () => import('@/views/article/index.vue'),
-          meta: {
-            requiresAuth: false,
-          },
-        },
-      ],
-    },
-    {
-      path: '/article',
-      component: DEFAULT_LAYOUT,
-      meta: {
-        requiresAuth: false,
-      },
-      children: [
-        {
-          name: 'article',
-          path: ':articleId',
-          component: () => import('@/views/article/index.vue'),
-          meta: {
-            requiresAuth: false,
-          },
-        },
-      ],
-    },
+
     {
       path: '/userinfo/:userId',
       name: 'userinfo',
