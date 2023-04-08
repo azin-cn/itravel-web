@@ -7,10 +7,10 @@
   import { useStorage } from '@vueuse/core';
   import { useUserStore } from '@/store';
   import useLoading from '@/hooks/loading';
-  import { LOGIN_TYPE } from '@/api/user';
+  import { AUTH_TYPE } from '@/api/user';
   import type { AuthData } from '@/api/user';
   import { isMobile } from '@/utils/validate';
-  import { redirectHomeOrDefault } from '@/router/utils';
+  import { redirectHomeOrDefault, redirectRegister } from '@/router/utils';
 
   const router = useRouter();
   const { t } = useI18n();
@@ -24,7 +24,7 @@
     password: '',
   });
 
-  const userInfo = reactive<AuthData>({
+  const userInfo = reactive<Partial<AuthData>>({
     account: loginConfig.value.account,
     password: loginConfig.value.password,
     phone: '',
@@ -38,7 +38,7 @@
   });
 
   const onCaptchaClick = async () => {
-    if (!isMobile(userInfo.phone)) {
+    if (!isMobile(userInfo.phone as string)) {
       Message.error('请输入正确的手机号');
       return;
     }
@@ -111,22 +111,23 @@
       <div class="tabs">
         <a
           class="tab tab-bordered"
-          :class="userInfo.type === LOGIN_TYPE.ACCOUNT ? 'tab-active' : ''"
+          :class="userInfo.type === AUTH_TYPE.ACCOUNT ? 'tab-active' : ''"
           @click="changeLoginType(1)"
         >
           账号登录
         </a>
         <a
           class="tab tab-bordered"
-          :class="userInfo.type === LOGIN_TYPE.MOBILE ? 'tab-active' : ''"
+          :class="userInfo.type === AUTH_TYPE.MOBILE ? 'tab-active' : ''"
           @click="changeLoginType(2)"
         >
           短信登录
         </a>
       </div>
     </a-form-item>
+
     <!-- 账户登录 -->
-    <template v-if="userInfo.type === LOGIN_TYPE.ACCOUNT">
+    <template v-if="userInfo.type === AUTH_TYPE.ACCOUNT">
       <a-form-item
         field="account"
         :rules="[{ required: true, message: $t('login.form.userName.errMsg') }]"
@@ -162,7 +163,7 @@
     </template>
 
     <!-- 手机验证码登录 -->
-    <div v-if="userInfo.type === LOGIN_TYPE.MOBILE">
+    <div v-if="userInfo.type === AUTH_TYPE.MOBILE">
       <a-form-item
         field="phone"
         :rules="[{ required: true, message: $t('请输入手机号') }]"
@@ -179,6 +180,7 @@
           </template>
         </a-input>
       </a-form-item>
+
       <a-form-item
         field="captcha"
         :rules="[{ required: true, message: '请输入验证码' }]"
@@ -210,7 +212,7 @@
 
     <a-space :size="16" class="justify-around">
       <a-checkbox
-        v-if="userInfo.type === LOGIN_TYPE.ACCOUNT"
+        v-if="userInfo.type === AUTH_TYPE.ACCOUNT"
         checked="rememberPassword"
         :model-value="loginConfig.rememberPassword"
         @change="setRememberPassword as any"
@@ -222,7 +224,12 @@
         登录
       </a-button>
 
-      <a-button type="text" long class="login-form-register-btn">
+      <a-button
+        type="text"
+        long
+        class="login-form-register-btn"
+        @click.stop="redirectRegister"
+      >
         注册
       </a-button>
     </a-space>
