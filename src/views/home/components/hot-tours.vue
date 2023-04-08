@@ -3,7 +3,7 @@
   import { useRouter } from 'vue-router';
   import { getHotSpots } from '@/api/spot';
   import type { ITour } from '@/api/spot';
-  import { redirectArticle } from '@/router/utils';
+  import { redirectSpot } from '@/router/utils';
 
   export type MixTour = ITour & {
     clickButton: (articleId: string) => void;
@@ -62,7 +62,7 @@
             </p>
             <button
               class="btn btn-primary"
-              @click.stop="redirectArticle(item.id as string)"
+              @click.stop="redirectSpot(item.id as string)"
             >
               {{ buttonText || 'Get Started' }}
             </button>
@@ -107,7 +107,7 @@
               <div class="card-actions justify-end">
                 <button
                   class="btn btn-primary"
-                  @click.stop="redirectArticle(item.id)"
+                  @click.stop="redirectSpot(item.id)"
                 >
                   Watch
                 </button>
@@ -152,7 +152,7 @@
               <div class="card-actions justify-end">
                 <button
                   class="btn btn-primary"
-                  @click.stop="redirectArticle(item.id)"
+                  @click.stop="redirectSpot(item.id)"
                 >
                   Watch
                 </button>

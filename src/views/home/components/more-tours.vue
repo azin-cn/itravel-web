@@ -2,7 +2,7 @@
   import { ref, onMounted } from 'vue';
   import { getRandSpots } from '@/api/spot';
   import type { ITour } from '@/api/spot';
-  import { redirectArticle } from '@/router/utils';
+  import { redirectSpot } from '@/router/utils';
   import { limitMaxLength } from '@/utils/string';
 
   const tours = ref<ITour[]>();
@@ -42,7 +42,7 @@
               </a>
             </p>
             <div class="card-actions justify-end">
-              <button class="btn btn-primary" @click="redirectArticle(item.id)">
+              <button class="btn btn-primary" @click="redirectSpot(item.id)">
                 Watch
               </button>
             </div>
@@ -74,7 +74,7 @@
               </a>
             </p>
             <div class="card-actions justify-end">
-              <button class="btn btn-primary" @click="redirectArticle(item.id)">
+              <button class="btn btn-primary" @click="redirectSpot(item.id)">
                 Watch
               </button>
             </div>
