@@ -38,8 +38,9 @@ export default function setupUserLoginInfoGuard(router: Router) {
         }
       }
     } else if (to.name === 'login') {
+      const isRegister = from.name === 'register';
       to.query = {
-        redirect: from.name || 'home',
+        redirect: isRegister ? 'home' : from.name,
         ...to.query,
       } as LocationQuery;
       next();
