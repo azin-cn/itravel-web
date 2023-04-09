@@ -1,7 +1,6 @@
 import axios from 'axios';
 import qs from 'qs';
-
-export const baseURL = 'http://localhost:7000';
+import { prefix } from './base';
 
 /**
  * 景点基础数据类型
@@ -52,7 +51,7 @@ export function getSpotCount(params: Partial<SpotModel> = {}) {
     return target;
   }, {} as any);
 
-  return axios.get<RegionModel[]>(`${baseURL}/spot/area_counts`, {
+  return axios.get<RegionModel[]>(`${prefix}/spot/area_counts`, {
     params,
   });
 }
@@ -74,7 +73,7 @@ export type SpecialModel = Partial<MonthORFeatureBaseModel>;
  * @returns
  */
 export function getMonths() {
-  return axios.get<MonthModel[]>(`${baseURL}/month`);
+  return axios.get<MonthModel[]>(`${prefix}/month`);
 }
 
 /**
@@ -82,7 +81,7 @@ export function getMonths() {
  * @returns
  */
 export function getSpecials() {
-  return axios.get<SpecialModel[]>(`${baseURL}/feature`);
+  return axios.get<SpecialModel[]>(`${prefix}/feature`);
 }
 
 /**
@@ -107,7 +106,7 @@ export interface ITour {
  * @returns
  */
 export function getHotSpots(params: PartialSpotModel = {}) {
-  return axios.get<ITour[]>(`${baseURL}/spot/area_spots`, { params });
+  return axios.get<ITour[]>(`${prefix}/spot/area_spots`, { params });
 }
 
 /**
@@ -116,5 +115,56 @@ export function getHotSpots(params: PartialSpotModel = {}) {
  * @returns
  */
 export function getRandSpots(params: PartialSpotModel = {}) {
-  return axios.get<ITour[]>(`${baseURL}/spot/recom_spots/rand`, { params });
+  return axios.get<ITour[]>(`${prefix}/spot/recom_spots/rand`, { params });
+}
+
+/**
+ * 区域信息模型
+ */
+export interface RegionInfoModel {
+  id: string;
+  name: string;
+  fullName: string;
+  weight: number;
+  aid?: string;
+  bid?: string;
+  tid?: string;
+}
+
+/**
+ * 景点信息模型
+ */
+export interface SpotBreifInfoModel {
+  id: string;
+  name: string;
+  description: string;
+  thumbUrl: string;
+  createdTime?: string;
+  updatedTime?: string;
+  province: RegionInfoModel;
+  city: RegionInfoModel;
+}
+
+/**
+ * 获取景点信息
+ * @param id
+ * @returns
+ */
+export function getSpotBriefInfo(id: string) {
+  return axios.get<SpotBreifInfoModel>(`${prefix}/spot/${id}`);
+}
+
+/**
+ * features and month
+ */
+export type FMInfoModel = Omit<SpotBreifInfoModel, 'province' | 'city'> & {
+  months: MonthORFeatureBaseModel[];
+  features: MonthORFeatureBaseModel[];
+};
+
+/**
+ * 获取景点特色、月份
+ */
+export function getSpotMonthsAndFeatures(id: string) {
+  return axios.get<FMInfoModel>(`${prefix}/spot/fm/${id}`);
 }
