@@ -18,7 +18,7 @@
   import useECharts from './use-echarts';
   import useSeries from './use-series';
   import HotTours from './components/hot-tours.vue';
-  import MoreTours from './components/more-tours.vue';
+  import MoreTours from '../components/spot/more-tours.vue';
 
   const router = useRouter();
   const { getNewMap } = useMap();
