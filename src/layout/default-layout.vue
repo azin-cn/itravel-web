@@ -9,7 +9,9 @@
 <template>
   <div class="layout">
     <a-layout style="min-height: 400px">
-      <a-layout-header> <IHeader /> </a-layout-header>
+      <a-layout-header class="sticky top-0 w-full">
+        <IHeader />
+      </a-layout-header>
       <a-layout>
         <a-layout-content>
           <PageLayout />
