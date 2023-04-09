@@ -9,6 +9,9 @@
     SpotBreifInfoModel,
   } from '@/api/spot';
   import { limitMaxLength } from '@/utils/string';
+  import * as settings from '@/config/settings.json';
+  import ArticleBrief from '../components/article/article-brief.vue';
+  import Recom from './components/recom.vue';
 
   const route = useRoute();
   const spotBreifInfo = ref<SpotBreifInfoModel>();
@@ -35,6 +38,8 @@
 
     spotBreifInfo.value = breifInfo;
     spotFMInfo.value = fmInfo;
+
+    document.title = `${settings.title} - ${breifInfo.name}`;
   };
   init();
 </script>
@@ -57,6 +62,11 @@
           <!-- <button class="btn btn-primary">Get Started</button> -->
         </div>
       </div>
+    </div>
+
+    <div class="2xl:container mx-auto text-gray-700 text-left">
+      <ArticleBrief></ArticleBrief>
+      <Recom></Recom>
     </div>
   </div>
 </template>
