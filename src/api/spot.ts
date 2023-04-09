@@ -168,3 +168,5 @@ export type FMInfoModel = Omit<SpotBreifInfoModel, 'province' | 'city'> & {
 export function getSpotMonthsAndFeatures(id: string) {
   return axios.get<FMInfoModel>(`${prefix}/spot/fm/${id}`);
 }
+
+export function getSpotArticles(id: string) {}
