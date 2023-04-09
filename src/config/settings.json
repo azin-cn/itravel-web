@@ -14,5 +14,6 @@
   "tabBar": false,
   "menuFromServer": false,
   "serverMenu": [],
-  "title": "Itravel"
+  "title": "Itravel",
+  "authorUrl": "https://github.com/azin-cn"
 }
