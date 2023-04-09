@@ -5,6 +5,12 @@
   import { redirectSpot } from '@/router/utils';
   import { limitMaxLength } from '@/utils/string';
 
+  export interface IProps {
+    line: 1 | 2;
+  }
+
+  const props = withDefaults(defineProps<IProps>(), { line: 2 });
+
   const tours = ref<ITour[]>();
 
   const init = async () => {
@@ -52,7 +58,7 @@
     </div>
 
     <!-- 后四个 -->
-    <div class="flex justify-around">
+    <div v-if="line === 2" class="flex justify-around">
       <template v-for="(item, index) in tours" :key="item.id">
         <div
           v-if="index >= 4"
