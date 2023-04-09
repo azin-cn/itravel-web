@@ -9,7 +9,7 @@
 <template>
   <div class="layout">
     <a-layout style="min-height: 400px">
-      <a-layout-header class="sticky top-0 w-full">
+      <a-layout-header class="sticky top-0 w-full z-10">
         <IHeader />
       </a-layout-header>
       <a-layout>
