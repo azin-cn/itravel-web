@@ -45,7 +45,7 @@ export interface IPaginationOpton {
  */
 export function getSpotBriefInfoOfArticles(
   id: string,
-  params: Partial<IPaginationOptons> = {}
+  params: Partial<IPaginationOpton> = {}
 ) {
   return axios.get<ListResult<ArticleBriefInfo>>(
     `${prefix}/article/spot/${id}`,
