@@ -18,6 +18,7 @@
   import * as settings from '@/config/settings.json';
   import { ListResult } from '@/types/global';
   import IPagination from '@/views/components/pagination/index.vue';
+  import ArticleBrief from '@/views/components/article/article-brief.vue';
   import useFM from './use-fm';
   import useArticle from './use-article';
   import Recom from './components/recom.vue';
@@ -114,6 +115,30 @@
           <IconFont type="icon-youjiantou4"></IconFont>
         </h2>
       </div>
+
+      <a-layout class="mr-10 ml-10">
+        <a-layout>
+          <a-layout-content class="pb-1">
+            <ArticleBrief
+              :img-url="spotBreifInfo?.thumbUrl"
+              :list="spotBriefArticles?.list as ArticleBriefInfo[]"
+            />
+
+            <IPagination
+              :on-page-change="onPageChange"
+              :page="page"
+              :total="spotBriefArticles?.total"
+            ></IPagination>
+          </a-layout-content>
+
+          <a-layout-sider
+            :resize-directions="['left']"
+            style="min-width: 25%; max-width: 50%"
+          >
+            Sider
+          </a-layout-sider>
+        </a-layout>
+      </a-layout>
 
       <Recom></Recom>
     </div>
