@@ -31,8 +31,9 @@
 <template>
   <a-layout class="mr-10 ml-10">
     <a-layout>
-      <a-layout-content class="pb-1"> </a-layout-content>
-      <slot name="content"><a-empty /></slot>
+      <a-layout-content class="pb-1">
+        <slot name="content"> <a-empty></a-empty> </slot>
+      </a-layout-content>
       <a-layout-sider
         :resize-directions="['left']"
         style="min-width: 26%; max-width: 50%"
