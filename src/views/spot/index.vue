@@ -1,21 +1,53 @@
 <script lang="ts" setup>
   import { ref } from 'vue';
   import { useRoute } from 'vue-router';
-  import { redirectHome } from '@/router/utils';
+  import { redirectArticle, redirectHome } from '@/router/utils';
   import {
     getSpotBriefInfo,
     getSpotMonthsAndFeatures,
     FMInfoModel,
     SpotBreifInfoModel,
+    MonthORFeatureBaseModel,
   } from '@/api/spot';
-  import { limitMaxLength } from '@/utils/string';
+  import {
+    getSpotBriefInfoOfArticles,
+    ArticleBriefInfo,
+    IPaginationOpton,
+  } from '@/api/article';
+  import { limitMaxLength, formatNumber } from '@/utils/format';
   import * as settings from '@/config/settings.json';
-  import ArticleBrief from '../components/article/article-brief.vue';
+  import { ListResult } from '@/types/global';
+  import IPagination from '@/views/components/pagination/index.vue';
+  import useFM from './use-fm';
+  import useArticle from './use-article';
   import Recom from './components/recom.vue';
+  import FM from './components/f-m.vue';
 
   const route = useRoute();
+  const { sortMonths } = useFM();
+  const { onArticleShare } = useArticle();
   const spotBreifInfo = ref<SpotBreifInfoModel>();
   const spotFMInfo = ref<FMInfoModel>();
+  const spotBriefArticles = ref<ListResult<ArticleBriefInfo>>();
+
+  const page = ref(1);
+  const onPageChange = async (v: number) => {
+    page.value = v;
+    /**
+     * request new data
+     */
+    const params = {
+      limit: 10,
+      page: v,
+    } as IPaginationOpton;
+
+    const { data: briefArticles } = await getSpotBriefInfoOfArticles(
+      spotBreifInfo.value?.id as string,
+      params
+    );
+    spotBriefArticles.value = briefArticles;
+  };
+
   const init = async () => {
     /**
      * 携带参数进入路由
@@ -31,13 +63,17 @@
       return;
     }
 
-    const [{ data: breifInfo }, { data: fmInfo }] = await Promise.all([
-      getSpotBriefInfo(spotId as string),
-      getSpotMonthsAndFeatures(spotId as string),
-    ]);
+    const [{ data: breifInfo }, { data: fmInfo }, { data: briefArticles }] =
+      await Promise.all([
+        getSpotBriefInfo(spotId as string),
+        getSpotMonthsAndFeatures(spotId as string),
+        getSpotBriefInfoOfArticles(spotId as string),
+      ]);
 
+    fmInfo.months = sortMonths(fmInfo.months) as MonthORFeatureBaseModel[];
     spotBreifInfo.value = breifInfo;
     spotFMInfo.value = fmInfo;
+    spotBriefArticles.value = briefArticles;
 
     document.title = `${settings.title} - ${breifInfo.name}`;
   };
@@ -59,14 +95,58 @@
           <p class="mb-5">
             {{ limitMaxLength(spotFMInfo?.description || '暂无数据', 300) }}
           </p>
-          <!-- <button class="btn btn-primary">Get Started</button> -->
         </div>
       </div>
     </div>
 
     <div class="2xl:container mx-auto text-gray-700 text-left">
-      <ArticleBrief></ArticleBrief>
+      <FM
+        :features="spotFMInfo?.features as any"
+        :months="spotFMInfo?.months as any"
+        :province="spotBreifInfo?.province.name"
+        :city="spotBreifInfo?.city.name"
+      ></FM>
+
+      <div class="m-12">
+        <h2 class="text-xl link link-hover inline-block" @click.stop="() => {}">
+          <IconFont type="icon-lvyou4"></IconFont>
+          相关分享贴
+          <IconFont type="icon-youjiantou4"></IconFont>
+        </h2>
+      </div>
+
       <Recom></Recom>
     </div>
   </div>
 </template>
+
+<style scoped lang="less">
+  .hover-card,
+  .hover-img {
+    transition: all 0.3s;
+  }
+
+  .hover-img:hover {
+    transform: scale(1.14);
+    transform-origin: 0 center;
+  }
+
+  .icon-click {
+    transition: all 0.3s;
+  }
+
+  .icon-click:active {
+    transform: scale(1.2);
+
+    /* 解决active时长太短问题 */
+    transition: 0s;
+  }
+
+  :deep(.itravel-pagination) {
+    .arco-pagination-item-active,
+    .arco-pagination-item-active:hover {
+      color: hsl(var(--pf, var(--p)) / var(--tw-text-opacity));
+      background-color: unset;
+    }
+  }
+</style>
