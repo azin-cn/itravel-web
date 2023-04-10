@@ -41,8 +41,8 @@
             <p>{{ limitMaxLength(item.summary || item.content) }}</p>
           </div>
 
-          <div class="text-left link-primary text-sm">
-            <p>
+          <div class="text-left text-sm">
+            <p class="inline-block link-primary">
               <IconFont type="icon-shijian" />
               {{ new Date(item.publishTime).toLocaleString() }}
             </p>
