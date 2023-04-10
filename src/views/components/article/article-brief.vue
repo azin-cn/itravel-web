@@ -24,7 +24,7 @@
         <img
           :src="item.thumbUrl || imgUrl"
           class="rounded-lg shadow-xl hover-img cursor-pointer"
-          alt="Movie"
+          :alt="item.title"
           :style="{ width: '24%' }"
           loading="lazy"
           @click.stop="redirectArticle(item.id)"
