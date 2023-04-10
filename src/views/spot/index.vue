@@ -155,23 +155,4 @@
     transform: scale(1.14);
     transform-origin: 0 center;
   }
-
-  .icon-click {
-    transition: all 0.3s;
-  }
-
-  .icon-click:active {
-    transform: scale(1.2);
-
-    /* 解决active时长太短问题 */
-    transition: 0s;
-  }
-
-  :deep(.itravel-pagination) {
-    .arco-pagination-item-active,
-    .arco-pagination-item-active:hover {
-      color: hsl(var(--pf, var(--p)) / var(--tw-text-opacity));
-      background-color: unset;
-    }
-  }
 </style>

@@ -37,3 +37,13 @@
     />
   </div>
 </template>
+
+<style lang="less" scoped>
+  :deep(.itravel-pagination) {
+    .arco-pagination-item-active,
+    .arco-pagination-item-active:hover {
+      color: hsl(var(--pf, var(--p)) / var(--tw-text-opacity));
+      background-color: unset;
+    }
+  }
+</style>
