@@ -28,7 +28,7 @@
 </script>
 
 <template>
-  <div class="flex justify-center">
+  <div v-if="total" class="flex justify-center">
     <a-pagination
       :total="total"
       :current="current"
