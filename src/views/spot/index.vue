@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { ref } from 'vue';
+  import { ref, computed } from 'vue';
   import { useRoute } from 'vue-router';
   import { redirectArticle, redirectHome } from '@/router/utils';
   import {
@@ -58,10 +58,27 @@
     spotRandArticles.value = data;
   };
   const onRandUserRefresh = async () => {
-    console.log('refresh');
     const { data } = await getRandUsers();
     spotRandUsers.value = data;
   };
+
+  const siderLimit = computed(() => {
+    const { list } = spotBriefArticles.value || {};
+    /**
+     * 不存在返回 3
+     */
+    if (!list) return 3;
+
+    /**
+     * 如果article list的长度小于四，则分别限制randArticles和randUsers的长度为6
+     */
+    if (list.length < 4) return 6;
+
+    /**
+     * 最长十条
+     */
+    return 10;
+  });
 
   const init = async () => {
     /**
@@ -162,11 +179,13 @@
             <ArticleMini
               :list="spotRandArticles as ArticleBriefInfo[]"
               :refresh="onRandArticleRefesh"
+              :limit="siderLimit"
             />
 
             <UserMini
               :list="spotRandUsers as UserState[]"
               :refresh="onRandUserRefresh"
+              :limit="siderLimit"
             />
           </a-layout-sider>
         </a-layout>
@@ -178,26 +197,7 @@
 </template>
 
 <style scoped lang="less">
-  .hover-card,
-  .hover-img {
-    transition: all 0.3s;
-  }
-
-  .hover-img:hover {
-    transform: scale(1.14);
-    transform-origin: 0 center;
-  }
-
   .itravel-spot-layout__sider :deep(.arco-layout-sider-children) {
     justify-content: flex-start;
-  }
-
-  .icon-click-rotate {
-    transition: all 0.3s;
-  }
-
-  .icon-click-rotate:active {
-    transform: rotate(-360deg);
-    transition: 0s;
   }
 </style>
