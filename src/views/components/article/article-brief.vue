@@ -101,4 +101,13 @@
     /* 解决active时长太短问题 */
     transition: 0s;
   }
+
+  .hover-img {
+    transition: all 0.3s;
+  }
+
+  .hover-img:hover {
+    transform: scale(1.14);
+    transform-origin: 0 center;
+  }
 </style>
