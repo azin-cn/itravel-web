@@ -22,6 +22,7 @@ export interface UserState {
   avatar?: string;
   description?: string;
   title?: string;
+  visitors?: number;
   createdTime?: string;
   updatedTime?: string;
 }
