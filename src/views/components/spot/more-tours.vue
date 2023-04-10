@@ -40,7 +40,7 @@
             alt="Shoes"
           />
           <div class="card-body">
-            <h2 class="card-title"> {{ item.name }} </h2>
+            <h2 class="text-xl font-semibold truncate"> {{ item.name }} </h2>
             <p>
               {{ limitMaxLength(item.description) }}
               <a class="link link-hover link-primary">
@@ -72,7 +72,7 @@
             alt="Shoes"
           />
           <div class="card-body">
-            <h2 class="card-title"> {{ item.name }} </h2>
+            <h2 class="text-xl font-semibold truncate"> {{ item.name }} </h2>
             <p>
               {{ limitMaxLength(item.description) }}
               <a class="link link-hover link-primary">
@@ -106,7 +106,7 @@
 
   .hover-card,
   .hover-img {
-    transition: all 0.2s;
+    transition: all 0.3s;
   }
 
   .hover-card:hover {
