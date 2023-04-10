@@ -20,7 +20,7 @@
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="less">
   .layout :deep(.arco-layout-header),
   .layout :deep(.arco-layout-footer),
   .layout :deep(.arco-layout-sider-children),
@@ -33,6 +33,10 @@
     font-size: 16px;
     font-stretch: condensed;
     text-align: center;
+    background-color: hsla(var(--b1) / var(--tw-bg-opacity, 1));
+    // 后代元素中包含 .arco-layout
+    // &::has(.arco-layout) {
+    // }
   }
 
   .layout :deep(.arco-layout-sider) {
