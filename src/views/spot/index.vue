@@ -13,23 +13,28 @@
     getSpotBriefInfoOfArticles,
     ArticleBriefInfo,
     IPaginationOpton,
+    getRandArticles,
   } from '@/api/article';
+  import { getRandUsers } from '@/api/user';
+  import { UserState } from '@/store/modules/user/types';
   import { limitMaxLength, formatNumber } from '@/utils/format';
   import * as settings from '@/config/settings.json';
   import { ListResult } from '@/types/global';
   import IPagination from '@/views/components/pagination/index.vue';
   import ArticleBrief from '@/views/components/article/article-brief.vue';
+  import ArticleMini from '@/views/components/article/article-mini.vue';
+  import UserMini from '@/views/components/user/user-mini.vue';
   import useFM from './use-fm';
-  import useArticle from './use-article';
   import Recom from './components/recom.vue';
   import FM from './components/f-m.vue';
 
   const route = useRoute();
   const { sortMonths } = useFM();
-  const { onArticleShare } = useArticle();
   const spotBreifInfo = ref<SpotBreifInfoModel>();
   const spotFMInfo = ref<FMInfoModel>();
   const spotBriefArticles = ref<ListResult<ArticleBriefInfo>>();
+  const spotRandArticles = ref<ArticleBriefInfo[]>();
+  const spotRandUsers = ref<UserState[]>();
 
   const page = ref(1);
   const onPageChange = async (v: number) => {
@@ -48,6 +53,15 @@
     );
     spotBriefArticles.value = briefArticles;
   };
+  const onRandArticleRefesh = async () => {
+    const { data } = await getRandArticles();
+    spotRandArticles.value = data;
+  };
+  const onRandUserRefresh = async () => {
+    console.log('refresh');
+    const { data } = await getRandUsers();
+    spotRandUsers.value = data;
+  };
 
   const init = async () => {
     /**
@@ -64,17 +78,26 @@
       return;
     }
 
-    const [{ data: breifInfo }, { data: fmInfo }, { data: briefArticles }] =
-      await Promise.all([
-        getSpotBriefInfo(spotId as string),
-        getSpotMonthsAndFeatures(spotId as string),
-        getSpotBriefInfoOfArticles(spotId as string),
-      ]);
+    const [
+      { data: breifInfo },
+      { data: fmInfo },
+      { data: briefArticles },
+      { data: randArticles },
+      { data: randUsers },
+    ] = await Promise.all([
+      getSpotBriefInfo(spotId as string),
+      getSpotMonthsAndFeatures(spotId as string),
+      getSpotBriefInfoOfArticles(spotId as string),
+      getRandArticles(),
+      getRandUsers(),
+    ]);
 
     fmInfo.months = sortMonths(fmInfo.months) as MonthORFeatureBaseModel[];
     spotBreifInfo.value = breifInfo;
     spotFMInfo.value = fmInfo;
     spotBriefArticles.value = briefArticles;
+    spotRandArticles.value = randArticles;
+    spotRandUsers.value = randUsers;
 
     document.title = `${settings.title} - ${breifInfo.name}`;
   };
@@ -133,9 +156,18 @@
 
           <a-layout-sider
             :resize-directions="['left']"
-            style="min-width: 25%; max-width: 50%"
+            style="min-width: 26%; max-width: 50%"
+            class="itravel-spot-layout__sider"
           >
-            Sider
+            <ArticleMini
+              :list="spotRandArticles as ArticleBriefInfo[]"
+              :refresh="onRandArticleRefesh"
+            />
+
+            <UserMini
+              :list="spotRandUsers as UserState[]"
+              :refresh="onRandUserRefresh"
+            />
           </a-layout-sider>
         </a-layout>
       </a-layout>
@@ -154,5 +186,18 @@
   .hover-img:hover {
     transform: scale(1.14);
     transform-origin: 0 center;
+  }
+
+  .itravel-spot-layout__sider :deep(.arco-layout-sider-children) {
+    justify-content: flex-start;
+  }
+
+  .icon-click-rotate {
+    transition: all 0.3s;
+  }
+
+  .icon-click-rotate:active {
+    transform: rotate(-360deg);
+    transition: 0s;
   }
 </style>
