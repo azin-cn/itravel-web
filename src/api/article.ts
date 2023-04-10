@@ -18,6 +18,7 @@ interface Author {
 export interface ArticleBriefInfo {
   id: string;
   title: string;
+  thumbUrl: string;
   summary: string;
   content: string;
   viewCount: number;
