@@ -178,13 +178,8 @@
     text-overflow: ellipsis;
   }
 
-  .hover-card,
   .hover-img {
     transition: all 0.2s;
-  }
-
-  .hover-card:hover {
-    @apply w-1/2;
   }
 
   .hover-img:hover {
