@@ -3,7 +3,7 @@
   import { getRandSpots } from '@/api/spot';
   import type { ITour } from '@/api/spot';
   import { redirectSpot } from '@/router/utils';
-  import { limitMaxLength } from '@/utils/string';
+  import { limitMaxLength } from '@/utils/format';
 
   export interface IProps {
     line: 1 | 2;
