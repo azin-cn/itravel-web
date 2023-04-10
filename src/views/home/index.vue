@@ -19,6 +19,7 @@
   import useSeries from './use-series';
   import HotTours from './components/hot-tours.vue';
   import MoreTours from '../components/spot/more-tours.vue';
+  import MoreToursTitle from '../components/spot/more-tours-title.vue';
 
   const router = useRouter();
   const { getNewMap } = useMap();
@@ -358,43 +359,10 @@
     </section>
 
     <section>
-      <div class="m-12">
-        <h2 class="text-xl link link-hover inline-block" @click.stop="() => {}">
-          <IconFont type="icon-zhilupai"></IconFont>
-          更多旅游景点
-          <IconFont type="icon-youjiantou4"></IconFont>
-        </h2>
-      </div>
+      <MoreToursTitle></MoreToursTitle>
       <MoreTours></MoreTours>
     </section>
   </div>
 
   <IFooter></IFooter>
 </template>
-
-<style scoped>
-  /* less 结合 tailwind 会出现问题 */
-  .card-title {
-    min-width: 0;
-    max-width: 200px;
-  }
-
-  .truncate {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-
-  .hover-card,
-  .hover-img {
-    transition: all 0.3s;
-  }
-
-  .hover-card:hover {
-    @apply w-1/2;
-  }
-
-  .hover-img:hover {
-    transform: scale(1.14);
-  }
-</style>
