@@ -10,9 +10,11 @@
       <a-layout-header class="sticky top-0 w-full z-10">
         <IHeader />
       </a-layout-header>
-      <a-layout-content>
-        <PageLayout />
-      </a-layout-content>
+      <a-layout>
+        <a-layout-content>
+          <PageLayout />
+        </a-layout-content>
+      </a-layout>
       <a-layout-footer>
         <IFooter></IFooter>
       </a-layout-footer>
