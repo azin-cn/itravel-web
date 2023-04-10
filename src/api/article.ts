@@ -52,3 +52,11 @@ export function getSpotBriefInfoOfArticles(
     { params }
   );
 }
+
+/**
+ * 获取随机的文章，十条
+ * @returns
+ */
+export function getRandArticles() {
+  return axios.get<ArticleBriefInfo[]>(`${prefix}/article/recom_article/rand`);
+}
