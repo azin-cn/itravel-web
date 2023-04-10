@@ -89,3 +89,16 @@
   </div>
   <div v-else><a-empty /></div>
 </template>
+
+<style scoped>
+  .icon-click {
+    transition: all 0.3s;
+  }
+
+  .icon-click:active {
+    transform: scale(1.2);
+
+    /* 解决active时长太短问题 */
+    transition: 0s;
+  }
+</style>
