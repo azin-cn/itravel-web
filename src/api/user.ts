@@ -91,3 +91,11 @@ export function logout() {
 export function getUserInfo(id: string) {
   return axios.get<UserState>(`${prefix}/user/${id}`);
 }
+
+/**
+ * 获取随机的用户
+ * @returns
+ */
+export function getRandUsers() {
+  return axios.get<UserState[]>(`${prefix}/user/recom_user/rand`);
+}
