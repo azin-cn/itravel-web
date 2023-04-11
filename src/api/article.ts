@@ -6,6 +6,7 @@ import { prefix, BaseModel } from './base';
 interface Spot {
   id: string;
   name: string;
+  thumbUrl: string;
   description: string;
 }
 

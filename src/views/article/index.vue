@@ -108,14 +108,14 @@
             <a-image
               class="flex-1 m-2 overflow-hidden"
               style="height: 216px; border-radius: 8px"
-              :src="articleInfo?.thumbUrl"
+              :src="articleInfo?.thumbUrl || articleInfo?.spot.thumbUrl"
               :alt="articleInfo?.title"
             />
           </div>
 
           <!-- 文章主体 -->
 
-          <!-- <a-image-preview-group infinite>
+          <a-image-preview-group infinite>
             <a-space>
               <a-image
                 src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/cd7a1aaea8e1c5e3d26fe2591e561798.png~tplv-uwbnlip3yd-webp.webp"
@@ -134,7 +134,7 @@
                 width="200"
               />
             </a-space>
-          </a-image-preview-group> -->
+          </a-image-preview-group>
         </div>
       </template>
     </SiderLayout>
