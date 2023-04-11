@@ -12,3 +12,11 @@ export const isProd = process.env.NODE_ENV === 'production';
 export const prefix = isProd
   ? 'http://localhost:7000'
   : 'http://localhost:7000';
+
+/**
+ * 基础数据类型
+ */
+export interface BaseModel {
+  id: string;
+  name: string;
+}

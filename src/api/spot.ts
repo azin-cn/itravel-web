@@ -1,14 +1,6 @@
 import axios from 'axios';
 import qs from 'qs';
-import { prefix } from './base';
-
-/**
- * 景点基础数据类型
- */
-export interface BaseModel {
-  id: string;
-  name: string;
-}
+import { prefix, BaseModel } from './base';
 
 /**
  * 完整景点数据类型
