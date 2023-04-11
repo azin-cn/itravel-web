@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { ListResult } from '@/types/global';
 import { UserState } from '@/store/modules/user/types';
-import { prefix } from './base';
+import { prefix, BaseModel } from './base';
 
 interface Spot {
   id: string;
@@ -17,6 +17,8 @@ export interface ArticleBriefInfo {
   thumbUrl: string;
   summary: string;
   content: string;
+  category: BaseModel;
+  tags: BaseModel[];
   viewCount: number;
   likeCount: number;
   favCount: number;
