@@ -32,7 +32,7 @@
   <a-layout class="mr-10 ml-10">
     <a-layout>
       <a-layout-content class="pb-1">
-        <slot name="content"> <a-empty></a-empty> </slot>
+        <slot name="content"> <a-empty class="w-full"></a-empty> </slot>
       </a-layout-content>
       <a-layout-sider
         :resize-directions="['left']"
