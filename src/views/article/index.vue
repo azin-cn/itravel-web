@@ -2,6 +2,7 @@
   import { ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import { getArticleById, ArticleBriefInfo } from '@/api/article';
+  import { getSpotBriefInfo, SpotBreifInfoModel } from '@/api/spot';
   import { formatNumber } from '@/utils/format';
   import RandRecomSpot from './components/rand-recom-spot.vue';
   import SiderLayout from '../components/layout/sider-layout.vue';
@@ -12,6 +13,7 @@
   const { onArticleShare } = useArticle();
 
   const articleInfo = ref<ArticleBriefInfo>();
+  const spotInfo = ref<SpotBreifInfoModel>();
 
   const init = async () => {
     /**
@@ -24,8 +26,10 @@
       return;
     }
 
-    const { data } = await getArticleById(articleId as string);
-    articleInfo.value = data;
+    const { data: article } = await getArticleById(articleId as string);
+    const { data: spot } = await getSpotBriefInfo(article.spot.id as string);
+    articleInfo.value = article;
+    spotInfo.value = spot;
   };
 
   init();
@@ -43,7 +47,7 @@
           <!-- 作者介绍和缩略图 -->
           <div class="flex items-stretch">
             <div
-              class="flex flex-col justify-center bg-base-100 p-4 mt-2 mb-2 text-gray-700"
+              class="flex flex-col justify-center bg-base-100 p-6 mt-2 mb-2 text-gray-700"
               :style="{
                 'border': '1px solid #fff',
                 'box-shadow': '0 0 2px 0 #ccc',
@@ -89,7 +93,11 @@
                   </span>
                 </div>
                 <div class="mr-2">
-                  <IconFont type="icon-dianzan3" />
+                  <IconFont
+                    type="icon-dianzan3"
+                    class="cursor-pointer icon-click"
+                    @click.stop="() => {}"
+                  />
                   <span class="text-xs link-neutral">
                     {{ articleInfo?.likeCount || formatNumber(120112) }}
                   </span>
@@ -103,17 +111,65 @@
                   />
                 </div>
               </div>
+
+              <!-- 位置 -->
+              <div class="mt-6 text-left">
+                <div class="mr-2">
+                  <IconFont type="icon-nationaarea" class="mr-1" />
+                  <span class="text-sm">
+                    {{
+                      `${spotInfo?.province.name} - ${spotInfo?.city.name}` ||
+                      '暂无数据'
+                    }}
+                  </span>
+                  <div>
+                    <IconFont type="icon-zhishipai" class="mr-1" />
+                    <span class="text-sm">
+                      {{ spotInfo?.name }}
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <a-image
-              class="flex-1 m-2 overflow-hidden"
-              style="height: 216px; border-radius: 8px"
+              show-loader
+              fit="cover"
+              class="flex-1 m-2 overflow-hidden h-60 lg:h-80"
+              style="border-radius: 8px"
               :src="articleInfo?.thumbUrl || articleInfo?.spot.thumbUrl"
               :alt="articleInfo?.title"
             />
           </div>
 
+          <div class="text-left mt-6 mb-6">
+            <h3 class="mb-2 text-lg font-semibold inline-block">
+              <IconFont
+                type="icon--"
+                size="24"
+                class="mr-2 align-text-bottom"
+              />
+              <span>摘要</span>
+            </h3>
+            <p class="text-base" style="text-indent: 2rem">
+              {{ articleInfo?.summary }}
+            </p>
+          </div>
+
           <!-- 文章主体 -->
+          <div class="text-left mt-6 mb-6">
+            <h3 class="mb-2 text-lg font-semibold inline-block">
+              <IconFont
+                type="icon--"
+                size="24"
+                class="mr-2 align-text-bottom"
+              />
+              <span>正文</span>
+            </h3>
+            <p class="text-base" style="text-indent: 2rem">
+              {{ articleInfo?.content }}
+            </p>
+          </div>
 
           <!-- 图片预览 -->
           <div class="text-left">
@@ -148,4 +204,15 @@
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+  .icon-click {
+    transition: all 0.3s;
+  }
+
+  .icon-click:active {
+    transform: scale(1.2);
+
+    /* 解决active时长太短问题 */
+    transition: 0s;
+  }
+</style>
