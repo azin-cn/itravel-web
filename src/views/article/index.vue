@@ -33,7 +33,7 @@
 
 <template>
   <div class="2xl:container mx-auto text-gray-700 text-left">
-    <SiderLayout>
+    <SiderLayout :limit="10">
       <template #content>
         <div class="m-2 flex-1">
           <h1 class="text-2xl font-semibold p-2 truncate">
