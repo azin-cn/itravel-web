@@ -2,7 +2,7 @@
   import { limitMaxLength, formatNumber } from '@/utils/format';
   import { redirectArticle } from '@/router/utils';
   import { ArticleBriefInfo } from '@/api/article';
-  import useArticle from '@/views/spot/use-article';
+  import useArticle from '@/views/components/article/use-article.js';
 
   export interface IProps {
     list: ArticleBriefInfo[];
