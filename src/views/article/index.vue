@@ -5,9 +5,11 @@
   import { formatNumber } from '@/utils/format';
   import RandRecomSpot from './components/rand-recom-spot.vue';
   import SiderLayout from '../components/layout/sider-layout.vue';
+  import useArticle from '../components/article/use-article';
 
   const route = useRoute();
   const router = useRouter();
+  const { onArticleShare } = useArticle();
 
   const articleInfo = ref<ArticleBriefInfo>();
 
@@ -41,7 +43,7 @@
           <!-- 作者介绍和缩略图 -->
           <div class="flex items-stretch">
             <div
-              class="flex items-center bg-base-100 p-2 mt-2 mb-2 text-gray-700"
+              class="flex flex-col justify-center bg-base-100 p-4 mt-2 mb-2 text-gray-700"
               :style="{
                 'border': '1px solid #fff',
                 'box-shadow': '0 0 2px 0 #ccc',
@@ -79,19 +81,15 @@
               </div>
 
               <!-- 点赞 -->
-              <div class="flex items-center">
+              <div class="flex items-center mt-10">
                 <div class="mr-2">
-                  <IconFont type="icon-pinglun3" 、 />
+                  <IconFont type="icon-pinglun3" />
                   <span class="text-xs link-neutral">
                     {{ articleInfo?.commentCount || formatNumber(120012) }}
                   </span>
                 </div>
                 <div class="mr-2">
-                  <IconFont
-                    type="icon-dianzan3"
-                    class="cursor-pointer icon-click"
-                    @click.stop="() => {}"
-                  />
+                  <IconFont type="icon-dianzan3" />
                   <span class="text-xs link-neutral">
                     {{ articleInfo?.likeCount || formatNumber(120112) }}
                   </span>
@@ -101,22 +99,18 @@
                     type="icon-zhuanfa2"
                     size="13"
                     class="cursor-pointer icon-click"
+                    @click.stop="onArticleShare(articleInfo?.id as string)"
                   />
                 </div>
               </div>
             </div>
 
-            <div
-              class="flex-1 relative overflow-hidden p-2 m-2"
+            <a-image
+              class="flex-1 m-2 overflow-hidden"
               style="height: 216px; border-radius: 8px"
-            >
-              <img
-                src="https://tse1-mm.cn.bing.net/th/id/OIP-C.xc5KsKdO2u9T5hBCpE0yCgHaEK?pid=ImgDet&rs=1"
-                :alt="articleInfo?.title"
-                class="absolute top-1/2 left-1/2 w-full h-full"
-                style="object-fit: cover; transform: translate(-50%, -50%)"
-              />
-            </div>
+              :src="articleInfo?.thumbUrl"
+              :alt="articleInfo?.title"
+            />
           </div>
 
           <!-- 文章主体 -->
