@@ -39,6 +39,8 @@
         style="min-width: 26%; max-width: 50%"
         class="itravel-spot-layout__sider"
       >
+        <slot name="sider-top"></slot>
+
         <ArticleMini
           :list="spotRandArticles as ArticleBriefInfo[]"
           :refresh="onRandArticleRefesh"
