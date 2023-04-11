@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { ListResult } from '@/types/global';
+import { UserState } from '@/store/modules/user/types';
 import { prefix } from './base';
 
 interface Spot {
@@ -8,12 +9,7 @@ interface Spot {
   description: string;
 }
 
-interface Author {
-  id: string;
-  username: string;
-  avatar: string;
-  description: string | null;
-}
+type Author = UserState;
 
 export interface ArticleBriefInfo {
   id: string;
@@ -29,8 +25,8 @@ export interface ArticleBriefInfo {
   publishTime: string;
   createdTime: string;
   updatedTime: string;
-  spot: Spot;
-  author: Author;
+  spot: Partial<Spot>;
+  author: Partial<Author>;
 }
 
 export interface IPaginationOpton {
