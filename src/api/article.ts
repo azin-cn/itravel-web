@@ -24,13 +24,13 @@ export interface ArticleBriefInfo {
   viewCount: number;
   likeCount: number;
   favCount: number;
+  commentCount: number;
   status: number;
   publishTime: string;
   createdTime: string;
   updatedTime: string;
   spot: Spot;
   author: Author;
-  commentCount: number;
 }
 
 export interface IPaginationOpton {
@@ -59,4 +59,13 @@ export function getSpotBriefInfoOfArticles(
  */
 export function getRandArticles() {
   return axios.get<ArticleBriefInfo[]>(`${prefix}/article/recom_article/rand`);
+}
+
+/**
+ * 通过id获取文章
+ * @param id
+ * @returns
+ */
+export function getArticleById(id: string) {
+  return axios.get<ArticleBriefInfo>(`${prefix}/article/${id}`);
 }
