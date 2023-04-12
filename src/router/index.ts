@@ -23,15 +23,6 @@ const router = createRouter({
         requiresAuth: false,
       },
     },
-
-    {
-      path: '/userinfo/:userId',
-      name: 'userinfo',
-      component: () => import('@/views/article/index.vue'),
-      meta: {
-        requiresAuth: false,
-      },
-    },
     {
       path: '/login',
       name: 'login',
