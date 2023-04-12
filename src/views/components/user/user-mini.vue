@@ -1,16 +1,19 @@
 <script lang="ts" setup>
   import { UserState } from '@/store/modules/user/types';
   import { formatNumber } from '@/utils/format';
+  import { redirectUserPreview } from '@/router/utils';
 
   export interface IProps {
     list: UserState[];
     limit: number;
     refresh: () => Promise<void>;
+    redirect: (userId: string) => Promise<void> | void;
   }
 
   const props = withDefaults(defineProps<IProps>(), {
     limit: 3,
     refresh: async () => {},
+    redirect: redirectUserPreview,
   });
 
   const emits = defineEmits(['update:refresh']);
@@ -45,7 +48,7 @@
               :size="28"
               :image-url="item.avatar"
               class="mr-2 cursor-pointer"
-              @click.stop="() => {}"
+              @click.stop="redirect(item.id as string)"
             />
             <div class="flex-1">
               <div class="flex items-center justify-between">
