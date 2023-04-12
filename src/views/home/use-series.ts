@@ -113,7 +113,7 @@ export default function useSeries() {
       },
       {
         orient: 'vertical',
-        right: 63,
+        right: 60,
         top: 380,
         z: -1,
         align: 'right',
