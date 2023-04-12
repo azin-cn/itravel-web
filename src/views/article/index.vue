@@ -10,7 +10,7 @@
 
   const route = useRoute();
   const router = useRouter();
-  const { onArticleShare } = useArticle();
+  const { onArticleShare, onThumbsUp } = useArticle();
 
   const articleInfo = ref<ArticleBriefInfo>();
   const spotInfo = ref<SpotBreifInfoModel>();
@@ -96,7 +96,7 @@
                   <IconFont
                     type="icon-dianzan3"
                     class="cursor-pointer icon-click"
-                    @click.stop="() => {}"
+                    @click.stop="onThumbsUp(articleInfo?.id as string)"
                   />
                   <span class="text-xs link-neutral">
                     {{ articleInfo?.likeCount || formatNumber(120112) }}
@@ -135,11 +135,16 @@
             <a-image
               show-loader
               fit="cover"
-              class="flex-1 m-2 overflow-hidden h-60 lg:h-80"
+              class="flex-1 m-2 overflow-hidden h-60 lg:h-80 cursor-pointer"
               style="border-radius: 8px"
               :src="articleInfo?.thumbUrl || articleInfo?.spot.thumbUrl"
               :alt="articleInfo?.title"
-            />
+            >
+              <!-- :description="articleInfo?.spot.name" -->
+              <template #extra>
+                <span class="action" @click="() => {}"><icon-download /></span>
+              </template>
+            </a-image>
           </div>
 
           <div class="text-left mt-6 mb-6">
@@ -176,22 +181,22 @@
             <a-image-preview-group infinite>
               <a-image
                 src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/cd7a1aaea8e1c5e3d26fe2591e561798.png~tplv-uwbnlip3yd-webp.webp"
-                class="w-1/3 p-1 pb-0"
+                class="w-1/3 p-1 pb-0 cursor-pointer"
                 style="border-radius: 6px"
               />
               <a-image
                 src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/6480dbc69be1b5de95010289787d64f1.png~tplv-uwbnlip3yd-webp.webp"
-                class="w-1/3 p-1 pb-0"
+                class="w-1/3 p-1 pb-0 cursor-pointer"
                 style="border-radius: 6px"
               />
               <a-image
                 src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/0265a04fddbd77a19602a15d9d55d797.png~tplv-uwbnlip3yd-webp.webp"
-                class="w-1/3 p-1 pb-0"
+                class="w-1/3 p-1 pb-0 cursor-pointer"
                 style="border-radius: 6px"
               />
               <a-image
                 src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/24e0dd27418d2291b65db1b21aa62254.png~tplv-uwbnlip3yd-webp.webp"
-                class="w-1/3 p-1 pb-0"
+                class="w-1/3 p-1 pb-0 cursor-pointer"
                 style="border-radius: 6px"
               />
             </a-image-preview-group>
