@@ -3,7 +3,9 @@ import { useClipboard } from '@vueuse/core';
 
 export default function useArticle() {
   const { copy } = useClipboard();
-  const onThumbsUp = async (id: string) => {};
+  const onThumbsUp = async (id: string) => {
+    Message.success('点赞成功');
+  };
 
   const onArticleShare = async (id: string) => {
     const {
