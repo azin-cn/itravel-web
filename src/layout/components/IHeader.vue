@@ -31,6 +31,14 @@
       name: 'login',
     });
   };
+
+  const onRedirectUserPreview = (userId: string) => {
+    if (isLogin.value) {
+      router.push({ name: 'userPreview', params: { userId } });
+    } else {
+      onLogin();
+    }
+  };
 </script>
 
 <template>
@@ -83,7 +91,10 @@
             class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52"
           >
             <li>
-              <a class="justify-between">
+              <a
+                class="justify-between"
+                @click.stop="onRedirectUserPreview(userStore.id as string)"
+              >
                 个人主页
                 <span class="badge">New</span>
               </a>
