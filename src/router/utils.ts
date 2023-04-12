@@ -109,12 +109,26 @@ export const redirectSpot = async (spotId: string) => {
 };
 
 /**
- * 重定向userinfo
+ * 重定向redirectUserPreview
  * @param userId
  */
-export const redirectUserInfo = (userId: string) => {
+export const redirectUserPreview = (userId: string) => {
   router.push({
-    name: 'userinfo',
+    name: 'userPreview',
+    params: { userId },
+  });
+};
+
+/**
+ * 重定向到userProfile
+ * @param userId
+ */
+export const redirectUserProfile = (userId: string) => {
+  /**
+   * TODO: 鉴别是否登录
+   */
+  router.push({
+    name: 'userProfile',
     params: { userId },
   });
 };
@@ -124,10 +138,10 @@ export default {
   redirectHomeOrDefault,
   redirectLogin,
   redirectLoginOrDefault,
-  redirectUserInfo,
   redirectArticle,
   redirectRegister,
   redirectRegisterOrDefault,
   replaceLogin,
   replaceLoginOrDefault,
+  redirectUserPreview,
 };
