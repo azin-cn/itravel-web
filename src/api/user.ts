@@ -99,3 +99,12 @@ export function getUserInfo(id: string) {
 export function getRandUsers() {
   return axios.get<UserState[]>(`${prefix}/user/recom_user/rand`);
 }
+
+/**
+ * 获取用户的简略信息
+ * @param id
+ * @returns
+ */
+export function getUserBriefInfo(id: string) {
+  return axios.get<UserState>(`${prefix}/user/brief/${id}`);
+}
