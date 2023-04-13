@@ -76,7 +76,8 @@
                       <IconFont type="icon-tuijian2" />
                       <span class="text-xs link-neutral">
                         {{
-                          articleInfo?.author.visitors || formatNumber(12012)
+                          articleInfo?.author.visitors ||
+                          formatNumber(Math.random() * 2000)
                         }}
                       </span>
                     </span>
@@ -95,7 +96,10 @@
                 <div class="mr-2">
                   <IconFont type="icon-pinglun3" />
                   <span class="text-xs link-neutral">
-                    {{ articleInfo?.commentCount || formatNumber(120012) }}
+                    {{
+                      articleInfo?.commentCount ||
+                      formatNumber(Math.random() * 20000)
+                    }}
                   </span>
                 </div>
                 <div class="mr-2">
@@ -105,7 +109,10 @@
                     @click.stop="onThumbsUp(articleInfo?.id as string)"
                   />
                   <span class="text-xs link-neutral">
-                    {{ articleInfo?.likeCount || formatNumber(120112) }}
+                    {{
+                      articleInfo?.likeCount ||
+                      formatNumber(Math.random() * 20000)
+                    }}
                   </span>
                 </div>
                 <div class="mr-2">

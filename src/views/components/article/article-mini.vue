@@ -51,13 +51,13 @@
               <div class="mr-2">
                 <IconFont type="icon-pinglun3" />
                 <span class="text-xs">
-                  {{ item.commentCount || formatNumber(120112) }}
+                  {{ item.commentCount || formatNumber(Math.random() * 20000) }}
                 </span>
               </div>
               <div class="mr-2">
                 <IconFont type="icon-dianzan3" />
                 <span class="text-xs link-neutral">
-                  {{ item.likeCount || formatNumber(120122) }}
+                  {{ item.likeCount || formatNumber(Math.random() * 20000) }}
                 </span>
               </div>
             </div>

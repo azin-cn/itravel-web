@@ -56,7 +56,7 @@
                 <div>
                   <IconFont type="icon-tuijian2" />
                   <span class="text-xs link-neutral">
-                    {{ item.visitors || formatNumber(12012) }}
+                    {{ item.visitors || formatNumber(Math.random() * 10000) }}
                   </span>
                 </div>
               </div>

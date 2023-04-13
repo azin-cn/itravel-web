@@ -11,7 +11,7 @@
 
   const props = defineProps<IProps>();
 
-  const { onArticleShare } = useArticle();
+  const { onArticleShare, onThumbsUp } = useArticle();
 </script>
 
 <template>
@@ -57,17 +57,17 @@
                   @click.stop="redirectArticle(item.id)"
                 />
                 <span class="text-xs link-neutral">
-                  {{ item.commentCount || formatNumber(12012012) }}
+                  {{ item.commentCount || formatNumber(Math.random() * 20000) }}
                 </span>
               </div>
               <div class="mr-2">
                 <IconFont
                   type="icon-dianzan3"
                   class="cursor-pointer icon-click"
-                  @click.stop="() => {}"
+                  @click.stop="onThumbsUp(item.id)"
                 />
                 <span class="text-xs link-neutral">
-                  {{ item.likeCount || formatNumber(12012012) }}
+                  {{ item.likeCount || formatNumber(Math.random() * 20000) }}
                 </span>
               </div>
               <div class="mr-2" @click="onArticleShare(item.id)">
