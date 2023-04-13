@@ -51,5 +51,5 @@ export function formatNumber(num: number): string {
     return `${(num / 1e3).toFixed(1)}k+`;
   }
 
-  return `${num}`;
+  return `${num.toFixed(0)}`;
 }
