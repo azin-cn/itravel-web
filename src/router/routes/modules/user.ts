@@ -9,15 +9,15 @@ export const USER_ROUTE: RouteRecordRaw = {
   },
   children: [
     {
-      path: 'profile/:userId',
+      path: 'profile/:userId?',
       name: 'userProfile',
+      component: () => import('@/views/user/profile/index.vue'),
       meta: {
         requiresAuth: true,
       },
-      component: () => import('@/views/user/profile/index.vue'),
     },
     {
-      path: ':userId',
+      path: 'preview/:userId?',
       name: 'userPreview',
       component: () => import('@/views/user/preview/index.vue'),
       meta: {
