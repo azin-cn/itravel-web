@@ -22,7 +22,7 @@
         style="border: 1px solid #fff; box-shadow: 0 0 2px 0 #ccc"
       >
         <img
-          :src="item.thumbUrl || imgUrl"
+          :src="item.thumbUrl || item.spot.thumbUrl || imgUrl"
           class="rounded-lg shadow-xl hover-img cursor-pointer"
           :alt="item.title"
           :style="{ width: '24%' }"
