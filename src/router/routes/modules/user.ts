@@ -9,6 +9,10 @@ export const USER_ROUTE: RouteRecordRaw = {
   },
   children: [
     {
+      path: '',
+      redirect: '/',
+    },
+    {
       path: 'profile/:userId?',
       name: 'userProfile',
       component: () => import('@/views/user/profile/index.vue'),
