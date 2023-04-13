@@ -11,9 +11,12 @@ export default function setupUserLoginInfoGuard(router: Router) {
     const userStore = useUserStore();
     /**
      * 特殊跳转配置
+     * 因为多次跳转会丢失路由信息，需要通过redirectedFrom记录
      */
     if (
-      ['article', 'spot', 'userinfo'].includes(from?.name as string) &&
+      ['article', 'spot', 'userPreview', 'userProfile'].includes(
+        from?.name as string
+      ) &&
       to.name === 'login'
     ) {
       to.redirectedFrom = from;
