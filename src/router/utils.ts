@@ -133,6 +133,17 @@ export const redirectUserProfile = (userId: string) => {
   });
 };
 
+/**
+ * 跳转编辑页
+ * @param articleId
+ */
+export const redirectEditor = (articleId?: string) => {
+  router.push({
+    name: 'editor',
+    params: { articleId },
+  });
+};
+
 export default {
   redirectHome,
   redirectHomeOrDefault,
