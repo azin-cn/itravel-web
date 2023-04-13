@@ -1,11 +1,15 @@
 <script lang="ts" setup>
   import { ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
-  import { getArticleById, ArticleBriefInfo } from '@/api/article';
+  import { getUserBriefArticles, ArticleBriefInfo } from '@/api/article';
   import { getSpotBriefInfo, SpotBreifInfoModel } from '@/api/spot';
   import { getUserBriefInfo } from '@/api/user';
   import { formatNumber } from '@/utils/format';
+  import * as settings from '@/config/settings.json';
+  import { ListResult } from '@/types/global';
   import { UserState } from '@/store/modules/user/types';
+  import IPagination from '@/views/components/pagination/index.vue';
+  import ArticleBrief from '@/views/components/article/article-brief.vue';
   import RandRecomSpot from '../../components/spot/rand-recom-spot.vue';
   import SiderLayout from '../../components/layout/sider-layout.vue';
   import useArticle from '../../components/article/use-article';
@@ -15,12 +19,15 @@
   const { onArticleShare, onThumbsUp } = useArticle();
 
   const userInfo = ref<UserState>();
-  const articleInfo = ref<ArticleBriefInfo>();
-  const spotInfo = ref<SpotBreifInfoModel>();
+  const userArticles = ref<ListResult<ArticleBriefInfo>>();
+  const page = ref(1);
 
   const onRedirectUserPreview = (userId: string) => {
-    userId = userId || (articleInfo.value?.author.id as string);
     router.push({ name: 'userPreview', params: { userId } });
+  };
+  const onPageChange = async (v: number) => {
+    page.value = v;
+    // network
   };
 
   const init = async () => {
@@ -32,13 +39,14 @@
     if (!userId) {
       router.push({ name: 'home' });
     }
-
-    const { data: user } = await getUserBriefInfo(userId as string);
+    const [{ data: user }, { data: articles }] = await Promise.all([
+      getUserBriefInfo(userId as string),
+      getUserBriefArticles(userId as string),
+    ]);
     userInfo.value = user;
-    // const { data: article } = await getArticleById(articleId as string);
-    // const { data: spot } = await getSpotBriefInfo(article.spot.id as string);
-    // articleInfo.value = article;
-    // spotInfo.value = spot;
+    userArticles.value = articles;
+
+    document.title = `${settings.title} - 用户 - ${user.username}`;
   };
   init();
 </script>
@@ -90,17 +98,21 @@
                 <div class="mr-2">
                   <IconFont type="icon-pinglun3" />
                   <span class="text-xs link-neutral">
-                    {{ articleInfo?.commentCount || formatNumber(120012) }}
+                    {{
+                      userArticles?.list[0].commentCount || formatNumber(120012)
+                    }}
                   </span>
                 </div>
                 <div class="mr-2">
                   <IconFont
                     type="icon-dianzan3"
                     class="cursor-pointer icon-click"
-                    @click.stop="onThumbsUp(articleInfo?.id as string)"
+                    @click.stop="onThumbsUp(userArticles?.list[0].id as string)"
                   />
                   <span class="text-xs link-neutral">
-                    {{ articleInfo?.likeCount || formatNumber(120112) }}
+                    {{
+                      userArticles?.list[0].likeCount || formatNumber(120112)
+                    }}
                   </span>
                 </div>
                 <div class="mr-2">
@@ -108,7 +120,9 @@
                     type="icon-zhuanfa2"
                     size="13"
                     class="cursor-pointer icon-click"
-                    @click.stop="onArticleShare(articleInfo?.id as string)"
+                    @click.stop="
+                      onArticleShare(userArticles?.list[0].id as string)
+                    "
                   />
                 </div>
               </div>
@@ -138,8 +152,12 @@
               fit="cover"
               class="flex-1 m-2 overflow-hidden h-60 lg:h-80 cursor-pointer"
               style="border-radius: 8px"
-              :src="articleInfo?.thumbUrl || articleInfo?.spot.thumbUrl"
-              :alt="articleInfo?.title"
+              :src="
+                userInfo?.thumbUrl ||
+                userArticles?.list[0].thumbUrl ||
+                userArticles?.list[0].spot.thumbUrl
+              "
+              :alt="userArticles?.list[0].title"
             >
               <!-- :description="articleInfo?.spot.name" -->
               <template #extra>
@@ -155,12 +173,20 @@
                 size="24"
                 class="mr-2 align-text-bottom"
               />
-              <span>摘要</span>
+              <span>文章</span>
             </h3>
-            <p class="text-base" style="text-indent: 2rem">
-              {{ articleInfo?.summary }}
-            </p>
           </div>
+
+          <ArticleBrief
+            :img-url="userArticles?.list[0].thumbUrl"
+            :list="userArticles?.list as ArticleBriefInfo[]"
+          />
+
+          <IPagination
+            :on-page-change="onPageChange"
+            :page="page"
+            :total="userArticles?.total"
+          ></IPagination>
         </div>
       </template>
     </SiderLayout>
