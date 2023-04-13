@@ -4,7 +4,7 @@
   export interface IPagination {
     total: number;
     page?: number;
-    onPageChange: (page: number) => Promise<void>;
+    onPageChange: (page: number) => Promise<void> | void;
   }
 
   const emits = defineEmits(['update:page']);
