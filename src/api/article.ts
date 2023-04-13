@@ -68,3 +68,14 @@ export function getRandArticles() {
 export function getArticleById(id: string) {
   return axios.get<ArticleBriefInfo>(`${prefix}/article/${id}`);
 }
+
+/**
+ * 获取用户的文章
+ * @param userId
+ * @returns
+ */
+export function getUserBriefArticles(userId: string) {
+  return axios.get<ListResult<ArticleBriefInfo>>(
+    `${prefix}/article/user/${userId}`
+  );
+}
