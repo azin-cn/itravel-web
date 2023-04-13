@@ -108,30 +108,38 @@
                     </div>
 
                     <!-- 简介 -->
-                    <p class="text-xs w-full truncate">
+                    <p class="mt-1 w-full text-xs truncate">
                       {{
                         userInfo?.description ||
                         '人之初，性本善，性相近，习相远'
                       }}
                     </p>
 
-                    <!-- 位置 -->
-                    <div class="mt-3 text-left">
-                      <div class="mr-2">
+                    <!-- 更多 -->
+                    <div class="flex flex-col mt-3 text-left">
+                      <div>
                         <IconFont type="icon-nationaarea" class="mr-1" />
                         <span class="text-sm">
                           最近去过：{{
                             `${userArticles?.list[0]?.spot.name || '暂无数据'}`
                           }}
                         </span>
-                        <div>
-                          <IconFont type="icon-zhishipai" class="mr-1" />
-                          <span class="text-sm">
-                            最新分享：{{
-                              `${userArticles?.list[0]?.title || '暂无数据'}`
-                            }}
-                          </span>
-                        </div>
+                      </div>
+                      <div>
+                        <IconFont type="icon-zhishipai" class="mr-1" />
+                        <span class="text-sm">
+                          最新分享：{{
+                            `${userArticles?.list[0]?.title || '暂无数据'}`
+                          }}
+                        </span>
+                      </div>
+                      <div v-if="showEditor">
+                        <IconFont type="icon-xiewenzhang" class="mr-1" />
+                        <span
+                          class="text-sm link link-hover link-primary cursor-pointer"
+                        >
+                          新建分享
+                        </span>
                       </div>
                     </div>
                   </div>
