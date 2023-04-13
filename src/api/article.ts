@@ -30,6 +30,7 @@ export interface ArticleBriefInfo {
   updatedTime: string;
   spot: Partial<Spot>;
   author: Partial<Author>;
+  images: string[];
 }
 
 export interface IPaginationOpton {
