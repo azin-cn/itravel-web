@@ -4,6 +4,7 @@
   import { getArticleById, ArticleBriefInfo } from '@/api/article';
   import { getSpotBriefInfo, SpotBreifInfoModel } from '@/api/spot';
   import { formatNumber } from '@/utils/format';
+  import { setDocumentTitle } from '@/utils/window';
   import RandRecomSpot from './components/rand-recom-spot.vue';
   import SiderLayout from '../components/layout/sider-layout.vue';
   import useArticle from '../components/article/use-article';
@@ -35,6 +36,8 @@
     const { data: spot } = await getSpotBriefInfo(article.spot.id as string);
     articleInfo.value = article;
     spotInfo.value = spot;
+
+    setDocumentTitle(`${article.author.username} | ${article.title}`);
   };
   init();
 </script>
