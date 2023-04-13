@@ -1,26 +1,30 @@
 <script lang="ts" setup>
-  import { ref } from 'vue';
+  import { ref, computed } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import { getUserBriefArticles, ArticleBriefInfo } from '@/api/article';
-  import { getSpotBriefInfo, SpotBreifInfoModel } from '@/api/spot';
   import { getUserBriefInfo } from '@/api/user';
   import { formatNumber } from '@/utils/format';
+  import { redirectUserProfile } from '@/router/utils';
   import * as settings from '@/config/settings.json';
   import { ListResult } from '@/types/global';
+  import { useUserStore } from '@/store';
   import { UserState } from '@/store/modules/user/types';
+  import { isLogin as isLoginFunc } from '@/utils/auth';
   import IPagination from '@/views/components/pagination/index.vue';
   import ArticleBrief from '@/views/components/article/article-brief.vue';
   import RandRecomSpot from '../../components/spot/rand-recom-spot.vue';
   import SiderLayout from '../../components/layout/sider-layout.vue';
-  import useArticle from '../../components/article/use-article';
 
   const route = useRoute();
   const router = useRouter();
-  const { onArticleShare, onThumbsUp } = useArticle();
+  const userStore = useUserStore();
 
   const userInfo = ref<UserState>();
   const userArticles = ref<ListResult<ArticleBriefInfo>>();
   const page = ref(1);
+  const showEditor = computed(() => {
+    return isLoginFunc() && userStore.id === userInfo.value?.id;
+  });
 
   const onRedirectUserPreview = (userId: string) => {
     router.push({ name: 'userPreview', params: { userId } });
@@ -56,7 +60,7 @@
     <SiderLayout :limit="10">
       <template #content>
         <div class="m-2 flex-1">
-          <!-- 作者介绍和缩略图 -->
+          <!-- 作者介绍 -->
           <div class="items-stretch">
             <div
               class="flex flex-1 justify-center bg-base-100 p-6 mt-2 mb-2 text-gray-700"
@@ -69,18 +73,19 @@
               <div class="w-1/2 flex items-center self-center">
                 <div class="flex items-center text-left">
                   <a-avatar
-                    :size="64"
+                    :size="68"
                     :image-url="userInfo?.avatar"
                     class="mr-12 cursor-pointer"
                     @click.stop="onRedirectUserPreview(userInfo?.id as string)"
                   />
 
                   <div class="flex-1">
+                    <!-- 用户名 -->
                     <div class="flex items-center justify-between">
                       <h4 class="text-2xl truncate" style="max-width: 60%">
                         {{ userInfo?.username }}
                       </h4>
-                      <span>
+                      <div>
                         <IconFont type="icon-tuijian2" />
                         <span class="text-xs link-neutral">
                           {{
@@ -88,14 +93,28 @@
                             formatNumber(Math.random() * 10000)
                           }}
                         </span>
-                      </span>
+
+                        <span
+                          v-if="showEditor"
+                          class="ml-2 cursor-pointer link link-hover"
+                          @click.stop="
+                            redirectUserProfile(userInfo?.id as string)
+                          "
+                        >
+                          <IconFont type="icon-bianji" class="mr-1" />
+                          <span class="text-xs">编辑</span>
+                        </span>
+                      </div>
                     </div>
+
+                    <!-- 简介 -->
                     <p class="text-xs w-full truncate">
                       {{
                         userInfo?.description ||
                         '人之初，性本善，性相近，习相远'
                       }}
                     </p>
+
                     <!-- 位置 -->
                     <div class="mt-3 text-left">
                       <div class="mr-2">
