@@ -46,6 +46,7 @@
     "query-string": "^8.0.3",
     "sha1": "^1.1.1",
     "sortablejs": "^1.15.0",
+    "vditor": "^3.9.2",
     "vue": "^3.2.40",
     "vue-echarts": "^6.2.3",
     "vue-i18n": "^9.2.2",
