@@ -3,7 +3,9 @@
   import { useRoute, useRouter } from 'vue-router';
   import { getArticleById, ArticleBriefInfo } from '@/api/article';
   import { getSpotBriefInfo, SpotBreifInfoModel } from '@/api/spot';
+  import { getUserBriefInfo } from '@/api/user';
   import { formatNumber } from '@/utils/format';
+  import { UserState } from '@/store/modules/user/types';
   import RandRecomSpot from '../../components/spot/rand-recom-spot.vue';
   import SiderLayout from '../../components/layout/sider-layout.vue';
   import useArticle from '../../components/article/use-article';
@@ -12,6 +14,7 @@
   const router = useRouter();
   const { onArticleShare, onThumbsUp } = useArticle();
 
+  const userInfo = ref<UserState>();
   const articleInfo = ref<ArticleBriefInfo>();
   const spotInfo = ref<SpotBreifInfoModel>();
 
@@ -30,6 +33,8 @@
       router.push({ name: 'home' });
     }
 
+    const { data: user } = await getUserBriefInfo(userId as string);
+    userInfo.value = user;
     // const { data: article } = await getArticleById(articleId as string);
     // const { data: spot } = await getSpotBriefInfo(article.spot.id as string);
     // articleInfo.value = article;
@@ -43,10 +48,6 @@
     <SiderLayout :limit="10">
       <template #content>
         <div class="m-2 flex-1">
-          <h1 class="text-2xl font-semibold p-2 truncate">
-            {{ articleInfo?.title }}
-          </h1>
-
           <!-- 作者介绍和缩略图 -->
           <div class="flex items-stretch">
             <div
@@ -60,36 +61,31 @@
               <div class="flex items-center text-left">
                 <a-avatar
                   :size="44"
-                  :image-url="articleInfo?.author.avatar"
+                  :image-url="userInfo?.avatar"
                   class="mr-2 cursor-pointer"
-                  @click.stop="
-                    onRedirectUserPreview(articleInfo?.author.id as string)
-                  "
+                  @click.stop="onRedirectUserPreview(userInfo?.id as string)"
                 />
                 <div class="flex-1">
                   <div class="flex items-center justify-between">
                     <h4 class="text-base">
-                      {{ articleInfo?.author.username }}
+                      {{ userInfo?.username }}
                     </h4>
                     <span>
                       <IconFont type="icon-tuijian2" />
                       <span class="text-xs link-neutral">
-                        {{
-                          articleInfo?.author.visitors || formatNumber(12012)
-                        }}
+                        {{ userInfo?.visitors || formatNumber(12012) }}
                       </span>
                     </span>
                   </div>
                   <p class="text-xs w-48 truncate">
                     {{
-                      articleInfo?.author.description ||
-                      '人之初，性本善，性相近，习相远'
+                      userInfo?.description || '人之初，性本善，性相近，习相远'
                     }}
                   </p>
                 </div>
               </div>
 
-              <!-- 点赞 -->
+              <!-- 第一篇文章的点赞 -->
               <div class="flex items-center mt-10">
                 <div class="mr-2">
                   <IconFont type="icon-pinglun3" />
