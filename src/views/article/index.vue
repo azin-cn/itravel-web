@@ -15,6 +15,11 @@
   const articleInfo = ref<ArticleBriefInfo>();
   const spotInfo = ref<SpotBreifInfoModel>();
 
+  const onRedirectUserPreview = (userId: string) => {
+    userId = userId || (articleInfo.value?.author.id as string);
+    router.push({ name: 'userPreview', params: { userId } });
+  };
+
   const init = async () => {
     /**
      * 携带路由参数进入组件
@@ -31,7 +36,6 @@
     articleInfo.value = article;
     spotInfo.value = spot;
   };
-
   init();
 </script>
 
@@ -59,7 +63,9 @@
                   :size="44"
                   :image-url="articleInfo?.author.avatar"
                   class="mr-2 cursor-pointer"
-                  @click.stop="() => {}"
+                  @click.stop="
+                    onRedirectUserPreview(articleInfo?.author.id as string)
+                  "
                 />
                 <div class="flex-1">
                   <div class="flex items-center justify-between">
