@@ -33,6 +33,11 @@
     page.value = v;
     // network
   };
+  const onRedirectEditor = () => {
+    router.push({
+      name: 'editor',
+    });
+  };
 
   const init = async () => {
     /**
@@ -137,6 +142,7 @@
                         <IconFont type="icon-xiewenzhang" class="mr-1" />
                         <span
                           class="text-sm link link-hover link-primary cursor-pointer"
+                          @click.stop="onRedirectEditor"
                         >
                           新建分享
                         </span>
