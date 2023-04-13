@@ -70,8 +70,8 @@
                 'border-radius': '8px',
               }"
             >
-              <div class="w-1/2 flex items-center self-center">
-                <div class="flex items-center text-left">
+              <div class="w-1/2 flex items-center justify-center">
+                <div class="flex w-full items-center text-left">
                   <a-avatar
                     :size="68"
                     :image-url="userInfo?.avatar"
@@ -81,8 +81,8 @@
 
                   <div class="flex-1">
                     <!-- 用户名 -->
-                    <div class="flex items-center justify-between">
-                      <h4 class="text-2xl truncate" style="max-width: 60%">
+                    <div class="flex w-full items-center justify-between">
+                      <h4 class="mr-2 truncate text-2xl" style="max-width: 60%">
                         {{ userInfo?.username }}
                       </h4>
                       <div>
