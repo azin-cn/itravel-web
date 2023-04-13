@@ -25,4 +25,5 @@ export interface UserState {
   visitors?: number;
   createdTime?: string;
   updatedTime?: string;
+  thumbUrl?: string;
 }
