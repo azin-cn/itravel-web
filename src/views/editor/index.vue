@@ -18,6 +18,8 @@
   const articleForm = ref<Partial<ArticleBriefInfo>>(genDefaultForm());
   const isUpdated = ref(false);
 
+  const onSubmit = async () => {};
+
   const init = async () => {
     const { params } = route;
     const { articleId } = params;
@@ -150,16 +152,96 @@
           </div>
           <!-- 内容 -->
           <div id="vditor" class="mt-4" />
-          <!-- 图库 -->
-          <a-upload
-            list-type="picture-card"
-            action="/"
-            image-preview
-            :default-file-list="fileList"
-            class="mt-2"
-          />
+          <!-- 标题 -->
+          <div class="m-6 ml-0">
+            <h2 class="text-lg link link-hover inline-block">
+              <IconFont type="icon-zhilupai"></IconFont>
+              更多
+            </h2>
+          </div>
+
+          <div class="flex">
+            <!-- 图库 -->
+            <a-upload
+              list-type="picture-card"
+              action="/"
+              image-preview
+              :default-file-list="fileList"
+              class="w-2/3"
+            />
+            <a-form :model="{}" class="w-2/5 itravel-editor-form">
+              <a-form-item field="spot" label="景点" tooltip="请选择关联景点">
+                <a-select placeholder="请输入关联景点">
+                  <a-option>Beijing</a-option>
+                  <a-option>Shanghai</a-option>
+                  <template #footer>
+                    <div class="text-center text-sm text-gray-400">
+                      默认展示10条，更多请搜索
+                    </div>
+                  </template>
+                </a-select>
+              </a-form-item>
+              <a-form-item
+                field="category"
+                label="分类"
+                tooltip="请选择文章分类"
+              >
+                <a-select placeholder="请选择文章分类">
+                  <a-option>Beijing</a-option>
+                  <a-option>Shanghai</a-option>
+                  <template #footer>
+                    <div class="text-center text-sm text-gray-400">
+                      默认展示10条，更多请搜索
+                    </div>
+                  </template>
+                </a-select>
+              </a-form-item>
+
+              <a-form-item field="tags" label="标签" tooltip="请选择文章标签">
+                <a-select
+                  placeholder="请选择文章标签"
+                  multiple
+                  :limit="4"
+                  :max-tag-count="2"
+                  scrollbar
+                >
+                  <a-option>Guangzhou</a-option>
+                  <a-option>Shenzhen</a-option>
+                  <template #footer>
+                    <div class="text-center text-sm text-gray-400">
+                      默认展示10条，更多请搜索
+                    </div>
+                  </template>
+                </a-select>
+              </a-form-item>
+            </a-form>
+          </div>
         </div>
       </template>
     </SiderLayout>
   </div>
 </template>
+
+<style lang="less">
+  .itravel-editor-form {
+    .arco-select-view-single:focus-within,
+    .arco-select-view-single.arco-select-view-focus {
+      border-color: unset;
+    }
+
+    .arco-form-item .arco-select-view-multiple:focus-within,
+    .arco-form-item .arco-select-view-multiple.arco-select-view-focus {
+      border-color: unset !important;
+    }
+
+    .arco-checkbox.arco-checkbox-checked
+      span.arco-icon-hover.arco-icon-hover-disabled.arco-checkbox-icon-hover
+      .arco-checkbox-icon {
+      background-color: white !important;
+
+      svg.arco-checkbox-icon-check {
+        color: unset;
+      }
+    }
+  }
+</style>
