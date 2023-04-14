@@ -3,6 +3,7 @@
   import { useRoute, useRouter } from 'vue-router';
   import { getArticleById, ArticleBriefInfo } from '@/api/article';
   import { getSpotBriefInfo, SpotBreifInfoModel } from '@/api/spot';
+  import { useUserStore } from '@/store';
   import { formatNumber } from '@/utils/format';
   import { setDocumentTitle } from '@/utils/window';
   import RandRecomSpot from './components/rand-recom-spot.vue';
@@ -11,6 +12,7 @@
 
   const route = useRoute();
   const router = useRouter();
+  const userStore = useUserStore();
   const { onArticleShare, onThumbsUp } = useArticle();
 
   const articleInfo = ref<ArticleBriefInfo>();
@@ -217,6 +219,91 @@
               />
             </a-image-preview-group>
           </div>
+
+          <!-- 评论 -->
+          <div class="text-left mt-6">
+            <h3 class="mb-2 text-lg font-semibold inline-block">
+              <IconFont
+                type="icon--"
+                size="24"
+                class="mr-2 align-text-bottom"
+              />
+              <span>评论</span>
+            </h3>
+
+            <div class="p-4">
+              <div class="mb-6 flex items-center">
+                <a-textarea
+                  placeholder="在这里输入你的观点吧！"
+                  allow-clear
+                  :auto-size="{
+                    minRows: 2,
+                    maxRows: 10,
+                  }"
+                  show-word-limit
+                  :max-length="100"
+                  :style="{
+                    'border-color': 'rgb(227 227 228 / 100%)',
+                    'border-radius': '6px',
+                  }"
+                  class="mr-3"
+                >
+                </a-textarea>
+                <a-button>发送</a-button>
+              </div>
+              <div>
+                <!-- item -->
+                <div class="itravel-comment">
+                  <a-avatar
+                    :size="32"
+                    alt="avatar"
+                    class="mr-2 cursor-pointer itravel-comment__avatar"
+                    image-url="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/3ee5f13fb09879ecb5185e440cef6eb9.png~tplv-uwbnlip3yd-webp.webp"
+                  />
+
+                  <div class="text-sm itravel-comment__userinfo">
+                    <p class="text-base">luckydog</p>
+                    <p v-if="userStore.id" class="text-gray-400">
+                      人之初，性本善，性相近，习相远
+                    </p>
+                  </div>
+
+                  <div class="text-base itravel-comment__comment">
+                    校友，你还有offer，我还是0。实在不行，先找个干着吧，付费上班也不是不行，手动狗头
+                  </div>
+
+                  <div class="text-sm text-gray-400 itravel-comment__action">
+                    <span class="mr-3 hover:link-accent">
+                      <IconFont
+                        type="icon-dianzan6"
+                        class="cursor-pointer icon-click"
+                      />
+                      <span class="ml-1">
+                        {{ formatNumber(Math.random() * 1000) }}
+                      </span>
+                    </span>
+                    <span class="mr-3 cursor-pointer hover:link-accent">
+                      <IconFont type="icon-pinglun3" class="icon-click" />
+                      <span class="ml-1">评论</span>
+                    </span>
+                    <span class="mr-3">
+                      <IconFont type="icon-shijian4" />
+                      <span class="ml-1">
+                        {{ new Date().toLocaleString() }}
+                      </span>
+                    </span>
+                    <span
+                      v-if="userStore.id"
+                      class="mr-3 cursor-pointer hover:link-warning"
+                    >
+                      <IconFont type="icon-shanchu2" />
+                      <span class="ml-1">删除</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </template>
     </SiderLayout>
@@ -225,7 +312,7 @@
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="less">
   .icon-click {
     transition: all 0.3s;
   }
@@ -235,5 +322,33 @@
 
     /* 解决active时长太短问题 */
     transition: 0s;
+  }
+
+  .itravel-comment {
+    display: grid;
+    grid-template-areas:
+      'avatar userinfo'
+      '. comment'
+      '. action';
+    grid-template-rows: 32px auto 24px;
+    grid-template-columns: 32px auto;
+    gap: 0.6rem 0.5rem;
+    align-items: center;
+
+    &__avatar {
+      grid-area: avatar;
+    }
+
+    &__userinfo {
+      grid-area: userinfo;
+    }
+
+    &__comment {
+      grid-area: comment;
+    }
+
+    &__action {
+      grid-area: action;
+    }
   }
 </style>
