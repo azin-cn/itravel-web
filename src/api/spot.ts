@@ -160,3 +160,12 @@ export type FMInfoModel = Omit<SpotBreifInfoModel, 'province' | 'city'> & {
 export function getSpotMonthsAndFeatures(id: string) {
   return axios.get<FMInfoModel>(`${prefix}/spot/fm/${id}`);
 }
+
+/**
+ * 根据关键字获取景点
+ * @param s
+ * @returns
+ */
+export function getSpotsByWords(s: string) {
+  return axios.get<BaseModel[]>(`${prefix}/spot/search`, { params: { s } });
+}
