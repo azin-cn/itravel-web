@@ -80,3 +80,25 @@ export function getUserBriefArticles(userId: string) {
     `${prefix}/article/user/${userId}`
   );
 }
+
+/**
+ * 获取分类
+ * @param userId
+ * @returns
+ */
+export function getCategoriesByNameAndUserId(name: string, id: string) {
+  return axios.get<BaseModel[]>(`${prefix}/category/user`, {
+    params: { id, name },
+  });
+}
+
+/**
+ * 获取标签
+ * @param userId
+ * @returns
+ */
+export function getTagsByNameAndUserId(name: string, id: string) {
+  return axios.get<BaseModel[]>(`${prefix}/tags/user`, {
+    params: { id, name },
+  });
+}
