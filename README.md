@@ -95,3 +95,11 @@ mapEl.on('click', 'series');
  * if(!data) { Message.warning("没有数据") }
  */
 ```
+
+## 记录动态切换 class 时，:deep(selector) 可能出现失败的过程
+
+具体的情况如下：
+
+在 editor 的 a-form>a-form-item>.arco-select-view-multiple 选择时，由于会进行多选择的切换，在进行多个选择时，border-color: unset 会失效，具体原因还未探究，记录现象待以后寻找原因。
+
+解决的方法是，不使用:deep和scoped，利用自定义类实现样式隔离
