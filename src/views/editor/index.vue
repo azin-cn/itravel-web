@@ -1,35 +1,96 @@
 <script lang="ts" setup>
-  import { ref, computed, onMounted } from 'vue';
+  import { ref, computed, onMounted, watch } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import Vditor from 'vditor';
   import 'vditor/dist/index.css';
-  import { ArticleBriefInfo, getArticleById } from '@/api/article';
+  import { BaseModel } from '@/api/base';
+  import { SelectFieldNames } from '@arco-design/web-vue';
+  import {
+    ArticleBriefInfo,
+    getArticleById,
+    getCategoriesByNameAndUserId,
+    getTagsByNameAndUserId,
+  } from '@/api/article';
+  import { useUserStore } from '@/store';
   import { setDocumentTitle } from '@/utils/window';
   import SiderLayout from '../components/layout/sider-layout.vue';
 
   const genDefaultForm = (): Partial<ArticleBriefInfo> => ({
+    title: '',
     images: [],
   });
 
   const route = useRoute();
   const router = useRouter();
+  const userStore = useUserStore();
 
   const vditorRef = ref<Vditor>();
-  const articleForm = ref<Partial<ArticleBriefInfo>>(genDefaultForm());
   const isUpdated = ref(false);
+  const form = ref<Partial<ArticleBriefInfo>>(genDefaultForm());
+  const spotOptions = ref<BaseModel[]>();
+  const categoryOptions = ref<BaseModel[]>();
+  const tagOptions = ref<BaseModel[]>();
+  const fieldNames: SelectFieldNames = {
+    label: 'name',
+    value: 'id',
+  };
+  const states = ref({
+    submitLoading: false,
+    categoryLoading: false,
+    tagLoading: false,
+  });
+
+  const onInputTitle = (e: Event) => {
+    const target = e.target as HTMLInputElement;
+    form.value.title = target.value;
+    console.log(form);
+  };
+  const onSearch = async (name: string, type: 'category' | 'tag') => {
+    if (type === 'category') {
+      states.value.categoryLoading = true;
+      try {
+        const { data } = await getCategoriesByNameAndUserId(
+          name,
+          userStore.id as string
+        );
+        categoryOptions.value = data;
+      } finally {
+        states.value.categoryLoading = false;
+      }
+    } else {
+      states.value.tagLoading = true;
+      try {
+        const { data } = await getTagsByNameAndUserId(
+          name,
+          userStore.id as string
+        );
+        tagOptions.value = data;
+      } finally {
+        states.value.tagLoading = false;
+      }
+    }
+  };
+  const onSearchSpot = () => {};
 
   const onSubmit = async () => {};
 
   const init = async () => {
     const { params } = route;
     const { articleId } = params;
+    /**
+     * 路由已配置requestAuth
+     */
 
     if (articleId) {
       isUpdated.value = true;
-      const { data } = await getArticleById(articleId as string);
-      articleForm.value = data;
+      const [{ data: article }, { data: categories }] = await Promise.all([
+        getArticleById(articleId as string),
+        getCategoriesByNameAndUserId('', userStore.id as string),
+      ]);
+      form.value = article;
+      categoryOptions.value = categories;
 
-      setDocumentTitle(`编辑文章 - ${data.title}`);
+      setDocumentTitle(`编辑文章 - ${article.title}`);
     } else {
       setDocumentTitle(`创建文章`);
     }
@@ -141,9 +202,11 @@
           <!-- 标题 -->
           <div class="flex justify-between items-center">
             <input
+              :value="form.title"
               type="text"
               placeholder="输入文章标题"
               class="input input-bordered input-md w-full text-base"
+              @input="onInputTitle"
             />
             <!-- v-model:value="" -->
             <button class="btn btn-ghost btn-info ml-2" @click.stop="() => {}">
@@ -181,14 +244,20 @@
                   </template>
                 </a-select>
               </a-form-item>
+
               <a-form-item
                 field="category"
                 label="分类"
                 tooltip="请选择文章分类"
               >
-                <a-select placeholder="请选择文章分类">
-                  <a-option>Beijing</a-option>
-                  <a-option>Shanghai</a-option>
+                <a-select
+                  :field-names="fieldNames"
+                  :options="categoryOptions"
+                  :loading="states.categoryLoading"
+                  placeholder="请选择文章分类"
+                  allow-search
+                  @search="(v: string) => onSearch(v.trim(), 'category')"
+                >
                   <template #footer>
                     <div class="text-center text-sm text-gray-400">
                       默认展示10条，更多请搜索
