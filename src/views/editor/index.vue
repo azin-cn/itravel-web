@@ -45,12 +45,12 @@
     form.value.title = target.value;
     console.log(form);
   };
-  const onSearch = async (name: string, type: 'category' | 'tag') => {
+  const onSearch = async (keywords: string, type: 'category' | 'tag') => {
     if (type === 'category') {
       states.value.categoryLoading = true;
       try {
         const { data } = await getCategoriesByNameAndUserId(
-          name,
+          keywords,
           userStore.id as string
         );
         categoryOptions.value = data;
@@ -61,7 +61,7 @@
       states.value.tagLoading = true;
       try {
         const { data } = await getTagsByNameAndUserId(
-          name,
+          keywords,
           userStore.id as string
         );
         tagOptions.value = data;
@@ -245,16 +245,13 @@
                 </a-select>
               </a-form-item>
 
-              <a-form-item
-                field="category"
-                label="分类"
-                tooltip="请选择文章分类"
-              >
+              <a-form-item field="category" label="分类" tooltip="可进行搜索">
                 <a-select
                   :field-names="fieldNames"
                   :options="categoryOptions"
                   :loading="states.categoryLoading"
                   placeholder="请选择文章分类"
+                  scrollbar
                   allow-search
                   @search="(v: string) => onSearch(v.trim(), 'category')"
                 >
@@ -266,16 +263,18 @@
                 </a-select>
               </a-form-item>
 
-              <a-form-item field="tags" label="标签" tooltip="请选择文章标签">
+              <a-form-item field="tags" label="标签" tooltip="可进行搜索">
                 <a-select
-                  placeholder="请选择文章标签"
-                  multiple
+                  :field-names="fieldNames"
+                  :options="tagOptions"
                   :limit="4"
                   :max-tag-count="2"
                   scrollbar
+                  multiple
+                  placeholder="请选择文章标签"
+                  allow-search
+                  @search="(v: string) => onSearch(v.trim(), 'tag') "
                 >
-                  <a-option>Guangzhou</a-option>
-                  <a-option>Shenzhen</a-option>
                   <template #footer>
                     <div class="text-center text-sm text-gray-400">
                       默认展示10条，更多请搜索
