@@ -86,9 +86,9 @@ export function getUserBriefArticles(userId: string) {
  * @param userId
  * @returns
  */
-export function getCategoriesByNameAndUserId(name: string, id: string) {
+export function getCategoriesByNameAndUserId(s: string, id: string) {
   return axios.get<BaseModel[]>(`${prefix}/category/user`, {
-    params: { id, name },
+    params: { id, s },
   });
 }
 
@@ -97,8 +97,8 @@ export function getCategoriesByNameAndUserId(name: string, id: string) {
  * @param userId
  * @returns
  */
-export function getTagsByNameAndUserId(name: string, id: string) {
+export function getTagsByNameAndUserId(s: string, id: string) {
   return axios.get<BaseModel[]>(`${prefix}/tags/user`, {
-    params: { id, name },
+    params: { id, s },
   });
 }
