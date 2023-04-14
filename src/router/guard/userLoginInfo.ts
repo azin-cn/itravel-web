@@ -48,17 +48,9 @@ export default function setupUserLoginInfoGuard(router: Router) {
       } as LocationQuery;
       next();
     } else {
-      next();
+      const { requiresAuth } = to.meta;
+      if (requiresAuth) next({ name: 'login' });
+      else next();
     }
-    /**
-     * 无需登录
-     */
-    // next({
-    //   name: 'login',
-    //   query: {
-    //     redirect: to.name,
-    //     ...to.query,
-    //   } as LocationQueryRaw,
-    // });
   });
 }
