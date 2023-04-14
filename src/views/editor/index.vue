@@ -11,6 +11,7 @@
     getCategoriesByNameAndUserId,
     getTagsByNameAndUserId,
   } from '@/api/article';
+  import { getSpotsByWords } from '@/api/spot';
   import { useUserStore } from '@/store';
   import { setDocumentTitle } from '@/utils/window';
   import SiderLayout from '../components/layout/sider-layout.vue';
@@ -36,6 +37,7 @@
   };
   const states = ref({
     submitLoading: false,
+    spotLoading: false,
     categoryLoading: false,
     tagLoading: false,
   });
@@ -70,7 +72,15 @@
       }
     }
   };
-  const onSearchSpot = () => {};
+  const onSearchSpot = async (v: string) => {
+    states.value.spotLoading = true;
+    try {
+      const { data } = await getSpotsByWords(v);
+      spotOptions.value = data;
+    } finally {
+      states.value.spotLoading = false;
+    }
+  };
 
   const onSubmit = async () => {};
 
@@ -80,15 +90,30 @@
     /**
      * 路由已配置requestAuth
      */
+    try {
+      states.value.categoryLoading = true;
+      states.value.tagLoading = true;
+      states.value.spotLoading = true;
+      const [{ data: categories }, { data: tags }, { data: spots }] =
+        await Promise.all([
+          getCategoriesByNameAndUserId('', userStore.id as string),
+          getTagsByNameAndUserId('', userStore.id as string),
+          getSpotsByWords(''),
+        ]);
+      categoryOptions.value = categories;
+      tagOptions.value = tags;
+      spotOptions.value = spots;
+    } finally {
+      states.value.categoryLoading = false;
+      states.value.tagLoading = false;
+      states.value.spotLoading = false;
+    }
 
     if (articleId) {
       isUpdated.value = true;
-      const [{ data: article }, { data: categories }] = await Promise.all([
-        getArticleById(articleId as string),
-        getCategoriesByNameAndUserId('', userStore.id as string),
-      ]);
+
+      const { data: article } = await getArticleById(articleId as string);
       form.value = article;
-      categoryOptions.value = categories;
 
       setDocumentTitle(`编辑文章 - ${article.title}`);
     } else {
@@ -232,11 +257,18 @@
               :default-file-list="fileList"
               class="w-2/3"
             />
-            <a-form :model="{}" class="w-2/5 itravel-editor-form">
+            <a-form :model="form" class="w-2/5 itravel-editor-form">
               <a-form-item field="spot" label="景点" tooltip="请选择关联景点">
-                <a-select placeholder="请输入关联景点">
-                  <a-option>Beijing</a-option>
-                  <a-option>Shanghai</a-option>
+                <a-select
+                  v-model="form.spot"
+                  :options="spotOptions"
+                  :field-names="fieldNames"
+                  :loading="states.spotLoading"
+                  scrollbar
+                  allow-search
+                  placeholder="请输入关联景点"
+                  @search="(v: string) => onSearchSpot(v.trim())"
+                >
                   <template #footer>
                     <div class="text-center text-sm text-gray-400">
                       默认展示10条，更多请搜索
@@ -247,12 +279,13 @@
 
               <a-form-item field="category" label="分类" tooltip="可进行搜索">
                 <a-select
+                  v-model="form.category"
                   :field-names="fieldNames"
                   :options="categoryOptions"
                   :loading="states.categoryLoading"
-                  placeholder="请选择文章分类"
                   scrollbar
                   allow-search
+                  placeholder="请选择文章分类"
                   @search="(v: string) => onSearch(v.trim(), 'category')"
                 >
                   <template #footer>
@@ -265,14 +298,15 @@
 
               <a-form-item field="tags" label="标签" tooltip="可进行搜索">
                 <a-select
+                  v-model="form.tags"
                   :field-names="fieldNames"
                   :options="tagOptions"
                   :limit="4"
                   :max-tag-count="2"
                   scrollbar
                   multiple
-                  placeholder="请选择文章标签"
                   allow-search
+                  placeholder="请选择文章标签"
                   @search="(v: string) => onSearch(v.trim(), 'tag') "
                 >
                   <template #footer>
