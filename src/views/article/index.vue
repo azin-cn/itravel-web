@@ -1,6 +1,7 @@
 <script lang="ts" setup>
   import { ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
+  import { IPaginationOpton } from '@/api/base';
   import {
     getArticleById,
     getCommentsByArticleId,
@@ -13,9 +14,11 @@
   import { setDocumentTitle } from '@/utils/window';
   import IComment, { Comment } from '@/components/comment/index.vue';
   import { IAction } from '@/components/comment/types';
+  import { ListResult } from '@/types/global';
   import RandRecomSpot from './components/rand-recom-spot.vue';
   import SiderLayout from '../components/layout/sider-layout.vue';
   import useArticle from '../components/article/use-article';
+  import IPagination from '../components/pagination/index.vue';
 
   const route = useRoute();
   const router = useRouter();
@@ -25,27 +28,52 @@
   const commentRef = ref<InstanceType<typeof IComment>>();
   const articleInfo = ref<ArticleBriefInfo>();
   const spotInfo = ref<SpotBreifInfoModel>();
-  const commentsInfo = ref<Comment[]>();
+  const comments = ref<ListResult<Comment>>();
 
   const onRedirectUserPreview = (userId: string) => {
     userId = userId || (articleInfo.value?.author.id as string);
     router.push({ name: 'userPreview', params: { userId } });
   };
 
+  const getArticle = async (articleId: string) => {
+    const { data } = await getArticleById(articleId);
+    articleInfo.value = data;
+  };
+
+  const getSpot = async (articleId: string) => {
+    const { data } = await getSpotBriefInfo(articleId);
+    spotInfo.value = data;
+  };
+
+  const page = ref(1);
+  const getComments = async (
+    articleId: string,
+    options: IPaginationOpton = { page: 1, limit: 10 }
+  ) => {
+    const { data } = await getCommentsByArticleId(articleId, options);
+    comments.value = data;
+  };
+
+  const onCommentPageChange = async (v: number) => {
+    page.value = v;
+    await getComments(articleInfo.value?.id as string, { page: v, limit: 10 });
+  };
+
   const onAction = async (action: IAction) => {
     const { key, record } = action;
-    const { user } = record;
     switch (key) {
       case 'reply':
         // network
         try {
           await postComment({
-            user: record.user as string,
+            user: (record.user || userStore.id) as string,
             toUser: record.toUser as string,
             content: record.content as string,
             parent: record.parent as string,
             article: articleInfo.value?.id as string,
           });
+          commentRef.value?.hideReply();
+          getCommentsByArticleId(articleInfo.value?.id as string);
         } catch (e) {
           commentRef.value?.setReplyLoading(false);
         }
@@ -66,20 +94,15 @@
       return;
     }
     // promise.all
-    const { data: article } = await getArticleById(articleId as string);
-    const { data: comments } = await getCommentsByArticleId(
-      articleId as string,
-      {
-        limit: 10,
-        page: 1,
-      }
-    );
-    const { data: spot } = await getSpotBriefInfo(article.spot.id as string);
-    articleInfo.value = article;
-    spotInfo.value = spot;
-    commentsInfo.value = comments.list;
+    await Promise.all([
+      getArticle(articleId as string),
+      getComments(articleId as string),
+      getSpot(articleId as string),
+    ]);
 
-    setDocumentTitle(`${article.author.username} | ${article.title}`);
+    setDocumentTitle(
+      `${articleInfo.value?.author.username} | ${articleInfo.value?.title}`
+    );
   };
   init();
 </script>
@@ -291,7 +314,16 @@
                 </a-textarea>
                 <a-button>发送</a-button>
               </div>
-              <IComment :comments="commentsInfo" @action="onAction"></IComment>
+              <IComment
+                ref="commentRef"
+                :comments="comments?.list"
+                @action="onAction"
+              />
+              <IPagination
+                :on-page-change="onCommentPageChange"
+                :page="page"
+                :total="comments?.total"
+              />
             </div>
           </div>
         </div>
