@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { ref } from 'vue';
+  import { ref, reactive } from 'vue';
   import { formatNumber } from '@/utils/format';
   import { UserState } from '@/store/modules/user/types';
   import ReplyMini from '../reply-mini/index.vue';
@@ -56,17 +56,22 @@
      * 评论数据
      */
     comments: Comment[];
+
+    /**
+     * 是否展开
+     */
+    expand: boolean;
   }
 
   const props = withDefaults(defineProps<IProps>(), {
     browser: () => ({}),
     comments: () => [],
+    expand: false,
   });
 
   const emits = defineEmits(['action']);
 
   const showReplyMap = ref<Map<string, boolean>>();
-
   /**
    * onShowReply 只能展示一个回复输入框
    */
@@ -94,6 +99,12 @@
     showReplyMap.value = new Map([]);
   };
 
+  const showChildCommentMap = reactive<Map<string, boolean>>(new Map());
+  const onShowChildComment = (id: string) => {
+    const showChildComment = !showChildCommentMap.get(id);
+    showChildCommentMap.set(id, showChildComment);
+  };
+
   defineExpose({ hideReply });
 </script>
 
@@ -104,7 +115,11 @@
 </script>
 
 <template>
-  <div v-for="comment of comments" :key="comment.id" class="itravel-comment">
+  <div
+    v-for="comment of comments"
+    :key="comment.id"
+    class="itravel-comment mb-2"
+  >
     <a-avatar
       :size="32"
       :image-url="comment.user.avatar"
@@ -174,16 +189,32 @@
       />
     </Transition>
 
-    <!-- children -->
-    <div v-if="comment.children" class="itravel-comment__children">
-      <!-- 是否展示children -->
-      <a-divider :margin="10"> <icon-star /> </a-divider>
-      <Comment :comments="comment.children"></Comment>
+    <!-- children 递归终止 -->
+    <div v-if="comment.children?.length" class="itravel-comment__children">
+      <Transition name="zoom" mode="out-in">
+        <div>
+          <Comment
+            v-if="showChildCommentMap?.get(comment.id)"
+            :comments="comment.children"
+          />
+          <!-- 是否展示children -->
+          <div
+            class="-mt-2 mb-2 inline-block link-accent cursor-pointer text-base text-gray-500"
+            @click.stop="onShowChildComment(comment.id)"
+          >
+            {{ showChildCommentMap?.get(comment.id) ? '收起回复' : '展开回复' }}
+            <IconFont
+              type="icon-xiangxiajiantoux"
+              :class="showChildCommentMap?.get(comment.id) ? 'rotate-180' : ''"
+            />
+          </div>
+        </div>
+      </Transition>
     </div>
   </div>
 </template>
 
-<style lang="less" scoped>
+<style lang="less">
   .itravel-comment {
     display: grid;
     grid-template-areas:
@@ -220,5 +251,15 @@
     &__children {
       grid-area: children;
     }
+  }
+
+  .zoom-enter-active,
+  .zoom-leave-active {
+    transition: all 1s ease;
+  }
+
+  .zoom-enter,
+  .zoom-leave-to {
+    height: 0;
   }
 </style>
