@@ -63,7 +63,7 @@
     comments: () => [],
   });
 
-  const emits = defineEmits(['reply']);
+  const emits = defineEmits(['action']);
 
   const showReplyMap = ref<Map<string, boolean>>();
 
@@ -87,7 +87,7 @@
   };
 
   const onReply = (userId: string, toUserId: string, content: string) => {
-    emits('reply', { userId, toUserId, content });
+    emits('action', { userId, toUserId, content });
   };
 
   const hideReply = () => {
@@ -163,7 +163,7 @@
       <ReplyMini
         v-if="showReplyMap?.get(comment.id)"
         class="itravel-comment__reply"
-        @reply="(v: string) => onReply(browser.id, comment.user.id, v)"
+        @reply="(v: string) => onReply(browser?.id as string, comment?.user.id as string, v)"
       />
     </Transition>
 
