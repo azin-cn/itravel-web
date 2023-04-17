@@ -11,6 +11,7 @@
   import { formatNumber } from '@/utils/format';
   import { setDocumentTitle } from '@/utils/window';
   import IComment, { Comment } from '@/components/comment/index.vue';
+  import { IAction } from '@/components/comment/types';
   import RandRecomSpot from './components/rand-recom-spot.vue';
   import SiderLayout from '../components/layout/sider-layout.vue';
   import useArticle from '../components/article/use-article';
@@ -27,6 +28,17 @@
   const onRedirectUserPreview = (userId: string) => {
     userId = userId || (articleInfo.value?.author.id as string);
     router.push({ name: 'userPreview', params: { userId } });
+  };
+
+  const onAction = async (action: IAction) => {
+    const { key, record } = action;
+    switch (key) {
+      case 'reply':
+        // network
+        break;
+      default:
+        break;
+    }
   };
 
   const init = async () => {
@@ -265,7 +277,7 @@
                 </a-textarea>
                 <a-button>发送</a-button>
               </div>
-              <IComment :comments="commentsInfo"></IComment>
+              <IComment :comments="commentsInfo" @action="onAction"></IComment>
             </div>
           </div>
         </div>
