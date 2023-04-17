@@ -4,6 +4,7 @@
   import { UserState } from '@/store/modules/user/types';
   import useLoading from '@/hooks/loading';
   import ReplyMini from '../reply-mini/index.vue';
+  import { IAction } from './types';
 
   export interface Comment {
     /**
@@ -95,7 +96,11 @@
 
   const onReply = (userId: string, toUserId: string, content: string) => {
     setReplyLoading(true);
-    emits('action', { userId, toUserId, content });
+
+    emits('action', {
+      key: 'reply',
+      record: { userId, toUserId, content },
+    } as IAction);
   };
 
   /**
