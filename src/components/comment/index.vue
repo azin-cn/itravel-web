@@ -5,6 +5,7 @@
   import useLoading from '@/hooks/loading';
   import ReplyMini from '../reply-mini/index.vue';
   import { IAction } from './types';
+  import { useReplyMap } from './use-reply-map';
 
   export interface Comment {
     /**
@@ -74,25 +75,7 @@
   const emits = defineEmits(['action']);
 
   const { loading: replyLoading, setLoading: setReplyLoading } = useLoading();
-  const showReplyMap = ref<Map<string, boolean>>();
-  /**
-   * onShowReply 只能展示一个回复输入框
-   */
-  const onShowReply = (id: string) => {
-    const showReply = !showReplyMap.value?.get(id);
-    if (showReply) {
-      /**
-       * entry type
-       * [
-       *   [key, value],
-       * ]
-       */
-      const map = new Map([[id, true]]);
-      showReplyMap.value = map;
-    } else {
-      showReplyMap.value = new Map([]);
-    }
-  };
+  const { showReplyMap, setShowReplyMap } = useReplyMap();
 
   const onReply = (
     user: string,
@@ -177,7 +160,7 @@
       </span>
       <span
         class="mr-3 cursor-pointer hover:link-accent"
-        @click.stop="onShowReply(comment.id)"
+        @click.stop="setShowReplyMap(comment.id)"
       >
         <IconFont type="icon-pinglun3" class="icon-click" />
         <!-- 只有为true才显示取消评论，否则一律显示评论按钮 -->
