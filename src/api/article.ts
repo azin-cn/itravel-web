@@ -112,7 +112,10 @@ export function getTagsByNameAndUserId(s: string, id: string) {
  */
 export function getCommentsByArticleId(
   articleId: string,
-  options: IPaginationOpton
+  options: IPaginationOpton = {
+    limit: 10,
+    page: 1,
+  }
 ) {
   return axios.get<ListResult<Comment>>(`${prefix}/comment`, {
     params: { articleId, ...options },

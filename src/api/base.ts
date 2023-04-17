@@ -20,3 +20,11 @@ export interface BaseModel {
   id: string;
   name: string;
 }
+
+/**
+ * 分页
+ */
+export interface IPaginationOpton {
+  limit: number;
+  page: number;
+}
