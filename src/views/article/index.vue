@@ -5,6 +5,7 @@
     getArticleById,
     getCommentsByArticleId,
     ArticleBriefInfo,
+    postComment,
   } from '@/api/article';
   import { getSpotBriefInfo, SpotBreifInfoModel } from '@/api/spot';
   import { useUserStore } from '@/store';
@@ -21,6 +22,7 @@
   const userStore = useUserStore();
   const { onArticleShare, onThumbsUp } = useArticle();
 
+  const commentRef = ref<InstanceType<typeof IComment>>();
   const articleInfo = ref<ArticleBriefInfo>();
   const spotInfo = ref<SpotBreifInfoModel>();
   const commentsInfo = ref<Comment[]>();
@@ -32,9 +34,21 @@
 
   const onAction = async (action: IAction) => {
     const { key, record } = action;
+    const { user } = record;
     switch (key) {
       case 'reply':
         // network
+        try {
+          await postComment({
+            user: record.user as string,
+            toUser: record.toUser as string,
+            content: record.content as string,
+            parent: record.parent as string,
+            article: articleInfo.value?.id as string,
+          });
+        } catch (e) {
+          commentRef.value?.setReplyLoading(false);
+        }
         break;
       default:
         break;
