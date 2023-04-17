@@ -119,4 +119,22 @@ export function getCommentsByArticleId(
   });
 }
 
-export function postComment() {}
+/**
+ * comment model
+ */
+export interface CommentModel {
+  user: string;
+  toUser: string;
+  article: string;
+  content: string;
+  parent: string;
+}
+
+/**
+ * 提交评论
+ * @param data
+ * @returns
+ */
+export function postComment(data: CommentModel) {
+  return axios.post(`${prefix}/comment`, data);
+}
