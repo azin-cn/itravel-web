@@ -26,7 +26,7 @@
 </script>
 
 <template>
-  <div class="mb-6 flex items-center">
+  <div class="w-full mb-6 flex items-center">
     <a-textarea
       v-model="comment"
       :auto-size="{
