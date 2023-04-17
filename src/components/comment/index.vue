@@ -52,17 +52,17 @@
     /**
      * 当前用户
      */
-    browser: Partial<UserState>;
+    browser?: Partial<UserState>;
 
     /**
      * 评论数据
      */
-    comments: Comment[];
+    comments?: Comment[];
 
     /**
      * 是否展开
      */
-    expand: boolean;
+    expand?: boolean;
   }
 
   const props = withDefaults(defineProps<IProps>(), {
@@ -112,6 +112,7 @@
    * 当评论提交成功后，可通过hideReply来解除loading和隐藏输入框
    */
   const hideReply = () => {
+    console.log('hideReply');
     showReplyMap.value = new Map([]);
   };
 
@@ -121,7 +122,12 @@
     showChildCommentMap.set(id, showChildComment);
   };
 
-  defineExpose({ hideReply, setReplyLoading });
+  const test = () => {
+    console.log('test');
+    setReplyLoading(false);
+  };
+
+  defineExpose({ hideReply, setReplyLoading, test });
 </script>
 
 <script lang="ts">
