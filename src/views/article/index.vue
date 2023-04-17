@@ -1,6 +1,7 @@
 <script lang="ts" setup>
   import { ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
+  import { Message } from '@arco-design/web-vue';
   import { IPaginationOpton } from '@/api/base';
   import {
     getArticleById,
@@ -18,6 +19,7 @@
   import RandRecomSpot from './components/rand-recom-spot.vue';
   import SiderLayout from '../components/layout/sider-layout.vue';
   import useArticle from '../components/article/use-article';
+  import useRootComment from './use-root-comment';
   import IPagination from '../components/pagination/index.vue';
   import { DEFAULT_PAGINATION_LIMIT } from './constants';
 
@@ -30,6 +32,9 @@
   const articleInfo = ref<ArticleBriefInfo>();
   const spotInfo = ref<SpotBreifInfoModel>();
   const comments = ref<ListResult<Comment>>();
+
+  const { rootComment, rootLoading, setRootLoading, onSubmitRootComment } =
+    useRootComment(articleInfo);
 
   const onRedirectUserPreview = (userId: string) => {
     userId = userId || (articleInfo.value?.author.id as string);
@@ -76,12 +81,14 @@
             parent: record.parent as string,
             article: articleInfo.value?.id as string,
           });
+          Message.success('发送成功');
           commentRef.value?.hideReply();
           getComments(articleInfo.value?.id as string, {
             page: page.value,
             limit: DEFAULT_PAGINATION_LIMIT,
           });
         } catch (e) {
+          Message.error((e as Error).message || '提交失败');
           commentRef.value?.setReplyLoading(false);
         }
         break;
@@ -304,8 +311,7 @@
             <div class="p-6">
               <div class="mb-6 flex items-center">
                 <a-textarea
-                  placeholder="在这里输入你的观点吧！"
-                  allow-clear
+                  v-model="rootComment"
                   :auto-size="{
                     minRows: 2,
                     maxRows: 10,
@@ -316,10 +322,17 @@
                     'border-color': 'rgb(227 227 228 / 100%)',
                     'border-radius': '6px',
                   }"
+                  allow-clear
+                  placeholder="在这里输入你的观点吧！"
                   class="mr-3"
                 >
                 </a-textarea>
-                <a-button>发送</a-button>
+                <a-button
+                  :loading="rootLoading"
+                  @click.stop="onSubmitRootComment"
+                >
+                  发送
+                </a-button>
               </div>
               <IComment
                 ref="commentRef"
