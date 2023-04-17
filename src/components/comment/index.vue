@@ -175,8 +175,10 @@
     </Transition>
 
     <!-- children -->
-    <div class="itravel-comment__children">
-      <Comment v-if="comment.children" :comments="comment.children"></Comment>
+    <div v-if="comment.children" class="itravel-comment__children">
+      <!-- 是否展示children -->
+      <a-divider :margin="10"> <icon-star /> </a-divider>
+      <Comment :comments="comment.children"></Comment>
     </div>
   </div>
 </template>
