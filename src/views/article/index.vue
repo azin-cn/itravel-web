@@ -19,6 +19,7 @@
   import SiderLayout from '../components/layout/sider-layout.vue';
   import useArticle from '../components/article/use-article';
   import IPagination from '../components/pagination/index.vue';
+  import { DEFAULT_PAGINATION_LIMIT } from './constants';
 
   const route = useRoute();
   const router = useRouter();
@@ -48,7 +49,7 @@
   const page = ref(1);
   const getComments = async (
     articleId: string,
-    options: IPaginationOpton = { page: 1, limit: 10 }
+    options: IPaginationOpton = { page: 1, limit: DEFAULT_PAGINATION_LIMIT }
   ) => {
     const { data } = await getCommentsByArticleId(articleId, options);
     comments.value = data;
@@ -56,7 +57,10 @@
 
   const onCommentPageChange = async (v: number) => {
     page.value = v;
-    await getComments(articleInfo.value?.id as string, { page: v, limit: 10 });
+    await getComments(articleInfo.value?.id as string, {
+      page: v,
+      limit: DEFAULT_PAGINATION_LIMIT,
+    });
   };
 
   const onAction = async (action: IAction) => {
@@ -73,7 +77,10 @@
             article: articleInfo.value?.id as string,
           });
           commentRef.value?.hideReply();
-          getCommentsByArticleId(articleInfo.value?.id as string);
+          getComments(articleInfo.value?.id as string, {
+            page: page.value,
+            limit: DEFAULT_PAGINATION_LIMIT,
+          });
         } catch (e) {
           commentRef.value?.setReplyLoading(false);
         }
