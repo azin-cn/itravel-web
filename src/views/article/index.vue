@@ -301,7 +301,7 @@
               <span>评论</span>
             </h3>
 
-            <div class="p-4">
+            <div class="p-6">
               <div class="mb-6 flex items-center">
                 <a-textarea
                   placeholder="在这里输入你的观点吧！"
