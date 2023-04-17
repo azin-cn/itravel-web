@@ -33,7 +33,7 @@
     /**
      * 子评论/回复
      */
-    children: Comment[];
+    children?: Comment[];
 
     /**
      * 创建时间
