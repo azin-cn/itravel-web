@@ -94,12 +94,17 @@
     }
   };
 
-  const onReply = (userId: string, toUserId: string, content: string) => {
+  const onReply = (
+    user: string,
+    toUser: string,
+    parent: string,
+    content: string
+  ) => {
     setReplyLoading(true);
 
     emits('action', {
       key: 'reply',
-      record: { userId, toUserId, content },
+      record: { user, toUser, parent, content },
     } as IAction);
   };
 
@@ -197,7 +202,7 @@
         v-if="showReplyMap?.get(comment.id)"
         class="itravel-comment__reply"
         :loading="replyLoading"
-        @reply="(v: string) => onReply(browser?.id as string, comment?.user.id as string, v)"
+        @reply="(v: string) => onReply(browser?.id as string, comment?.user.id as string, comment.parent?.id as string, v)"
       />
     </Transition>
 
