@@ -2,11 +2,11 @@
   import { ref } from 'vue';
 
   export interface IProps {
-    minRows: number;
-    maxRows: number;
-    maxLength: number;
-    btnText: string;
-    placeholder: string;
+    minRows?: number;
+    maxRows?: number;
+    maxLength?: number;
+    btnText?: string;
+    placeholder?: string;
     loading?: boolean;
   }
 
