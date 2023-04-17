@@ -1,5 +1,5 @@
-export interface Action {
-  type: string | 'reply' | 'thumb-up' | 'delete';
+export interface IAction {
+  key: 'reply' | 'thumb-up' | 'delete';
   record: {
     userId: string;
     toUserId: string;
