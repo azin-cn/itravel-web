@@ -40,8 +40,8 @@
     articleInfo.value = data;
   };
 
-  const getSpot = async (articleId: string) => {
-    const { data } = await getSpotBriefInfo(articleId);
+  const getSpot = async (spotId: string) => {
+    const { data } = await getSpotBriefInfo(spotId);
     spotInfo.value = data;
   };
 
@@ -97,8 +97,8 @@
     await Promise.all([
       getArticle(articleId as string),
       getComments(articleId as string),
-      getSpot(articleId as string),
     ]);
+    await getSpot(articleInfo.value?.spot.id as string);
 
     setDocumentTitle(
       `${articleInfo.value?.author.username} | ${articleInfo.value?.title}`
