@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { ListResult } from '@/types/global';
 import { UserState } from '@/store/modules/user/types';
+import { Comment } from '@/components/comment/index.vue';
 import { prefix, BaseModel } from './base';
 
 interface Spot {
@@ -100,5 +101,20 @@ export function getCategoriesByNameAndUserId(s: string, id: string) {
 export function getTagsByNameAndUserId(s: string, id: string) {
   return axios.get<BaseModel[]>(`${prefix}/tags/user`, {
     params: { id, s },
+  });
+}
+
+/**
+ * 通过article id获取评论
+ * @param articleId
+ * @param options
+ * @returns
+ */
+export function getCommentsByArticleId(
+  articleId: string,
+  options: IPaginationOpton
+) {
+  return axios.get<ListResult<Comment>>(`${prefix}/comment`, {
+    params: { articleId, ...options },
   });
 }
