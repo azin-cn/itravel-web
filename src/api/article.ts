@@ -118,3 +118,5 @@ export function getCommentsByArticleId(
     params: { articleId, ...options },
   });
 }
+
+export function postComment() {}
