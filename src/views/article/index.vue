@@ -1,11 +1,16 @@
 <script lang="ts" setup>
   import { ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
-  import { getArticleById, ArticleBriefInfo } from '@/api/article';
+  import {
+    getArticleById,
+    getCommentsByArticleId,
+    ArticleBriefInfo,
+  } from '@/api/article';
   import { getSpotBriefInfo, SpotBreifInfoModel } from '@/api/spot';
   import { useUserStore } from '@/store';
   import { formatNumber } from '@/utils/format';
   import { setDocumentTitle } from '@/utils/window';
+  import IComment, { Comment } from '@/components/comment/index.vue';
   import RandRecomSpot from './components/rand-recom-spot.vue';
   import SiderLayout from '../components/layout/sider-layout.vue';
   import useArticle from '../components/article/use-article';
@@ -17,6 +22,7 @@
 
   const articleInfo = ref<ArticleBriefInfo>();
   const spotInfo = ref<SpotBreifInfoModel>();
+  const commentsInfo = ref<Comment[]>();
 
   const onRedirectUserPreview = (userId: string) => {
     userId = userId || (articleInfo.value?.author.id as string);
@@ -33,11 +39,19 @@
       router.push({ name: 'home' });
       return;
     }
-
+    // promise.all
     const { data: article } = await getArticleById(articleId as string);
+    const { data: comments } = await getCommentsByArticleId(
+      articleId as string,
+      {
+        limit: 10,
+        page: 1,
+      }
+    );
     const { data: spot } = await getSpotBriefInfo(article.spot.id as string);
     articleInfo.value = article;
     spotInfo.value = spot;
+    commentsInfo.value = comments.list;
 
     setDocumentTitle(`${article.author.username} | ${article.title}`);
   };
@@ -301,6 +315,8 @@
                     </span>
                   </div>
                 </div>
+
+                <IComment :comments="commentsInfo"></IComment>
               </div>
             </div>
           </div>
