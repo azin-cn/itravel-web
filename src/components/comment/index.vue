@@ -2,6 +2,7 @@
   import { ref, reactive } from 'vue';
   import { formatNumber } from '@/utils/format';
   import { UserState } from '@/store/modules/user/types';
+  import useLoading from '@/hooks/loading';
   import ReplyMini from '../reply-mini/index.vue';
 
   export interface Comment {
@@ -71,6 +72,7 @@
 
   const emits = defineEmits(['action']);
 
+  const { loading: replyLoading, setLoading: setReplyLoading } = useLoading();
   const showReplyMap = ref<Map<string, boolean>>();
   /**
    * onShowReply 只能展示一个回复输入框
@@ -92,9 +94,13 @@
   };
 
   const onReply = (userId: string, toUserId: string, content: string) => {
+    setReplyLoading(true);
     emits('action', { userId, toUserId, content });
   };
 
+  /**
+   * 当评论提交成功后，可通过hideReply来解除loading和隐藏输入框
+   */
   const hideReply = () => {
     showReplyMap.value = new Map([]);
   };
@@ -105,7 +111,7 @@
     showChildCommentMap.set(id, showChildComment);
   };
 
-  defineExpose({ hideReply });
+  defineExpose({ hideReply, setReplyLoading });
 </script>
 
 <script lang="ts">
@@ -185,6 +191,7 @@
       <ReplyMini
         v-if="showReplyMap?.get(comment.id)"
         class="itravel-comment__reply"
+        :loading="replyLoading"
         @reply="(v: string) => onReply(browser?.id as string, comment?.user.id as string, v)"
       />
     </Transition>
