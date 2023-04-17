@@ -113,7 +113,14 @@
     />
 
     <div class="text-sm itravel-comment__userinfo">
-      <p class="text-base">{{ comment.user.username }}</p>
+      <!-- 目前仅有静态模板，后续完善信息展示交互 -->
+      <p class="text-base">
+        {{ comment.user.username }}
+        <span v-if="comment.parent">
+          <span class="text-gray-500 ml-2 mr-2">回复</span>
+          {{ comment?.toUser.username }}
+        </span>
+      </p>
       <!-- 处于子评论/回复时隐藏 -->
       <p v-if="!comment.parent" class="text-gray-400">
         {{ comment.user.description }}
