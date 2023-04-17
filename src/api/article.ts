@@ -127,7 +127,7 @@ export interface CommentModel {
   toUser: string;
   article: string;
   content: string;
-  parent: string;
+  parent: string | null;
 }
 
 /**

@@ -1,7 +1,7 @@
 export interface IRecord {
   user: string;
   toUser: string;
-  parent: string;
+  parent: string | null;
   content: string;
   comment: string;
 }
