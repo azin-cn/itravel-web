@@ -7,6 +7,7 @@
     maxLength: number;
     btnText: string;
     placeholder: string;
+    loading?: boolean;
   }
 
   const props = withDefaults(defineProps<IProps>(), {
@@ -44,6 +45,6 @@
       class="mr-3"
     >
     </a-textarea>
-    <a-button @click.stop="onReply">{{ btnText }}</a-button>
+    <a-button :loading="loading" @click.stop="onReply">{{ btnText }}</a-button>
   </div>
 </template>
