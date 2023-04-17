@@ -65,10 +65,41 @@
 
   const emits = defineEmits(['reply']);
 
-  const showReply = ref(false);
+  const showReplyMap = ref<Map<string, boolean>>();
 
-  const onReply = (userId: string, toUserId: string, v: string) => {
-    emits('reply', v);
+  /**
+   * onShowReply 只能展示一个回复输入框
+   */
+  const onShowReply = (id: string) => {
+    const showReply = !showReplyMap.value?.get(id);
+    if (showReply) {
+      /**
+       * entry type
+       * [
+       *   [key, value],
+       * ]
+       */
+      const map = new Map([[id, true]]);
+      showReplyMap.value = map;
+    } else {
+      showReplyMap.value = new Map([]);
+    }
+  };
+
+  const onReply = (userId: string, toUserId: string, content: string) => {
+    emits('reply', { userId, toUserId, content });
+  };
+
+  const hideReply = () => {
+    showReplyMap.value = new Map([]);
+  };
+
+  defineExpose({ hideReply });
+</script>
+
+<script lang="ts">
+  export default {
+    name: 'Comment',
   };
 </script>
 
@@ -102,10 +133,14 @@
       </span>
       <span
         class="mr-3 cursor-pointer hover:link-accent"
-        @click.stop="showReply = !showReply"
+        @click.stop="onShowReply(comment.id)"
       >
         <IconFont type="icon-pinglun3" class="icon-click" />
-        <span class="ml-1">{{ showReply ? '取消评论' : '评论' }}</span>
+        <!-- 只有为true才显示取消评论，否则一律显示评论按钮 -->
+        <span v-if="showReplyMap?.get(comment.id)" class="ml-1 link-accent">
+          取消评论
+        </span>
+        <span v-else class="ml-1">评论</span>
       </span>
       <span class="mr-3">
         <IconFont type="icon-shijian4" />
@@ -124,12 +159,18 @@
     </div>
 
     <!-- 回复时，由当前的浏览者发起，由当前的评论人接收 -->
-    <ReplyMini
-      v-if="showReply"
-      @reply="(v: string) => onReply(browser.id, comment.user.id, v)"
-    />
+    <Transition name="fade" mode="out-in">
+      <ReplyMini
+        v-if="showReplyMap?.get(comment.id)"
+        class="itravel-comment__reply"
+        @reply="(v: string) => onReply(browser.id, comment.user.id, v)"
+      />
+    </Transition>
 
     <!-- children -->
+    <div class="itravel-comment__children">
+      <Comment v-if="comment.children" :comments="comment.children"></Comment>
+    </div>
   </div>
 </template>
 
@@ -139,8 +180,10 @@
     grid-template-areas:
       'avatar userinfo'
       '. comment'
-      '. action';
-    grid-template-rows: 32px auto 24px;
+      '. action'
+      '. reply'
+      '. children';
+    grid-template-rows: 32px auto 24px auto;
     grid-template-columns: 32px auto;
     gap: 0.6rem 0.5rem;
     align-items: center;
@@ -159,6 +202,14 @@
 
     &__action {
       grid-area: action;
+    }
+
+    &__reply {
+      grid-area: reply;
+    }
+
+    &__children {
+      grid-area: children;
     }
   }
 </style>
