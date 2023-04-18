@@ -2,7 +2,7 @@ import { RouteRecordRaw } from 'vue-router';
 import { DEFAULT_LAYOUT } from '../base';
 
 export const SEARCH_ROUTE: RouteRecordRaw = {
-  path: 'search',
+  path: '/search',
   component: DEFAULT_LAYOUT,
   meta: {
     requiresAuth: false,
