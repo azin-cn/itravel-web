@@ -76,6 +76,7 @@
 
   const { loading: replyLoading, setLoading: setReplyLoading } = useLoading();
   const { showReplyMap, setShowReplyMap } = useReplyMap();
+  const childRef = ref();
 
   const onReply = (
     user: string,
@@ -90,13 +91,10 @@
       record: { user, toUser, parent, content },
     } as IAction);
   };
-
-  /**
-   * 当评论提交成功后，可通过hideReply来解除loading和隐藏输入框
-   */
-  const hideReply = () => {
-    console.log('hideReply');
-    showReplyMap.value = new Map([]);
+  const onAction = (action: IAction) => {
+    const { record } = action;
+    setReplyLoading(true);
+    emits('action', { key: 'reply', record });
   };
 
   const showChildCommentMap = reactive<Map<string, boolean>>(new Map());
@@ -105,12 +103,17 @@
     showChildCommentMap.set(id, showChildComment);
   };
 
-  const test = () => {
-    console.log('test');
+  /**
+   * 当评论提交成功后，可通过hideReply来解除loading和隐藏输入框
+   */
+  const hideReply = () => {
     setReplyLoading(false);
+    showReplyMap.value = new Map([]);
+    // console.log(childRef.value);
+    childRef.value?.forEach((item: any) => item?.hideReply());
   };
 
-  defineExpose({ hideReply, setReplyLoading, test });
+  defineExpose({ hideReply, setReplyLoading });
 </script>
 
 <script lang="ts">
@@ -208,7 +211,9 @@
         <div>
           <Comment
             v-if="showChildCommentMap?.get(comment.id)"
+            ref="childRef"
             :comments="comment.children"
+            @action="onAction"
           />
           <!-- 是否展示children -->
           <div
