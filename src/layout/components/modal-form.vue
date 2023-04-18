@@ -2,6 +2,7 @@
   import { ref } from 'vue';
   import useVisible from '@/hooks/visible';
   import useLoading from '@/hooks/loading';
+  import { redirectSearch } from '@/router/utils';
 
   const { visible, setVisible } = useVisible();
 
@@ -10,7 +11,8 @@
   const onSearch = () => {
     const { search } = form.value;
     if (search.trim()) {
-      console.log(search.trim());
+      redirectSearch(search.trim());
+      setVisible(false);
     }
   };
 
