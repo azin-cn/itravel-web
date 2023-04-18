@@ -4,7 +4,7 @@
   import Vditor from 'vditor';
   import 'vditor/dist/index.css';
   import { BaseModel } from '@/api/base';
-  import { Message, SelectFieldNames } from '@arco-design/web-vue';
+  import { FileItem, Message, SelectFieldNames } from '@arco-design/web-vue';
   import {
     getArticleById,
     getCategoriesByNameAndUserId,
@@ -19,6 +19,7 @@
   import { setDocumentTitle } from '@/utils/window';
   import SiderLayout from '../components/layout/sider-layout.vue';
   import useUpload from './use-upload';
+  import ModalForm from './component/modal-form.vue';
 
   const route = useRoute();
   const userStore = useUserStore();
@@ -27,6 +28,7 @@
   const genDefaultForm = (): Partial<ArticleModel> => ({
     title: '',
     author: userStore.id,
+    content: '',
     thumbUrl: '',
     summary: '',
     spot: '',
@@ -36,6 +38,7 @@
   });
 
   const vditorRef = ref<Vditor>();
+  const modalRef = ref<InstanceType<typeof ModalForm>>();
   const isUpdated = ref(false);
   const form = ref<Partial<ArticleModel>>(genDefaultForm());
   const spotOptions = ref<BaseModel[]>();
@@ -99,14 +102,15 @@
       Message.error('标题不能为空');
       state = false;
     }
+    const { content } = form.value;
+    if (!content) {
+      Message.error('文章内容不为空');
+      state = false;
+    }
     if (!spot) {
       Message.error('景点不能为空');
       state = false;
     }
-    // if (!category) {
-    //   Message.error('分类不能为空');
-    //   state = false;
-    // }
     if (!fileList.value?.length) {
       Message.error('图片不能为空');
       state = false;
@@ -117,10 +121,7 @@
   const onSubmit = async () => {
     const { state, data } = checkForm();
     if (!state) return;
-
-    await uploadImages();
-
-    // await postArticle(data as ArticleModel);
+    modalRef.value?.init(data as ArticleModel, uploadImages);
   };
 
   const init = async () => {
@@ -129,7 +130,6 @@
     /**
      * 路由已配置requestAuth
      */
-
     if (articleId) {
       isUpdated.value = true;
 
@@ -140,6 +140,14 @@
       form.value.category = article.category.id;
       form.value.tags = article.tags.map((item) => item.id);
       form.value.images = article.images;
+
+      fileList.value = article.images.map(
+        (item) =>
+          ({
+            name: item.slice(item.lastIndexOf('/')),
+            url: item,
+          } as FileItem)
+      );
 
       const spot = article.spot.id as string;
       const category = article.category.id as string;
@@ -258,6 +266,7 @@
       },
       input(md: string) {
         console.log(md);
+        form.value.content = md;
       },
     });
   });
@@ -390,6 +399,8 @@
         </div>
       </template>
     </SiderLayout>
+
+    <ModalForm ref="modalRef"></ModalForm>
   </div>
 </template>
 
