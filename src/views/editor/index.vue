@@ -4,7 +4,7 @@
   import Vditor from 'vditor';
   import 'vditor/dist/index.css';
   import { BaseModel } from '@/api/base';
-  import { SelectFieldNames } from '@arco-design/web-vue';
+  import { Message, SelectFieldNames } from '@arco-design/web-vue';
   import {
     getArticleById,
     getCategoriesByNameAndUserId,
@@ -18,9 +18,11 @@
   import { useUserStore } from '@/store';
   import { setDocumentTitle } from '@/utils/window';
   import SiderLayout from '../components/layout/sider-layout.vue';
+  import useUpload from './use-upload';
 
   const route = useRoute();
   const userStore = useUserStore();
+  const { fileList, uploadImages } = useUpload();
 
   const genDefaultForm = (): Partial<ArticleModel> => ({
     title: '',
@@ -89,8 +91,36 @@
     }
   };
 
+  const checkForm = (): { state: boolean; data: Partial<ArticleModel> } => {
+    const { images, tags, spot, category } = form.value;
+    let state = true;
+    const title = form.value.title?.trim();
+    if (!title) {
+      Message.error('标题不能为空');
+      state = false;
+    }
+    if (!spot) {
+      Message.error('景点不能为空');
+      state = false;
+    }
+    // if (!category) {
+    //   Message.error('分类不能为空');
+    //   state = false;
+    // }
+    if (!fileList.value?.length) {
+      Message.error('图片不能为空');
+      state = false;
+    }
+    return { state, data: { ...form.value, title } };
+  };
+
   const onSubmit = async () => {
-    const { id: author } = userStore;
+    const { state, data } = checkForm();
+    if (!state) return;
+
+    await uploadImages();
+
+    // await postArticle(data as ArticleModel);
   };
 
   const init = async () => {
@@ -231,19 +261,6 @@
       },
     });
   });
-
-  const fileList = [
-    {
-      uid: '-2',
-      name: '20200717-103937.png',
-      url: '//p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp',
-    },
-    {
-      uid: '-1',
-      name: 'hahhahahahaha.png',
-      url: '//p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/e278888093bef8910e829486fb45dd69.png~tplv-uwbnlip3yd-webp.webp',
-    },
-  ];
 </script>
 
 <template>
@@ -278,12 +295,16 @@
           <div class="flex">
             <!-- 图库 -->
             <a-upload
+              v-model:file-list="fileList"
+              :auto-upload="false"
+              :limit="9"
               list-type="picture-card"
-              action="/"
               image-preview
-              :default-file-list="fileList"
+              multiple
               class="w-2/3"
-            />
+            >
+              <template #retry-icon></template>
+            </a-upload>
             <a-form :model="form" class="w-2/5 itravel-editor-form">
               <a-form-item
                 field="spot"
@@ -291,6 +312,9 @@
                 tooltip="请选择关联景点"
                 required
                 hide-asterisk
+                :rules="{
+                  required: true,
+                }"
               >
                 <a-select
                   v-model="form.spot"
