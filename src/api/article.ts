@@ -106,6 +106,18 @@ export function postArticle(data: ArticleModel) {
 }
 
 /**
+ * 获取默认的分类列表
+ * @param ids
+ * @returns
+ */
+export function getCategoriesByIds(ids: string[]) {
+  const params = { ids: ids?.join() };
+  return axios.get<BaseModel[]>(`${prefix}/category/ids`, {
+    params,
+  });
+}
+
+/**
  * 获取分类
  * @param userId
  * @returns
@@ -113,6 +125,18 @@ export function postArticle(data: ArticleModel) {
 export function getCategoriesByNameAndUserId(s: string, id: string) {
   return axios.get<BaseModel[]>(`${prefix}/category/user`, {
     params: { id, s },
+  });
+}
+
+/**
+ * 获取默认标签
+ * @param ids
+ * @returns
+ */
+export function getTagsByIds(ids: string[]) {
+  const params = { ids: ids?.join() };
+  return axios.get<BaseModel[]>(`${prefix}/tag/ids`, {
+    params,
   });
 }
 
