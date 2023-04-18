@@ -16,10 +16,18 @@ export function postFile(form: FormData) {
 }
 
 /**
+ * 图像 response
+ */
+export interface ImgFileModel {
+  url: string;
+  name: string;
+}
+
+/**
  * 上传文件
  * @param form
  * @returns
  */
 export function uploadFile(form: FormData) {
-  return axios.post(`${prefix}/upload`, form);
+  return axios.post<ImgFileModel>(`${prefix}/upload`, form);
 }
