@@ -6,28 +6,34 @@
   import { BaseModel } from '@/api/base';
   import { SelectFieldNames } from '@arco-design/web-vue';
   import {
-    ArticleBriefInfo,
     getArticleById,
     getCategoriesByNameAndUserId,
     getTagsByNameAndUserId,
+    ArticleModel,
+    postArticle,
   } from '@/api/article';
   import { getSpotsByWords } from '@/api/spot';
   import { useUserStore } from '@/store';
   import { setDocumentTitle } from '@/utils/window';
   import SiderLayout from '../components/layout/sider-layout.vue';
 
-  const genDefaultForm = (): Partial<ArticleBriefInfo> => ({
+  const route = useRoute();
+  const userStore = useUserStore();
+
+  const genDefaultForm = (): Partial<ArticleModel> => ({
     title: '',
+    author: userStore.id,
+    thumbUrl: '',
+    summary: '',
+    spot: '',
+    category: '',
+    tags: [],
     images: [],
   });
 
-  const route = useRoute();
-  const router = useRouter();
-  const userStore = useUserStore();
-
   const vditorRef = ref<Vditor>();
   const isUpdated = ref(false);
-  const form = ref<Partial<ArticleBriefInfo>>(genDefaultForm());
+  const form = ref<Partial<ArticleModel>>(genDefaultForm());
   const spotOptions = ref<BaseModel[]>();
   const categoryOptions = ref<BaseModel[]>();
   const tagOptions = ref<BaseModel[]>();
@@ -45,7 +51,6 @@
   const onInputTitle = (e: Event) => {
     const target = e.target as HTMLInputElement;
     form.value.title = target.value;
-    console.log(form);
   };
   const onSearch = async (keywords: string, type: 'category' | 'tag') => {
     if (type === 'category') {
@@ -82,7 +87,9 @@
     }
   };
 
-  const onSubmit = async () => {};
+  const onSubmit = async () => {
+    const { id: author } = userStore;
+  };
 
   const init = async () => {
     const { params } = route;
@@ -234,7 +241,7 @@
               @input="onInputTitle"
             />
             <!-- v-model:value="" -->
-            <button class="btn btn-ghost btn-info ml-2" @click.stop="() => {}">
+            <button class="btn btn-ghost btn-info ml-2" @click.stop="onSubmit">
               提交
             </button>
           </div>
@@ -258,7 +265,13 @@
               class="w-2/3"
             />
             <a-form :model="form" class="w-2/5 itravel-editor-form">
-              <a-form-item field="spot" label="景点" tooltip="请选择关联景点">
+              <a-form-item
+                field="spot"
+                label="景点"
+                tooltip="请选择关联景点"
+                required
+                hide-asterisk
+              >
                 <a-select
                   v-model="form.spot"
                   :options="spotOptions"
@@ -277,7 +290,13 @@
                 </a-select>
               </a-form-item>
 
-              <a-form-item field="category" label="分类" tooltip="可进行搜索">
+              <a-form-item
+                field="category"
+                label="分类"
+                tooltip="可进行搜索"
+                required
+                hide-asterisk
+              >
                 <a-select
                   v-model="form.category"
                   :field-names="fieldNames"
@@ -296,7 +315,13 @@
                 </a-select>
               </a-form-item>
 
-              <a-form-item field="tags" label="标签" tooltip="可进行搜索">
+              <a-form-item
+                field="tags"
+                label="标签"
+                tooltip="可进行搜索"
+                required
+                hide-asterisk
+              >
                 <a-select
                   v-model="form.tags"
                   :field-names="fieldNames"
