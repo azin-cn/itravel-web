@@ -13,13 +13,20 @@ export default function useUpload() {
      */
     const res = await Promise.all(
       fileList.value?.map(async (item) => {
+        /**
+         * 在编辑的情况下，只有url没有file
+         */
+        if (!item.file) return item.url as string;
+
         const form = new FormData();
-        form.append('file', item.file as File);
-        const result = uploadFile(form);
-        return result;
+        form.append('file', item.file);
+        const {
+          data: { url },
+        } = await uploadFile(form);
+        return url;
       }) || []
     );
-    return res.map((item) => item.data.url);
+    return res;
   };
 
   return { fileList, uploadImages };
