@@ -102,7 +102,7 @@ export interface ArticleModel {
  * @param data
  */
 export function postArticle(data: ArticleModel) {
-  return axios.post<null>(`${prefix}/article`, data);
+  return axios.post<ArticleBriefInfo>(`${prefix}/article`, data);
 }
 
 /**
