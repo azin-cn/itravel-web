@@ -169,3 +169,13 @@ export function getSpotMonthsAndFeatures(id: string) {
 export function getSpotsByWords(s: string) {
   return axios.get<BaseModel[]>(`${prefix}/spot/search`, { params: { s } });
 }
+
+/**
+ * 获取景点Model
+ * @param ids
+ * @returns
+ */
+export function getSpotsByIds(ids: string[]) {
+  const params = { ids: ids?.join() };
+  return axios.get<BaseModel[]>(`${prefix}/spot/ids`, { params });
+}
