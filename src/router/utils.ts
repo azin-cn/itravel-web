@@ -144,6 +144,19 @@ export const redirectEditor = (articleId?: string) => {
   });
 };
 
+/**
+ * 跳转搜索页
+ * @param s
+ */
+export const redirectSearch = (s: string) => {
+  router.push({
+    name: 'search',
+    query: {
+      s,
+    },
+  });
+};
+
 export default {
   redirectHome,
   redirectHomeOrDefault,
