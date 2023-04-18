@@ -83,6 +83,27 @@ export function getUserBriefArticles(userId: string) {
 }
 
 /**
+ * 参数模型
+ */
+export interface ArticleModel {
+  title: string;
+  author: string;
+  thumbUrl: string;
+  summary: string;
+  content: string;
+  spot: string;
+  images: string[];
+}
+
+/**
+ * 创建文章
+ * @param data
+ */
+export function postArticle(data: ArticleModel) {
+  return axios.post<null>(`${prefix}/article`, data);
+}
+
+/**
  * 获取分类
  * @param userId
  * @returns
