@@ -92,6 +92,8 @@ export interface ArticleModel {
   summary: string;
   content: string;
   spot: string;
+  category: string;
+  tags: string[];
   images: string[];
 }
 
