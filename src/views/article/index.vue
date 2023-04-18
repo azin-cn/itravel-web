@@ -264,7 +264,7 @@
               <span>摘要</span>
             </h3>
             <p class="text-base" style="text-indent: 2rem">
-              {{ articleInfo?.summary }}
+              {{ articleInfo?.summary || '暂无内容' }}
             </p>
           </div>
 
