@@ -5,8 +5,8 @@
   import useVisible from '@/hooks/visible';
   import useLoading from '@/hooks/loading';
   import { cloneDeep } from 'lodash';
-  import { ImgFileModel, uploadFile } from '@/api/upload';
-  import { AxiosResponse } from 'axios';
+  import { uploadFile } from '@/api/upload';
+  import { redirectArticle } from '@/router/utils';
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
@@ -38,8 +38,12 @@
       }
 
       Message.info('提交中...');
-      await postArticle(form as ArticleModel);
+      const {
+        data: { id },
+      } = await postArticle(form as ArticleModel);
       Message.info('提交成功');
+
+      redirectArticle(id);
     } finally {
       setLoading(false);
     }
