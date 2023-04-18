@@ -11,8 +11,10 @@
     getTagsByNameAndUserId,
     ArticleModel,
     postArticle,
+    getCategoriesByIds,
+    getTagsByIds,
   } from '@/api/article';
-  import { getSpotsByWords } from '@/api/spot';
+  import { getSpotsByWords, getSpotsByIds } from '@/api/spot';
   import { useUserStore } from '@/store';
   import { setDocumentTitle } from '@/utils/window';
   import SiderLayout from '../components/layout/sider-layout.vue';
@@ -97,6 +99,34 @@
     /**
      * 路由已配置requestAuth
      */
+
+    if (articleId) {
+      isUpdated.value = true;
+
+      const { data: article } = await getArticleById(articleId as string);
+      form.value.title = article.title;
+      form.value.content = article.content;
+      form.value.spot = article.spot.id;
+      form.value.category = article.category.id;
+      form.value.tags = article.tags.map((item) => item.id);
+      form.value.images = article.images;
+
+      const spot = article.spot.id as string;
+      const category = article.category.id as string;
+      const tags = article.tags.map((item) => item.id as string);
+      const [{ data: cOptions }, { data: tOptions }, { data: sOptions }] =
+        await Promise.all([
+          getSpotsByIds([spot]),
+          getCategoriesByIds([category]),
+          getTagsByIds(tags),
+        ]);
+      categoryOptions.value = cOptions;
+      tagOptions.value = tOptions;
+      spotOptions.value = sOptions;
+      setDocumentTitle(`编辑文章 - ${article.title}`);
+      return;
+    }
+
     try {
       states.value.categoryLoading = true;
       states.value.tagLoading = true;
@@ -115,17 +145,7 @@
       states.value.tagLoading = false;
       states.value.spotLoading = false;
     }
-
-    if (articleId) {
-      isUpdated.value = true;
-
-      const { data: article } = await getArticleById(articleId as string);
-      form.value = article;
-
-      setDocumentTitle(`编辑文章 - ${article.title}`);
-    } else {
-      setDocumentTitle(`创建文章`);
-    }
+    setDocumentTitle(`创建文章`);
   };
   init();
 
