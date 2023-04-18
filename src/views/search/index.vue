@@ -5,7 +5,7 @@
 </script>
 
 <template>
-  <div>
+  <div class="2xl:container mx-auto text-gray-700 text-left">
     <SiderLayout></SiderLayout>
     <RandRecomSpot></RandRecomSpot>
   </div>
