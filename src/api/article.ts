@@ -99,7 +99,7 @@ export function getCategoriesByNameAndUserId(s: string, id: string) {
  * @returns
  */
 export function getTagsByNameAndUserId(s: string, id: string) {
-  return axios.get<BaseModel[]>(`${prefix}/tags/user`, {
+  return axios.get<BaseModel[]>(`${prefix}/tag/user`, {
     params: { id, s },
   });
 }
