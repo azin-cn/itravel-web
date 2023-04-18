@@ -33,8 +33,12 @@
   const spotInfo = ref<SpotBreifInfoModel>();
   const comments = ref<ListResult<Comment>>();
 
-  const { rootComment, rootLoading, setRootLoading, onSubmitRootComment } =
-    useRootComment(articleInfo);
+  const {
+    rootComment,
+    rootLoading,
+    setRootLoading,
+    onSubmitRootComment: onSubmit,
+  } = useRootComment(articleInfo);
 
   const onRedirectUserPreview = (userId: string) => {
     userId = userId || (articleInfo.value?.author.id as string);
@@ -64,6 +68,14 @@
     page.value = v;
     await getComments(articleInfo.value?.id as string, {
       page: v,
+      limit: DEFAULT_PAGINATION_LIMIT,
+    });
+  };
+
+  const onSubmitRootComment = async () => {
+    await onSubmit();
+    await getComments(articleInfo.value?.id as string, {
+      page: page.value,
       limit: DEFAULT_PAGINATION_LIMIT,
     });
   };
