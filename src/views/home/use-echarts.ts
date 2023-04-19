@@ -70,7 +70,7 @@ export default function useECharts() {
   const optionsGeo = {
     map: 'china',
     roam: true,
-    left: '16%',
+    left: '24%',
     top: 'center',
     // zoom: 1,
     scaleLimit: {
