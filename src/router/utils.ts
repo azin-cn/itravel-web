@@ -19,6 +19,10 @@ export function redirectHomeWithoutQuery() {
   router.push({ name: 'home' });
 }
 
+export function replaceHomeWithoutQuery() {
+  router.replace({ name: 'home' });
+}
+
 export function redirectHomeOrDefault() {
   const { redirect, othersQuery } = getRouteQueries();
   console.log('redirect', redirect);
