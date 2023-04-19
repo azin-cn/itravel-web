@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { ListResult } from '@/types/global';
 import { UserState } from '@/store/modules/user/types';
+import { DEFAULT_PAGINATION_LIMIT } from '../views/article/constants';
 import { IPaginationOpton, prefix } from './base';
 import { ArticleBriefInfo } from './article';
 import { ITour, SpotBreifInfoModel } from './spot';
@@ -11,7 +12,10 @@ import { ITour, SpotBreifInfoModel } from './spot';
  * @param options
  * @returns
  */
-export function getUsersByKeywords(s: string, options: IPaginationOpton) {
+export function getUsersByKeywords(
+  s: string,
+  options: IPaginationOpton = { page: 1, limit: DEFAULT_PAGINATION_LIMIT }
+) {
   return axios.get<ListResult<UserState>>(`${prefix}/search/user`, {
     params: { s, ...options },
   });
@@ -23,7 +27,10 @@ export function getUsersByKeywords(s: string, options: IPaginationOpton) {
  * @param options
  * @returns
  */
-export function getSpotsByKeywords(s: string, options: IPaginationOpton) {
+export function getSpotsByKeywords(
+  s: string,
+  options: IPaginationOpton = { page: 1, limit: DEFAULT_PAGINATION_LIMIT }
+) {
   return axios.get<ListResult<ITour>>(`${prefix}/search/spot`, {
     params: { s, ...options },
   });
@@ -35,7 +42,10 @@ export function getSpotsByKeywords(s: string, options: IPaginationOpton) {
  * @param options
  * @returns
  */
-export function getArticlesByKeywords(s: string, options: IPaginationOpton) {
+export function getArticlesByKeywords(
+  s: string,
+  options: IPaginationOpton = { page: 1, limit: DEFAULT_PAGINATION_LIMIT }
+) {
   return axios.get<ListResult<ArticleBriefInfo>>(`${prefix}/search/article`, {
     params: { s, ...options },
   });
