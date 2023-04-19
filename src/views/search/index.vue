@@ -15,6 +15,7 @@
   import SiderLayout from '../components/layout/sider-layout.vue';
   import IPagination from '../components/pagination/index.vue';
   import { DEFAULT_PAGINATION_LIMIT } from '../article/constants';
+  import ArticleBrief from '../components/article/article-brief.vue';
 
   const route = useRoute();
   const spots = ref<ListResult<ITour>>();
@@ -29,7 +30,7 @@
     spotPage.value = v;
     const { data } = await getSpotsByKeywords(states.keywords, {
       page: v,
-      limit: DEFAULT_PAGINATION_LIMIT,
+      limit: DEFAULT_PAGINATION_LIMIT / 2,
     });
     spots.value = data;
   };
@@ -38,7 +39,7 @@
     articlePage.value = v;
     const { data } = await getArticlesByKeywords(states.keywords, {
       page: v,
-      limit: DEFAULT_PAGINATION_LIMIT,
+      limit: DEFAULT_PAGINATION_LIMIT / 2,
     });
     articles.value = data;
   };
@@ -47,7 +48,7 @@
     userPage.value = v;
     const { data } = await getUsersByKeywords(states.keywords, {
       page: v,
-      limit: DEFAULT_PAGINATION_LIMIT,
+      limit: DEFAULT_PAGINATION_LIMIT / 2,
     });
     users.value = data;
   };
@@ -87,6 +88,11 @@
                 搜索景点
               </h2>
             </div>
+
+            <IPagination
+              :on-page-change="onSpotPageChange"
+              :total="spots?.total"
+            />
           </section>
 
           <section>
@@ -96,6 +102,16 @@
                 搜索文章
               </h2>
             </div>
+
+            <ArticleBrief
+              v-if="articles?.list"
+              :list="articles?.list as ArticleBriefInfo[]"
+            />
+            <a-empty v-else />
+            <IPagination
+              :on-page-change="onArticlePageChange"
+              :total="articles?.total"
+            />
           </section>
 
           <section>
@@ -105,6 +121,11 @@
                 搜索用户
               </h2>
             </div>
+            <a-empty v-if="!users?.total" />
+            <IPagination
+              :on-page-change="onUserPageChange"
+              :total="users?.total"
+            />
           </section>
         </div>
       </template>
