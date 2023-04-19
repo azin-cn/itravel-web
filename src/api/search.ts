@@ -14,7 +14,7 @@ import { ITour, SpotBreifInfoModel } from './spot';
  */
 export function getUsersByKeywords(
   s: string,
-  options: IPaginationOpton = { page: 1, limit: DEFAULT_PAGINATION_LIMIT }
+  options: IPaginationOpton = { page: 1, limit: DEFAULT_PAGINATION_LIMIT / 2 }
 ) {
   return axios.get<ListResult<UserState>>(`${prefix}/search/user`, {
     params: { s, ...options },
@@ -29,7 +29,7 @@ export function getUsersByKeywords(
  */
 export function getSpotsByKeywords(
   s: string,
-  options: IPaginationOpton = { page: 1, limit: DEFAULT_PAGINATION_LIMIT }
+  options: IPaginationOpton = { page: 1, limit: DEFAULT_PAGINATION_LIMIT / 2 }
 ) {
   return axios.get<ListResult<ITour>>(`${prefix}/search/spot`, {
     params: { s, ...options },
@@ -44,7 +44,7 @@ export function getSpotsByKeywords(
  */
 export function getArticlesByKeywords(
   s: string,
-  options: IPaginationOpton = { page: 1, limit: DEFAULT_PAGINATION_LIMIT }
+  options: IPaginationOpton = { page: 1, limit: DEFAULT_PAGINATION_LIMIT / 2 }
 ) {
   return axios.get<ListResult<ArticleBriefInfo>>(`${prefix}/search/article`, {
     params: { s, ...options },
