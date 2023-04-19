@@ -10,30 +10,56 @@
     getArticlesByKeywords,
     getUsersByKeywords,
   } from '@/api/search';
-  import { redirectHome } from '@/router/utils';
+  import { redirectHomeWithoutQuery } from '@/router/utils';
   import RandRecomSpot from '../article/components/rand-recom-spot.vue';
   import SiderLayout from '../components/layout/sider-layout.vue';
   import IPagination from '../components/pagination/index.vue';
+  import { DEFAULT_PAGINATION_LIMIT } from '../article/constants';
 
   const route = useRoute();
   const spots = ref<ListResult<ITour>>();
   const articles = ref<ListResult<ArticleBriefInfo>>();
   const users = ref<ListResult<UserState>>();
+  const states = {
+    keywords: '',
+  };
 
   const spotPage = ref(1);
-  const onSpotPageChange = async () => {};
+  const onSpotPageChange = async (v: number) => {
+    spotPage.value = v;
+    const { data } = await getSpotsByKeywords(states.keywords, {
+      page: v,
+      limit: DEFAULT_PAGINATION_LIMIT,
+    });
+    spots.value = data;
+  };
   const articlePage = ref(1);
-  const onArticlePageChange = async () => {};
+  const onArticlePageChange = async (v: number) => {
+    articlePage.value = v;
+    const { data } = await getArticlesByKeywords(states.keywords, {
+      page: v,
+      limit: DEFAULT_PAGINATION_LIMIT,
+    });
+    articles.value = data;
+  };
   const userPage = ref(1);
-  const onUserPageChange = async () => {};
+  const onUserPageChange = async (v: number) => {
+    userPage.value = v;
+    const { data } = await getUsersByKeywords(states.keywords, {
+      page: v,
+      limit: DEFAULT_PAGINATION_LIMIT,
+    });
+    users.value = data;
+  };
 
   const init = async () => {
     const { query } = route;
     const { s } = query;
     if (!s) {
-      redirectHome();
+      redirectHomeWithoutQuery();
       return;
     }
+    states.keywords = s as string;
 
     const [{ data: _spots }, { data: _articles }, { data: _users }] =
       await Promise.all([
