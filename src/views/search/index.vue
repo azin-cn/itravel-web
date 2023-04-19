@@ -10,7 +10,8 @@
     getArticlesByKeywords,
     getUsersByKeywords,
   } from '@/api/search';
-  import { redirectHomeWithoutQuery } from '@/router/utils';
+  import { replaceHomeWithoutQuery } from '@/router/utils';
+  import { setDocumentTitle } from '@/utils/window';
   import RandRecomSpot from '../article/components/rand-recom-spot.vue';
   import SiderLayout from '../components/layout/sider-layout.vue';
   import IPagination from '../components/pagination/index.vue';
@@ -58,7 +59,7 @@
     const { query } = route;
     const { s } = query;
     if (!s) {
-      redirectHomeWithoutQuery();
+      replaceHomeWithoutQuery();
       return;
     }
     states.keywords = s as string;
@@ -73,6 +74,8 @@
     spots.value = _spots;
     articles.value = _articles;
     users.value = _users;
+
+    setDocumentTitle(`搜索 | ${s}`);
   };
   init();
 </script>
