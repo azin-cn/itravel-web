@@ -16,6 +16,7 @@
   import IPagination from '../components/pagination/index.vue';
   import { DEFAULT_PAGINATION_LIMIT } from '../article/constants';
   import ArticleBrief from '../components/article/article-brief.vue';
+  import UserBrief from '../components/user/user-brief.vue';
 
   const route = useRoute();
   const spots = ref<ListResult<ITour>>();
@@ -121,7 +122,8 @@
                 搜索用户
               </h2>
             </div>
-            <a-empty v-if="!users?.total" />
+            <UserBrief v-if="users?.total" :list="users?.list as UserState[]" />
+            <a-empty v-else />
             <IPagination
               :on-page-change="onUserPageChange"
               :total="users?.total"
