@@ -23,7 +23,7 @@
       >
         <img
           :src="item.thumbUrl || item.spot?.thumbUrl || imgUrl"
-          class="rounded-lg shadow-xl hover-img cursor-pointer"
+          class="rounded-lg shadow-xl hover-img cursor-pointer max-h-52"
           :alt="item.title"
           :style="{ width: '24%' }"
           loading="lazy"
