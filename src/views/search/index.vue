@@ -92,7 +92,8 @@
                 搜索景点
               </h2>
             </div>
-
+            <div v-if="spots?.total"></div>
+            <a-empty v-else />
             <IPagination
               :on-page-change="onSpotPageChange"
               :total="spots?.total"
