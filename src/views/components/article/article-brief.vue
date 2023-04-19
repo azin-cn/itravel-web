@@ -22,7 +22,7 @@
         style="border: 1px solid #fff; box-shadow: 0 0 2px 0 #ccc"
       >
         <img
-          :src="item.thumbUrl || item.spot.thumbUrl || imgUrl"
+          :src="item.thumbUrl || item.spot?.thumbUrl || imgUrl"
           class="rounded-lg shadow-xl hover-img cursor-pointer"
           :alt="item.title"
           :style="{ width: '24%' }"
@@ -79,7 +79,7 @@
               </div>
             </div>
 
-            <a-tooltip :content="item.author.username" class="text-right">
+            <a-tooltip :content="item.author?.username" class="text-right">
               <a-avatar :size="28" :image-url="item.author.avatar" />
             </a-tooltip>
           </div>
