@@ -121,7 +121,7 @@
   const onSubmit = async () => {
     const { state, data } = checkForm();
     if (!state) return;
-    modalRef.value?.init(data as ArticleModel, uploadImages);
+    modalRef.value?.init(data as ArticleModel, isUpdated.value, uploadImages);
   };
 
   const init = async () => {

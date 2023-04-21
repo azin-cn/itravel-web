@@ -12,6 +12,7 @@
   const { loading, setLoading } = useLoading();
 
   let form: Partial<ArticleModel> = {};
+  let isUpdated = false;
   let uploadImages: () => Promise<string[]>;
   const states = ref({ hasThumbUrl: true, fileList: [] as FileItem[] });
 
@@ -49,9 +50,19 @@
     }
   };
 
-  const init = (data: ArticleModel, _uploadImages: () => Promise<string[]>) => {
+  const init = (
+    data: ArticleModel,
+    _isUpdated: boolean,
+    _uploadImages: () => Promise<string[]>
+  ) => {
     form = cloneDeep(data);
+    isUpdated = _isUpdated;
     uploadImages = _uploadImages;
+    if (!isUpdated) {
+      states.value.fileList = [
+        { uid: form.thumbUrl as string, name: '缩略图', url: form.thumbUrl },
+      ];
+    }
     setVisible(true);
   };
   defineExpose({ init });
