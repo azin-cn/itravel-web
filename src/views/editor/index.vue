@@ -134,14 +134,7 @@
       isUpdated.value = true;
 
       const { data: article } = await getArticleById(articleId as string);
-      form.value.title = article.title;
-      form.value.content = article.content;
-      form.value.spot = article.spot.id;
-      form.value.category = article.category.id;
-      form.value.tags = article.tags.map((item) => item.id);
-      form.value.images = article.images;
-
-      fileList.value = article.images.map(
+      fileList.value = article.images?.map(
         (item) =>
           ({
             name: item.slice(item.lastIndexOf('/')),
@@ -161,6 +154,14 @@
       categoryOptions.value = cOptions;
       tagOptions.value = tOptions;
       spotOptions.value = sOptions;
+
+      form.value.title = article.title;
+      form.value.content = article.content;
+      form.value.spot = article.spot.id;
+      form.value.category = article.category.id;
+      form.value.tags = article.tags.map((item) => item.id);
+      form.value.images = article.images;
+
       setDocumentTitle(`编辑文章 - ${article.title}`);
       return;
     }
