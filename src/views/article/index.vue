@@ -44,6 +44,9 @@
     userId = userId || (articleInfo.value?.author.id as string);
     router.push({ name: 'userPreview', params: { userId } });
   };
+  const onRedirectEditor = (articleId: string) => {
+    router.push({ name: 'editor', params: { articleId } });
+  };
 
   const getArticle = async (articleId: string) => {
     const { data } = await getArticleById(articleId);
@@ -208,6 +211,18 @@
                       formatNumber(Math.random() * 20000)
                     }}
                   </span>
+                </div>
+                <div
+                  v-if="userStore.id && articleInfo?.author.id === userStore.id"
+                  class="mr-2 cursor-pointer link-hover"
+                  @click.stop="onRedirectEditor(articleInfo?.id as string)"
+                >
+                  <IconFont
+                    type="icon-xiewenzhang"
+                    size="13"
+                    class="icon-click"
+                  />
+                  <span class="text-sm">编辑</span>
                 </div>
                 <div class="mr-2">
                   <IconFont
