@@ -143,24 +143,27 @@
       );
 
       const spot = article.spot.id as string;
-      const category = article.category.id as string;
-      const tags = article.tags.map((item) => item.id as string);
-      const [{ data: cOptions }, { data: tOptions }, { data: sOptions }] =
+      const category = article.category?.id as string;
+      const tags = article.tags?.map((item) => item.id as string);
+      const [{ data: sOptions }, { data: cOptions }, { data: tOptions }] =
         await Promise.all([
           getSpotsByIds([spot]),
           getCategoriesByIds([category]),
           getTagsByIds(tags),
         ]);
+      console.log(sOptions);
       categoryOptions.value = cOptions;
       tagOptions.value = tOptions;
       spotOptions.value = sOptions;
 
       form.value.title = article.title;
       form.value.content = article.content;
-      form.value.spot = article.spot.id;
-      form.value.category = article.category.id;
-      form.value.tags = article.tags.map((item) => item.id);
+      form.value.spot = article.spot?.id;
+      form.value.category = article.category?.id;
+      form.value.tags = article.tags?.map((item) => item.id);
       form.value.images = article.images;
+
+      vditorRef.value?.setValue(article.content);
 
       setDocumentTitle(`编辑文章 - ${article.title}`);
       return;
@@ -170,11 +173,11 @@
       states.value.categoryLoading = true;
       states.value.tagLoading = true;
       states.value.spotLoading = true;
-      const [{ data: categories }, { data: tags }, { data: spots }] =
+      const [{ data: spots }, { data: categories }, { data: tags }] =
         await Promise.all([
+          getSpotsByWords(''),
           getCategoriesByNameAndUserId('', userStore.id as string),
           getTagsByNameAndUserId('', userStore.id as string),
-          getSpotsByWords(''),
         ]);
       categoryOptions.value = categories;
       tagOptions.value = tags;
