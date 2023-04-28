@@ -67,7 +67,13 @@
           keywords,
           userStore.id as string
         );
-        categoryOptions.value = data;
+        /**
+         * 保留已选中的option
+         */
+        const current = categoryOptions.value?.find(
+          (item) => item.id === form.value.category
+        ) as BaseModel;
+        categoryOptions.value = [...data, current];
       } finally {
         states.value.categoryLoading = false;
       }
@@ -78,7 +84,13 @@
           keywords,
           userStore.id as string
         );
-        tagOptions.value = data;
+        /**
+         * 保留已选中的options
+         */
+        const current = tagOptions.value?.filter((item) =>
+          form.value.tags?.includes(item.id)
+        ) as BaseModel[];
+        categoryOptions.value = [...data, ...current];
       } finally {
         states.value.tagLoading = false;
       }
@@ -88,7 +100,13 @@
     states.value.spotLoading = true;
     try {
       const { data } = await getSpotsByWords(v);
-      spotOptions.value = data;
+      /**
+       * 保留已选中的option
+       */
+      const current = spotOptions.value?.find(
+        (item) => item.id === form.value.spot
+      ) as BaseModel;
+      spotOptions.value = [...data, current];
     } finally {
       states.value.spotLoading = false;
     }
