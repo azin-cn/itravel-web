@@ -355,7 +355,7 @@
         </h2>
       </div>
       <!-- 主要景点 -->
-      <HotTours></HotTours>
+      <HotTours :query="query"></HotTours>
     </section>
 
     <section>

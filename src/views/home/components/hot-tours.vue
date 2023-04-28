@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-  import { ref, computed, onMounted } from 'vue';
+  import { ref, computed, onMounted, watch } from 'vue';
   import { useRouter } from 'vue-router';
   import { getHotSpots } from '@/api/spot';
-  import type { ITour } from '@/api/spot';
+  import type { ITour, PartialSpotModel } from '@/api/spot';
   import { redirectSpot } from '@/router/utils';
 
   export type MixTour = ITour & {
@@ -12,12 +12,14 @@
   export interface IProps {
     pTours?: Array<MixTour>;
     buttonText?: string;
+    query?: PartialSpotModel;
   }
   const props = defineProps<IProps>();
 
   const router = useRouter();
   const mainTours = ref<ITour[]>();
   const secondaryTours = ref<ITour[]>();
+  const province = ref<string>();
 
   /**
    * 在数量不足的情况下可以选择不展示
@@ -30,13 +32,30 @@
    * 由于 index.vue 中加入 echart 已过于复杂，所以将组件的数据请求放入组件中
    */
   const init = async () => {
-    const { data } = await getHotSpots();
+    const { data } = await getHotSpots({ province: province.value });
     mainTours.value = data.slice(0, 3);
     secondaryTours.value = data.slice(3, 7);
   };
   onMounted(async () => {
     init();
   });
+
+  watch(
+    () => props.query,
+    () => {
+      const { province: p, city } = props.query || {};
+      if (!city) {
+        province.value = undefined;
+      }
+      if (p) {
+        province.value = p;
+      }
+      init();
+    },
+    {
+      deep: true,
+    }
+  );
 </script>
 
 <template>
