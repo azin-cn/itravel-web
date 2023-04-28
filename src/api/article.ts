@@ -86,6 +86,7 @@ export function getUserBriefArticles(userId: string) {
  * 参数模型
  */
 export interface ArticleModel {
+  id?: string;
   title: string;
   author: string;
   thumbUrl: string;
@@ -103,6 +104,15 @@ export interface ArticleModel {
  */
 export function postArticle(data: ArticleModel) {
   return axios.post<ArticleBriefInfo>(`${prefix}/article`, data);
+}
+
+/**
+ * 更新文章
+ * @param data
+ * @returns
+ */
+export function patchArticle(id: string, data: Partial<ArticleModel>) {
+  return axios.patch<ArticleBriefInfo>(`${prefix}/article/${id}`, data);
 }
 
 /**

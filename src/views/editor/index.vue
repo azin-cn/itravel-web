@@ -151,11 +151,11 @@
           getCategoriesByIds([category]),
           getTagsByIds(tags),
         ]);
-      console.log(sOptions);
       categoryOptions.value = cOptions;
       tagOptions.value = tOptions;
       spotOptions.value = sOptions;
 
+      form.value.id = article.id;
       form.value.title = article.title;
       form.value.content = article.content;
       form.value.spot = article.spot?.id;
