@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   import { ref } from 'vue';
   import { FileItem, Message } from '@arco-design/web-vue';
-  import { ArticleModel, postArticle } from '@/api/article';
+  import { ArticleModel, patchArticle, postArticle } from '@/api/article';
   import useVisible from '@/hooks/visible';
   import useLoading from '@/hooks/loading';
   import { cloneDeep } from 'lodash';
@@ -39,12 +39,18 @@
       }
 
       Message.info('提交中...');
-      const {
-        data: { id },
-      } = await postArticle(form as ArticleModel);
+      if (isUpdated) {
+        const {
+          data: { id },
+        } = await patchArticle(form.id as string, form);
+        redirectArticle(id);
+      } else {
+        const {
+          data: { id },
+        } = await postArticle(form as ArticleModel);
+        redirectArticle(id);
+      }
       Message.info('提交成功');
-
-      redirectArticle(id);
     } finally {
       setLoading(false);
     }
