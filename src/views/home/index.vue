@@ -336,7 +336,7 @@
     init();
   });
 
-  document.title = 'Itravel 首页';
+  document.title = 'Itravel - 首页';
 </script>
 
 <template>
