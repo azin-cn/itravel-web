@@ -28,6 +28,13 @@
   const userStore = useUserStore();
   const { onArticleShare, onThumbsUp } = useArticle();
 
+  const genDefaultImgs = () => [
+    'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/cd7a1aaea8e1c5e3d26fe2591e561798.png~tplv-uwbnlip3yd-webp.webp',
+    'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/6480dbc69be1b5de95010289787d64f1.png~tplv-uwbnlip3yd-webp.webp',
+    'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/0265a04fddbd77a19602a15d9d55d797.png~tplv-uwbnlip3yd-webp.webp',
+    'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/24e0dd27418d2291b65db1b21aa62254.png~tplv-uwbnlip3yd-webp.webp',
+  ];
+
   const commentRef = ref<InstanceType<typeof IComment>>();
   const articleInfo = ref<ArticleBriefInfo>();
   const spotInfo = ref<SpotBreifInfoModel>();
@@ -302,24 +309,14 @@
           <div class="text-left">
             <a-image-preview-group infinite>
               <a-image
-                src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/cd7a1aaea8e1c5e3d26fe2591e561798.png~tplv-uwbnlip3yd-webp.webp"
-                class="w-1/3 p-1 pb-0 cursor-pointer"
-                style="border-radius: 6px"
-              />
-              <a-image
-                src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/6480dbc69be1b5de95010289787d64f1.png~tplv-uwbnlip3yd-webp.webp"
-                class="w-1/3 p-1 pb-0 cursor-pointer"
-                style="border-radius: 6px"
-              />
-              <a-image
-                src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/0265a04fddbd77a19602a15d9d55d797.png~tplv-uwbnlip3yd-webp.webp"
-                class="w-1/3 p-1 pb-0 cursor-pointer"
-                style="border-radius: 6px"
-              />
-              <a-image
-                src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/24e0dd27418d2291b65db1b21aa62254.png~tplv-uwbnlip3yd-webp.webp"
-                class="w-1/3 p-1 pb-0 cursor-pointer"
-                style="border-radius: 6px"
+                v-for="item in articleInfo?.images || genDefaultImgs()"
+                :key="item"
+                :src="item"
+                height="160"
+                width="100%"
+                fit="cover"
+                class="m-1 cursor-pointer overflow-hidden"
+                style="width: 32% !important; border-radius: 6px"
               />
             </a-image-preview-group>
           </div>
