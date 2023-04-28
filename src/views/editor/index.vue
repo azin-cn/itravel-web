@@ -272,6 +272,9 @@
         console.log(md);
         form.value.content = md;
       },
+      after() {
+        vditorRef.value?.setValue(form.value.content as string);
+      },
     });
   });
 </script>
