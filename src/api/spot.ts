@@ -131,6 +131,7 @@ export interface SpotBreifInfoModel {
   name: string;
   description: string;
   thumbUrl: string;
+  panorama: string;
   createdTime?: string;
   updatedTime?: string;
   province: RegionInfoModel;
@@ -186,8 +187,5 @@ export function getSpotsByIds(ids: string[]) {
  * @returns
  */
 export function getSpotPanorama(id: string) {
-  return {
-    data: 'https://img.zcool.cn/community/01e6ae592fb49da8012193a3c3b31e.jpg@2o.jpg',
-  };
-  // return axios.get<string>(`${prefix}/spot/panorama/${id}`);
+  return axios.get<SpotBreifInfoModel>(`${prefix}/spot/panorama/${id}`);
 }
