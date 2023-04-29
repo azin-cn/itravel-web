@@ -74,8 +74,9 @@ export default function useThree(el: HTMLElement = document.body) {
   // 设置阻尼效果
   orbitControls.enableDamping = true;
   // 设置缩放范围
-  orbitControls.maxDistance = 340;
-  orbitControls.minDistance = 0;
+  orbitControls.maxDistance = 600;
+  orbitControls.minDistance = 20;
+  orbitControls.zoomSpeed = 2;
   // 设置键盘
   orbitControls.keys = { LEFT: '37', UP: '38', RIGHT: '39', BOTTOM: '40' };
 
@@ -101,11 +102,21 @@ export default function useThree(el: HTMLElement = document.body) {
     /**
      * 全景图
      */
-    const sphereGeometry = new THREE.SphereGeometry(10, 50, 50);
+    const sphereGeometry = new THREE.SphereGeometry(10, 100, 100);
     const sphereMaterial = new THREE.MeshBasicMaterial({ map: texture });
     const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    /**
+     * 球面点反转，向内
+     */
     sphereGeometry.scale(16, 16, -16);
     scene.add(sphere);
+
+    /**
+     * 初始将相机移动到目标对象
+     * 将目标对象设置为原点
+     */
+    camera.position.set(0, 0, 600);
+    orbitControls.target.set(0, 0, 0);
   };
   render();
 
