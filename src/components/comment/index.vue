@@ -6,7 +6,7 @@
   import useLoading from '@/hooks/loading';
   import { Message } from '@arco-design/web-vue';
   import ReplyMini from '../reply-mini/index.vue';
-  import { IAction } from './types';
+  import { IAction, IRecord } from './types';
   import { useReplyMap } from './use-reply-map';
 
   export interface Comment {
@@ -80,6 +80,13 @@
   const { showReplyMap, setShowReplyMap } = useReplyMap();
   const childRef = ref();
 
+  const onThumbsUp = (id: string) => {
+    emits('action', {
+      key: 'thumb-up',
+      record: { id },
+    } as IAction);
+  };
+
   const onReply = (
     user: string,
     toUser: string,
@@ -98,7 +105,7 @@
     } as IAction);
   };
   const onDelete = (id: string) => {
-    emits('action', { key: 'delete', record: { id } });
+    emits('action', { key: 'delete', record: { id } } as IAction);
   };
 
   const onAction = (action: IAction) => {
