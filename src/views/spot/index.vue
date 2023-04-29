@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   import { ref, computed } from 'vue';
   import { useRoute } from 'vue-router';
-  import { redirectArticle, redirectHome } from '@/router/utils';
+  import { redirectArticle, redirectHome, redirect3D } from '@/router/utils';
   import {
     getSpotBriefInfo,
     getSpotMonthsAndFeatures,
@@ -60,6 +60,9 @@
   const onRandUserRefresh = async () => {
     const { data } = await getRandUsers();
     spotRandUsers.value = data;
+  };
+  const onClick3D = (id: string) => {
+    redirect3D(id);
   };
 
   const siderLimit = computed(() => {
@@ -146,6 +149,7 @@
         :months="spotFMInfo?.months as any"
         :province="spotBreifInfo?.province.name"
         :city="spotBreifInfo?.city.name"
+        @click3d="onClick3D(spotBreifInfo?.id as string)"
       ></FM>
 
       <div class="m-12">
