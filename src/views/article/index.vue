@@ -360,6 +360,7 @@
               </div>
               <IComment
                 ref="commentRef"
+                :browser="userStore.userInfo"
                 :comments="comments?.list"
                 @action="onAction"
               />
