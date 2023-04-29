@@ -32,7 +32,7 @@
     spotPage.value = v;
     const { data } = await getSpotsByKeywords(states.keywords, {
       page: v,
-      limit: DEFAULT_PAGINATION_LIMIT / 2,
+      limit: DEFAULT_PAGINATION_LIMIT,
     });
     spots.value = data;
   };
@@ -41,7 +41,7 @@
     articlePage.value = v;
     const { data } = await getArticlesByKeywords(states.keywords, {
       page: v,
-      limit: DEFAULT_PAGINATION_LIMIT / 2,
+      limit: DEFAULT_PAGINATION_LIMIT,
     });
     articles.value = data;
   };
@@ -50,7 +50,7 @@
     userPage.value = v;
     const { data } = await getUsersByKeywords(states.keywords, {
       page: v,
-      limit: DEFAULT_PAGINATION_LIMIT / 2,
+      limit: DEFAULT_PAGINATION_LIMIT,
     });
     users.value = data;
   };
