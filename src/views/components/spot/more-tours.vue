@@ -69,7 +69,7 @@
             :src="item.thumbUrl"
             class="shadow-xl h-1/2 rounded-lg"
             style="object-fit: cover"
-            alt="Shoes"
+            :alt="item.name"
           />
           <div class="card-body">
             <h2 class="text-xl font-semibold truncate"> {{ item.name }} </h2>
