@@ -39,7 +39,7 @@ export default function useThree(el: HTMLElement = document.body) {
   // 通过渲染器渲染场景、物体、相机
   renderer.render(scene, camera);
 
-  el.addEventListener('resize', () => {
+  const resize = () => {
     /**
      * 窗口自动适应，考虑四个因素
      * 1. 更新相机比例
@@ -52,7 +52,9 @@ export default function useThree(el: HTMLElement = document.body) {
     camera.updateProjectionMatrix(); // 更新投影矩阵
     renderer.setPixelRatio(window.devicePixelRatio); // 更新像素比例
     renderer.setSize(w, h); // 更新渲染的窗口大小
-  });
+  };
+
+  window.addEventListener('resize', resize);
   el.addEventListener('dblclick', () => {
     /**
      * 双击屏幕进入全屏，再次双击退出元素
@@ -77,6 +79,12 @@ export default function useThree(el: HTMLElement = document.body) {
   // 设置键盘
   orbitControls.keys = { LEFT: '37', UP: '38', RIGHT: '39', BOTTOM: '40' };
 
+  const render = () => {
+    renderer.render(scene, camera);
+    orbitControls.update();
+    requestAnimationFrame(render);
+  };
+
   const renderThree = (url: string) => {
     const texture = new THREE.TextureLoader().load(url);
     /**
@@ -98,12 +106,6 @@ export default function useThree(el: HTMLElement = document.body) {
     const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     sphereGeometry.scale(16, 16, -16);
     scene.add(sphere);
-  };
-
-  const render = () => {
-    renderer.render(scene, camera);
-    orbitControls.update();
-    requestAnimationFrame(render);
   };
   render();
 
