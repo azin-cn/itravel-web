@@ -1,14 +1,13 @@
 <script lang="ts" setup>
-  import { ref } from 'vue';
+  import { ref, onMounted } from 'vue';
   import { useRoute } from 'vue-router';
-  import { redirectHome } from '@/router/utils';
+  import { redirectHome, redirectSpot } from '@/router/utils';
   import { getSpotPanorama } from '@/api/spot';
+  import IHeader from '@/layout/components/IHeader.vue';
   import useThree from './use-three';
 
   const route = useRoute();
   const threeRef = ref<HTMLElement>();
-
-  const { renderThree } = useThree(threeRef.value);
 
   const init = async () => {
     /**
@@ -23,11 +22,18 @@
     }
 
     const { data } = await getSpotPanorama(spotId as string);
+    console.log(threeRef.value);
+    const { renderThree } = useThree(threeRef.value as HTMLElement);
     renderThree(data);
   };
-  init();
+  onMounted(() => {
+    init();
+  });
 </script>
 
 <template>
-  <div ref="threeRef"></div>
+  <div class="w-full" style="position: fixed; top: 0">
+    <IHeader style="background-color: transparent"></IHeader>
+  </div>
+  <div ref="threeRef" class="w-full h-full" style="height: 100vh"></div>
 </template>
