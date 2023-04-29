@@ -14,6 +14,8 @@
   }
   const props = defineProps<IProps>();
 
+  const emits = defineEmits(['click3d']);
+
   const { months: allMonths, features: allFeatures } = useFM();
 
   const hasMonth = (name: string) => {
@@ -28,7 +30,7 @@
   <div class="flex items-center justify-between">
     <section class="pl-28">
       <a-tooltip content="点击进入VR空间">
-        <RotateBox></RotateBox>
+        <RotateBox @click.stop="emits('click3d')"></RotateBox>
       </a-tooltip>
     </section>
     <section class="text-right">
