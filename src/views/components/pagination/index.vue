@@ -3,7 +3,7 @@
 
   export interface IPagination {
     total: number;
-    page?: number;
+    page: number;
     onPageChange: (page: number) => Promise<void> | void;
   }
 

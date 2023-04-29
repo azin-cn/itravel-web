@@ -112,6 +112,7 @@
             <UserBrief v-if="users?.total" :list="users?.list as UserState[]" />
             <a-empty v-else />
             <IPagination
+              :page="userPage"
               :on-page-change="onUserPageChange"
               :total="users?.total"
             />
@@ -131,6 +132,7 @@
             />
             <a-empty v-else />
             <IPagination
+              :page="articlePage"
               :on-page-change="onArticlePageChange"
               :total="articles?.total"
             />
@@ -173,6 +175,7 @@
             </div>
             <a-empty v-else />
             <IPagination
+              :page="spotPage"
               :on-page-change="onSpotPageChange"
               :total="spots?.total"
             />
