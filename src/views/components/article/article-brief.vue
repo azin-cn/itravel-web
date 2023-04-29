@@ -31,14 +31,17 @@
         />
         <div class="card-body">
           <h2
-            class="card-title cursor-pointer link link-hover"
+            class="card-title cursor-pointer link link-hover truncate"
+            style="max-width: 80%"
             @click.stop="redirectArticle(item.id)"
           >
             {{ item.title }}
           </h2>
 
           <div class="text-left truncate">
-            <p>{{ limitMaxLength(item.summary || item.content) }}</p>
+            <p class="truncate" style="max-width: 80%">
+              {{ limitMaxLength(item.summary || item.content) }}
+            </p>
           </div>
 
           <div class="text-left text-sm">
