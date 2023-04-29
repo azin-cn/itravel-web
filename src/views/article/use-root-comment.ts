@@ -17,6 +17,10 @@ export default function useRootComment(
 
   const onSubmitRootComment = async () => {
     const { value } = rootComment;
+    if (!value) {
+      Message.warning('请输入内容');
+      return;
+    }
     setRootLoading(true);
     try {
       await postComment({
