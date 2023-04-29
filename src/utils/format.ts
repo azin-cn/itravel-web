@@ -2,6 +2,7 @@ export function limitLength(min: number, max: number) {}
 
 export function limitMaxLength(str: string, max = 24): string {
   const width = window.innerWidth;
+
   /**
    * 响应式，用于处理css无法生成省略号的情况（宽度不固定）
    */
@@ -9,22 +10,22 @@ export function limitMaxLength(str: string, max = 24): string {
     /**
      * 2xl
      */
-    max = 60;
+    max = 42;
   } else if (width >= 1280) {
     /**
      * xl
      */
-    max = 46;
+    max = 38;
   } else if (width >= 1024) {
     /**
      * lg
      */
-    max = 36;
+    max = 34;
   } else if (width >= 768) {
     /**
      * md
      */
-    max = 30;
+    max = 28;
   } else if (width >= 640) {
     /**
      * sm
