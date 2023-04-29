@@ -1,4 +1,5 @@
 export interface IRecord {
+  id: string;
   user: string;
   toUser: string;
   parent: string | null;
