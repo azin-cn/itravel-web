@@ -179,3 +179,15 @@ export function getSpotsByIds(ids: string[]) {
   const params = { ids: ids?.join() };
   return axios.get<BaseModel[]>(`${prefix}/spot/ids`, { params });
 }
+
+/**
+ * 得到全景图
+ * @param id
+ * @returns
+ */
+export function getSpotPanorama(id: string) {
+  return {
+    data: 'https://img.zcool.cn/community/01e6ae592fb49da8012193a3c3b31e.jpg@2o.jpg',
+  };
+  // return axios.get<string>(`${prefix}/spot/panorama/${id}`);
+}
