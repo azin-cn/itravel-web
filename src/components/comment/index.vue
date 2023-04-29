@@ -3,6 +3,7 @@
   import { formatNumber } from '@/utils/format';
   import { UserState } from '@/store/modules/user/types';
   import useLoading from '@/hooks/loading';
+  import { Message } from '@arco-design/web-vue';
   import ReplyMini from '../reply-mini/index.vue';
   import { IAction } from './types';
   import { useReplyMap } from './use-reply-map';
@@ -84,6 +85,10 @@
     parent: string,
     content: string
   ) => {
+    if (!content) {
+      Message.warning('请输入内容');
+      return;
+    }
     setReplyLoading(true);
 
     emits('action', {
