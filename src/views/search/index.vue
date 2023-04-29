@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { ref } from 'vue';
+  import { ref, computed } from 'vue';
   import { useRoute } from 'vue-router';
   import { ITour } from '@/api/spot';
   import { ListResult } from '@/types/global';
@@ -54,6 +54,23 @@
     });
     users.value = data;
   };
+  const siderLimit = computed(() => {
+    const { list } = articles.value || {};
+    /**
+     * 不存在返回 3
+     */
+    if (!list) return 3;
+
+    /**
+     * 如果article list的长度小于四，则分别限制randArticles和randUsers的长度为6
+     */
+    if (list.length < 4) return 6;
+
+    /**
+     * 最长十条
+     */
+    return 10;
+  });
 
   const init = async () => {
     const { query } = route;
@@ -82,7 +99,7 @@
 
 <template>
   <div class="2xl:container mx-auto text-gray-700 text-left">
-    <SiderLayout>
+    <SiderLayout :limit="siderLimit">
       <template #content>
         <div class="m-2 flex-1 text-left">
           <section>
@@ -126,7 +143,7 @@
                 搜索景点
               </h2>
             </div>
-            <div v-if="spots?.total" class="flex flex-wrap">
+            <div v-if="spots?.total" class="flex flex-wrap max-w-full">
               <div
                 v-for="item in spots.list"
                 :key="item.id"
