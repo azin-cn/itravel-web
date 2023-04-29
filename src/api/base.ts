@@ -10,7 +10,7 @@
  */
 export const isProd = process.env.NODE_ENV === 'production';
 export const prefix = isProd
-  ? 'http://localhost:7000'
+  ? 'https://itravel.todayto.com'
   : 'http://localhost:7000';
 
 /**
