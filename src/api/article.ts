@@ -2,6 +2,7 @@ import axios from 'axios';
 import { ListResult } from '@/types/global';
 import { UserState } from '@/store/modules/user/types';
 import { Comment } from '@/components/comment/index.vue';
+import { DEFAULT_PAGINATION_LIMIT } from '@/views/article/constants';
 import { prefix, BaseModel } from './base';
 
 interface Spot {
@@ -76,9 +77,15 @@ export function getArticleById(id: string) {
  * @param userId
  * @returns
  */
-export function getUserBriefArticles(userId: string) {
+export function getUserBriefArticles(
+  userId: string,
+  options: IPaginationOpton = { page: 1, limit: DEFAULT_PAGINATION_LIMIT }
+) {
   return axios.get<ListResult<ArticleBriefInfo>>(
-    `${prefix}/article/user/${userId}`
+    `${prefix}/article/user/${userId}`,
+    {
+      params: options,
+    }
   );
 }
 

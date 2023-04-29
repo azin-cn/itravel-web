@@ -12,6 +12,7 @@
   import { isLogin as isLoginFunc } from '@/utils/auth';
   import IPagination from '@/views/components/pagination/index.vue';
   import ArticleBrief from '@/views/components/article/article-brief.vue';
+  import { DEFAULT_PAGINATION_LIMIT } from '@/views/article/constants';
   import RandRecomSpot from '../../components/spot/rand-recom-spot.vue';
   import SiderLayout from '../../components/layout/sider-layout.vue';
 
@@ -32,6 +33,11 @@
   const onPageChange = async (v: number) => {
     page.value = v;
     // network
+    const { data } = await getUserBriefArticles(userInfo.value?.id as string, {
+      page: v,
+      limit: DEFAULT_PAGINATION_LIMIT,
+    });
+    userArticles.value = data;
   };
   const onRedirectEditor = () => {
     router.push({
