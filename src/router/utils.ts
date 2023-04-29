@@ -165,6 +165,17 @@ export const redirectSearch = (s: string) => {
   });
 };
 
+/**
+ * 跳转3d
+ * @param spotId
+ */
+export const redirect3D = (spotId: string) => {
+  router.push({
+    name: '3d',
+    params: { spotId },
+  });
+};
+
 export default {
   redirectHome,
   redirectHomeOrDefault,
@@ -176,4 +187,7 @@ export default {
   replaceLogin,
   replaceLoginOrDefault,
   redirectUserPreview,
+  redirectEditor,
+  redirectSearch,
+  redirect3D,
 };
