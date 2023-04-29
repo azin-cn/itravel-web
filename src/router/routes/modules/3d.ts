@@ -13,6 +13,7 @@ export const THREE_ROUTE: RouteRecordRaw = {
       redirect: '/home',
     },
     {
+      name: '3d',
       path: ':spotId',
       component: () => import('@/views/3d/index.vue'),
       meta: {
