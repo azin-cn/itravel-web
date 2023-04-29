@@ -214,7 +214,11 @@
       /**
        * 新的地图json
        */
+      const tiptimer = setTimeout(() => {
+        Message.warning('网络速度缓慢，请耐心等待');
+      }, 2000);
       const json = await getNewMap(name, geoJson.value);
+      clearTimeout(tiptimer);
 
       if (Object.keys(json).length === 0) {
         console.log('click series, no json');
