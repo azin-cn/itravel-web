@@ -1,6 +1,7 @@
 <script lang="ts" setup>
   import { ref, reactive } from 'vue';
   import { formatNumber } from '@/utils/format';
+  import { redirectUserPreview } from '@/router/utils';
   import { UserState } from '@/store/modules/user/types';
   import useLoading from '@/hooks/loading';
   import { Message } from '@arco-design/web-vue';
@@ -54,7 +55,7 @@
     /**
      * 当前用户
      */
-    browser?: Partial<UserState>;
+    browser: Partial<UserState>;
 
     /**
      * 评论数据
@@ -96,10 +97,14 @@
       record: { user, toUser, parent, content },
     } as IAction);
   };
+  const onDelete = (id: string) => {
+    emits('action', { key: 'delete', record: { id } });
+  };
+
   const onAction = (action: IAction) => {
     const { record } = action;
     setReplyLoading(true);
-    emits('action', { key: 'reply', record });
+    emits('action', action);
   };
 
   const showChildCommentMap = reactive<Map<string, boolean>>(new Map());
@@ -138,6 +143,7 @@
       :image-url="comment.user.avatar"
       alt="avatar"
       class="mr-2 cursor-pointer itravel-comment__avatar"
+      @click.stop="redirectUserPreview(comment.user.id as string)"
     />
 
     <div class="text-sm itravel-comment__userinfo">
@@ -150,8 +156,8 @@
         </span>
       </p>
       <!-- 处于子评论/回复时隐藏 -->
-      <p v-if="!comment.parent" class="text-gray-400">
-        {{ comment.user.description }}
+      <p v-if="!comment.parent" class="text-gray-400 truncate w-1/2">
+        {{ comment.user.description || '人之初，性本善。性相近，习相远' }}
       </p>
     </div>
 
@@ -187,6 +193,7 @@
       <span
         v-if="browser.id === comment.user.id"
         class="mr-3 cursor-pointer hover:link-warning"
+        @click.stop="onDelete(comment.id as string)"
       >
         <IconFont type="icon-shanchu2" />
         <span class="ml-1">删除</span>
