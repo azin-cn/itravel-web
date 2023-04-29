@@ -149,10 +149,20 @@
     <div class="text-sm itravel-comment__userinfo">
       <!-- 目前仅有静态模板，后续完善信息展示交互 -->
       <p class="text-base">
-        {{ comment.user.username }}
+        <span
+          class="cursor-pointer"
+          @click.stop="redirectUserPreview(comment.user.id as string)"
+        >
+          {{ comment.user.username }}
+        </span>
         <span v-if="comment.parent">
           <span class="text-gray-500 ml-2 mr-2">回复</span>
-          {{ comment?.toUser.username }}
+          <span
+            class="cursor-pointer"
+            @click.stop="redirectUserPreview(comment.user.id as string)"
+          >
+            {{ comment?.toUser.username }}
+          </span>
         </span>
       </p>
       <!-- 处于子评论/回复时隐藏 -->
@@ -255,7 +265,7 @@
       '. children';
     grid-template-rows: 32px auto 24px auto;
     grid-template-columns: 32px auto;
-    gap: 0.6rem 0.5rem;
+    gap: 0.4rem 0.5rem;
     align-items: center;
 
     &__avatar {
