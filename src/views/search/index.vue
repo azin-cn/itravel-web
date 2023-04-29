@@ -10,7 +10,7 @@
     getArticlesByKeywords,
     getUsersByKeywords,
   } from '@/api/search';
-  import { replaceHomeWithoutQuery } from '@/router/utils';
+  import { replaceHomeWithoutQuery, redirectSpot } from '@/router/utils';
   import { setDocumentTitle } from '@/utils/window';
   import RandRecomSpot from '../article/components/rand-recom-spot.vue';
   import SiderLayout from '../components/layout/sider-layout.vue';
@@ -89,14 +89,14 @@
             <div class="m-6 ml-0">
               <h2 class="text-lg link link-hover inline-block">
                 <IconFont type="icon-zhilupai"></IconFont>
-                搜索景点
+                搜索用户
               </h2>
             </div>
-            <div v-if="spots?.total"></div>
+            <UserBrief v-if="users?.total" :list="users?.list as UserState[]" />
             <a-empty v-else />
             <IPagination
-              :on-page-change="onSpotPageChange"
-              :total="spots?.total"
+              :on-page-change="onUserPageChange"
+              :total="users?.total"
             />
           </section>
 
@@ -123,14 +123,41 @@
             <div class="m-6 ml-0">
               <h2 class="text-lg link link-hover inline-block">
                 <IconFont type="icon-zhilupai"></IconFont>
-                搜索用户
+                搜索景点
               </h2>
             </div>
-            <UserBrief v-if="users?.total" :list="users?.list as UserState[]" />
+            <div v-if="spots?.total" class="flex flex-wrap">
+              <div
+                v-for="item in spots.list"
+                :key="item.id"
+                class="card w-1/3 p-4 hover-card"
+                style="height: 260px"
+              >
+                <img
+                  :src="item.thumbUrl"
+                  class="shadow-xl h-3/5 rounded-lg hover-img cursor-pointer"
+                  style="object-fit: cover"
+                  :alt="item.name"
+                  @click.stop="redirectSpot(item.id as string)"
+                />
+                <div class="card-body">
+                  <a-tooltip :content="item.name">
+                    <h2 class="text-xl font-semibold truncate">
+                      {{ item.name }}
+                    </h2>
+                  </a-tooltip>
+                  <p>
+                    <a class="link link-hover link-primary">
+                      [ {{ item.region }} ]
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
             <a-empty v-else />
             <IPagination
-              :on-page-change="onUserPageChange"
-              :total="users?.total"
+              :on-page-change="onSpotPageChange"
+              :total="spots?.total"
             />
           </section>
         </div>
@@ -139,3 +166,30 @@
     <RandRecomSpot></RandRecomSpot>
   </div>
 </template>
+
+<style scoped>
+  /* less 结合 tailwind 会出现问题 */
+  .card-title {
+    min-width: 0;
+    max-width: 200px;
+  }
+
+  .truncate {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .hover-card,
+  .hover-img {
+    transition: all 0.3s;
+  }
+
+  .hover-card:hover {
+    /* @apply w-1/2; */
+  }
+
+  .hover-img:hover {
+    transform: scale(1.14);
+  }
+</style>
