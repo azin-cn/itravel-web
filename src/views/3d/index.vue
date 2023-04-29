@@ -1,8 +1,9 @@
 <script lang="ts" setup>
   import { ref, onMounted } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
-  import { redirectHome, redirectSpot } from '@/router/utils';
+  import { redirectHome } from '@/router/utils';
   import { getSpotPanorama } from '@/api/spot';
+  import { setDocumentTitle } from '@/utils/window';
   import IHeader from '@/layout/components/IHeader.vue';
   import useThree from './use-three';
 
@@ -22,9 +23,13 @@
       return;
     }
 
-    const { data } = await getSpotPanorama(spotId as string);
+    const {
+      data: { name, panorama },
+    } = await getSpotPanorama(spotId as string);
     const { renderThree } = useThree(threeRef.value as HTMLElement);
-    renderThree(data);
+    renderThree(panorama);
+
+    setDocumentTitle(`VR | ${name}`);
   };
   onMounted(() => {
     init();
