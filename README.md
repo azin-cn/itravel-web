@@ -102,4 +102,23 @@ mapEl.on('click', 'series');
 
 在 editor 的 a-form>a-form-item>.arco-select-view-multiple 选择时，由于会进行多选择的切换，在进行多个选择时，border-color: unset 会失效，具体原因还未探究，记录现象待以后寻找原因。
 
-解决的方法是，不使用:deep和scoped，利用自定义类实现样式隔离
+解决的方法是，不使用:deep 和 scoped，利用自定义类实现样式隔离
+
+## flex 和 truncate 不生效的解决方案
+
+解决方案
+如果在 flex 或 h2（等其他 h 标签）使用 truncate 不生效时，可以在其内部建立一个行内块元素，设置 winth 和使用 truncate
+
+```vue
+<script></script>
+<template>
+  <h2 class="truncate">长字符串</h2>
+</template>
+<style>
+  .truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+</style>
+```
