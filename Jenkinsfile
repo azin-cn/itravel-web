@@ -9,9 +9,7 @@ def buildWebPackage() {
         // 构建
         sh 'pnpm run build'
         // 打包，打包文件名，打包文件路径
-        withArchive('dist.tar.gz') {
-            sh 'tar -czvf dist.tar.gz dist/'
-        }
+        sh 'tar -czvf dist.tar.gz dist/'
         // 上传服务器，arm
         // sh 'scp dist.tar.gz root@172.17.0.1:/opt/docker/dev-itravel-web/tmp'
         sshPut remote: [host: '172.17.0.1', user: 'root'], from: 'dist.tar.gz', into: '/opt/docker/dev-itravel-web/tmp'
@@ -41,16 +39,6 @@ pipeline {
         nodejs "Node18.14.0"
     }
     stages {
-        // stage('Prune_Branch') {
-        //     when {
-        //         changeset '**/*'
-        //     }
-        //     steps {
-        //         // 避免分支错误如 bugfix/list 和 bugfix/list/header 形式，需要Jenkins本地分支与远程保持一致
-        //         // error
-        //         // sh 'git remote update origin --prune'
-        //     }
-        // }
         stage('Build_All_Package') {
             // 根目录文件发生了变化，所有项目重新打包
             when {
@@ -67,6 +55,9 @@ pipeline {
         stage('Build_Web_Package') {
             when {
                 changeset 'packages/web/**'
+                not {
+                    changeset '**/packages/web'
+                }
             }
             steps {
                 buildWebPackage()
