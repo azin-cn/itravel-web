@@ -53,6 +53,17 @@ pipeline {
         nodejs "Node18.14.0"
     }
     stages {
+        stage('Empty') {
+            // 针对于非git触发的操作
+            when {
+                not {
+                    changeset '**/*'
+                }
+            }
+            steps {
+                buildWebPackage()
+            }
+        }
         stage('Build_All_Package') {
             // 根目录文件发生了变化，所有项目重新打包
             when {
