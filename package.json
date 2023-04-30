@@ -1,12 +1,38 @@
 {
   "name": "itravel-web",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "itravel-web",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "admin:dev": "pnpm --filter @itravel/admin dev",
+    "admin:build": "pnpm --filter @itravel/admin build",
+    "admin:build:dev": "pnpm --filter @itravel/admin build:dev",
+    "web:dev": "pnpm --filter @itravel/web dev",
+    "web:build": "pnpm --filter @itravel/web build",
+    "web:build:dev": "pnpm --filter @itravel/web build:dev",
+    "prepare": "husky install",
+    "lint-staged": "npx lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.vue": [
+      "stylelint --fix",
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{scss,sass,less,css}": [
+      "stylelint --fix --custom-syntax postcss",
+      "prettier --write"
+    ]
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "author": "itravel",
+  "license": "ISC",
+  "devDependencies": {
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3"
+  }
 }
