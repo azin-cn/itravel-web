@@ -58,8 +58,10 @@ pipeline {
                     changeset 'packages/**'
                 }
             }
-            // 自动执行
-            buildWebPackage()
+            steps {
+                // 自动执行
+                buildWebPackage()
+            }
         }
         stage('Build_Web_Package') {
             when {
