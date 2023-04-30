@@ -47,7 +47,8 @@ pipeline {
             }
             steps {
                 // 避免分支错误如 bugfix/list 和 bugfix/list/header 形式，需要Jenkins本地分支与远程保持一致
-                sh 'git remote update origin --prune'
+                // error
+                // sh 'git remote update origin --prune'
             }
         }
         stage('Build_All_Package') {
