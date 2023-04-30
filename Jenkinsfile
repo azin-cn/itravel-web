@@ -15,7 +15,7 @@ def buildWebPackage() {
         sshPut remote: [host: '172.17.0.1', user: 'root', name: 'arm'], from: 'dist.tar.gz', into: '/opt/docker/dev-itravel-web/tmp'
         // 执行其他任务
         sshagent(credentials: ['306954f3-2646-4a2e-bfc5-bfde07403643']) {
-            sshScript remote: [host: 'your_host', user: 'your_user'], script: '''
+            sshScript remote: [host: '172.17.0.1', user: 'root', name: 'arm', allowAnyHosts: true], script: '''
                 cd /opt/docker/dev-itravel-web/tmp
 
                 # 清除
