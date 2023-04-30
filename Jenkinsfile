@@ -40,6 +40,8 @@ def buildWebPackage() {
 
                 # 无需重启
                 # docker restart dev-itravel-web
+
+                exit 0
             '''
         }
     }
