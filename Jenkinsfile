@@ -41,16 +41,16 @@ pipeline {
         nodejs "Node18.14.0"
     }
     stages {
-        stage('Prune_Branch') {
-            when {
-                changeset '**/*'
-            }
-            steps {
-                // 避免分支错误如 bugfix/list 和 bugfix/list/header 形式，需要Jenkins本地分支与远程保持一致
-                // error
-                // sh 'git remote update origin --prune'
-            }
-        }
+        // stage('Prune_Branch') {
+        //     when {
+        //         changeset '**/*'
+        //     }
+        //     steps {
+        //         // 避免分支错误如 bugfix/list 和 bugfix/list/header 形式，需要Jenkins本地分支与远程保持一致
+        //         // error
+        //         // sh 'git remote update origin --prune'
+        //     }
+        // }
         stage('Build_All_Package') {
             // 根目录文件发生了变化，所有项目重新打包
             when {
