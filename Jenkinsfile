@@ -5,7 +5,7 @@ plugins {
 pipeline {
     agent any
     tools {
-        nodejs "node-18.14.0"
+        nodejs "Node18.14.0"
     }
     stages {
         stage('Prune Branch') {
@@ -17,7 +17,7 @@ pipeline {
                 sh 'git remote update origin --prune'
             }
         }
-        stage('Build Package Web') {
+        stage('Build Web Package') {
             when {
                 changeset 'packages/web/**'
             }
@@ -35,10 +35,6 @@ pipeline {
                     withArchive('dist.tar.gz') {
                         sh 'tar -czvf dist.tar.gz dist/'
                     }
-                }
-            }
-            steps {
-                dir('packages/web') {
                     // 上传服务器，arm
                     // sh 'scp dist.tar.gz root@172.17.0.1:/opt/docker/dev-itravel-web/tmp'
                     sshPut remote: [host: '172.17.0.1', user: 'root'], from: 'dist.tar.gz', into: '/opt/docker/dev-itravel-web/tmp'
