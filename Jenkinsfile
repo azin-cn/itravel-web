@@ -31,7 +31,7 @@ def buildWebPackage() {
                 cd /opt/docker/dev-itravel-web/tmp
 
                 # 清除
-                sudo rm -rf  ./html/*
+                sudo rm -rf  ../html/*
 
                 echo "info: 远程解压"
 
