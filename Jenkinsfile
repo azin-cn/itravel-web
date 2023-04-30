@@ -2,9 +2,6 @@
 
 pipeline {
     agent any
-    plugins {
-        id 'ssh-pipeline'
-    }
     tools {
         nodejs "Node18.14.0"
     }
