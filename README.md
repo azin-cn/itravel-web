@@ -1,124 +1,166 @@
-使用 ECharts 画中国地图
+## itravel-web
 
-options 准备
+使用 monorepo 管理项目
 
-### 遇到的问题
+- admin
+- web
 
-1. visualMap 需要触发改动数据后才能监听到事件，对本次功能来说显得麻烦，使用 legend 即可
+### amin
 
-```js
-const dataset = {
-  // 用 dimensions 指定了维度的顺序。如果不指定 dimensions，也可以通过指定 series.encode
-  name: {
-    gd: '广东'
-  },
-  months: [
-      '一月',
-      '二月',
-      '三月',
-      '四月',
-      '五月',
-      '六月',
-      '七月',
-      '八月',
-      '九月',
-      '十月',
-      '十一月',
-      '十二月'
-  ],
-  special: ['山', '水', '林', '草', '沙', '土', '人文', '现代'],
+```sh
+pnpm admin:dev
 
-  dimensions: [
-    'name', 'value',
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-    'mountain', 'water', 'forest', 'grass', 'sand', 'soil', 'humanity', 'modern'
-  ],
-  name: 区域名称
-  source: [
-    {
-      name: '广东', value: 433,
-      Jan: 433, Feb: 433, Mar: 433, Apr: 433, May: 433, Jun: 433,
-      Jul: 433, Aug: 433, Sep: 433, Oct: 433, Nov: 433, Dec: 433,
-      mountain: 433, water: 433, forest: 433, grass: 433,
-      sand: 433, soil: 433, humanity: 433, modern: 433,
-    },
-    {
-      name: '新疆', value: 433,
-      Jan: 433, Feb: 433, Mar: 433, Apr: 433, May: 433, Jun: 433,
-      Jul: 433, Aug: 433, Sep: 433, Oct: 433, Nov: 433, Dec: 433,
-      mountain: 433, water: 433, forest: 433, grass: 433,
-      sand: 433, soil: 433, humanity: 433, modern: 433,
-    },
-  ]
-},
+pnpm admin:build
 ```
 
-## 利用闭包解决网络时延问题
+[🚀 查看 AdminReadme](packages/admin/README.md)
 
-在对同一个接口快速请求多次时，由于网络时延的问题，前一次请求的数据不一定比后一次请求的数据先返回。此时由于前一次请求的数据后返回，会把后一次返回的数据覆盖，形成数据错乱。
+### web
 
-### 分析原因
+```sh
+pnpm web:dev
 
-这是由于网络时延和快速触发的行为共同造成的
+pnpm web:build
 
-### 解决方案
-
-- 点击以后只有数据返回了才能继续点击
-- 全局记录一个数据 counter，每点击一次请求 counter 自增 1
-  - 在函数内记录当前的 counter，请求完成后对比前后的 counter，一致则赋值，否则取消赋值
-
-```ts
-const counter = ref(0);
-
-const request = async () => {
-  counter.value += 1;
-  const inner = counter.value;
-  const { data } = await getData();
-  if (inner === counter.value) {
-    setData(data);
-  }
-};
+pnpm web:build:dev
 ```
 
-## 记录一次响应式设计
+[🚀 查看 WebReadme](packages/web/README.md)
 
-home/components/hot-tours.vue:mainTours
-lg:self-center
-md:self-start
-
-## 当地区没有数据时，可以选择不允许进去地区查看
-
-```ts
-mapEl.on('click', 'series');
-/**
- * 如果数据不存在，则可以选择不允许进入
- * if(!data) { Message.warning("没有数据") }
- */
-```
-
-## 记录动态切换 class 时，:deep(selector) 可能出现失败的过程
-
-具体的情况如下：
-
-在 editor 的 a-form>a-form-item>.arco-select-view-multiple 选择时，由于会进行多选择的切换，在进行多个选择时，border-color: unset 会失效，具体原因还未探究，记录现象待以后寻找原因。
-
-解决的方法是，不使用:deep 和 scoped，利用自定义类实现样式隔离
-
-## flex 和 truncate 不生效的解决方案
+## pnpm monorepo 改造原有项目记录
 
 解决方案
-如果在 flex 或 h2（等其他 h 标签）使用 truncate 不生效时，可以在其内部建立一个行内块元素，设置 winth 和使用 truncate
 
-```vue
-<script></script>
-<template>
-  <h2 class="truncate">长字符串</h2>
-</template>
-<style>
-  .truncate {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-</style>
+1. 建立 monorepo 项目文件夹
+2. pnpm init 初始化项目
+3. 建立 packages 文件夹
+4. 建立 pnpm-workspace.yaml 文件，写入以下内容
+
+```yml
+packages:
+  - 'packages/**'
 ```
+
+5. 建立 .npmrc 文件，写入以下内容
+
+```sh
+shamefully-hoist=true
+strict-peer-dependencies=false
+ignore-workspace-root-check=true
+```
+
+6. 将原有项目复制到 packages，删除原有项目的以下内容
+   a. .git
+   b. .husky
+   c. commitlint.config.js
+   d. .gitignore
+
+7. 更改原有项目的 package.json，这一部分的功能是将原有的 git 提交策略删除，最后通过配置 monorepo 仓库的提交策略检查代码规范
+   a. 重命名项目名称 @itravel/web
+   b. 删除 prepare script
+   c. 删除 lint-staged script
+   d. 删除 lint-staged 字段属性
+   e. 删除依赖 `@commitlint/cli`, `@commitlint/config-conventional`, `husky`, `lint-staged`
+
+8. git init monorepo 项目，将原有项目的 .gitignore 文件复制到根目录下
+
+9. (可选择)增加 git 提交策略，commitlint 和 lint-staged
+   a. 在 monorepo 项目路径下安装 commitlint 和 lint-staged，-w 表示将依赖写入到根目录的 package.json 中
+
+   ```sh
+   pnpm add -D -w @commitlint/cli @commitlint/config-conventional husky lint-staged
+   ```
+
+   b. 初始化 husky，出现 .husky 文件夹
+
+   ```shell
+   npx husky install
+   ```
+
+   c. 更新 monorepo 项目的 package.json
+
+   ```json
+   {
+     "scripts": {
+       "prepare": "husky insall"
+     }
+   }
+   ```
+
+   d. 将 commitlint 集成到 husky，这一部分是检查 commit 规范。配置 commitlint，根目录创建 commitlint-config.ts，写入以下内容
+
+   ```js
+   module.exports = {
+     extends: ['@commitlint/config-conventional'],
+   };
+   ```
+
+   e. husky 回调 commitlint
+
+   shell 形式创建
+
+   ```shell
+   npx husky add .husky/commit-msg "npx --no-install commitlint -e $HUSKY_GIT_PARAMS"
+   ```
+
+   手动在 .husky 文件夹创建 `commit-msg`，写入以下内容
+
+   ```shell
+   #!/bin/sh
+   . "$(dirname "$0")/_/husky.sh"
+   npx --no-install commitlint -e $HUSKY_GIT_PARAMS
+   ```
+
+   f. 将 lint-staged 集成到 husky，这一部分是检查 git staged 缓存区代码的规范，配置 lint-staged，更新根目录的 package.json ，可根据自己的需求，增加写入以下内容
+
+   ```json
+   {
+     "scripts": {
+       "lint-staged": "npx lint-staged"
+     },
+     "lint-staged": {
+       "*.{js,ts,jsx,tsx}": ["prettier --write", "eslint --fix"],
+       "*.vue": ["stylelint --fix", "prettier --write", "eslint --fix"],
+       "*.{scss,sass,less,css}": [
+         "stylelint --fix --custom-syntax postcss",
+         "prettier --write"
+       ]
+     }
+   }
+   ```
+
+   g. husky 回调 lint-staged
+   shell 形式创建
+
+   ```shell
+   npx husky add .husky/pre-commit "npm run lint-staged"
+   ```
+
+   手动形式创建，在.husky 文件夹中创建 pre-commit，写入以下内容
+
+   ```shell
+   #!/bin/sh
+   . "$(dirname "$0")/_/husky.sh"
+   npm run lint-staged
+   ```
+
+10. 更新根目录 package.json，加入快捷启动命令，便能在根目录下直接启动某一个项目，--filter | -F 表示对某一个项目生效
+
+```json
+{
+  "scripts": {
+    "admin:dev": "pnpm --filter @itravel/admin dev",
+    "admin:build": "pnpm --filter @itravel/admin build",
+    "admin:build:dev": "pnpm --filter @itravel/admin build:dev",
+    "web:dev": "pnpm --filter @itravel/web dev",
+    "web:build": "pnpm --filter @itravel/web build",
+    "web:build:dev": "pnpm --filter @itravel/web build:dev"
+  }
+}
+```
+
+现在一个带有 git 检测的 monorepo 项目就搭建完成了，更多的需求定义可以查看以下文章
+
+- https://juejin.cn/post/7227352009800138789
+- https://juejin.cn/post/7071992448511279141
+- https://lyh543.github.io/posts/2022-04-18-migrate-npm-multirepo-to-pnpm-monorepo.html
