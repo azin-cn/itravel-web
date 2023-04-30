@@ -31,10 +31,10 @@
         />
         <div class="card-body">
           <h2
-            class="card-title cursor-pointer link link-hover truncate"
+            class="card-title text-left cursor-pointer link link-hover"
             @click.stop="redirectArticle(item.id)"
           >
-            {{ item.title }}
+            <span class="truncate w-4/5">{{ item.title }}</span>
           </h2>
 
           <div class="text-left truncate">
