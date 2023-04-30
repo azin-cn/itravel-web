@@ -27,16 +27,21 @@ def buildWebPackage() {
             // sh 'scp dist.tar.gz root@172.17.0.1:/opt/docker/dev-itravel-web/tmp'
             sshPut remote: remote, from: 'dist.tar.gz', into: '/opt/docker/dev-itravel-web/tmp'
             // 执行其他任务
-            sshCommand  remote: remote, command: '''
-                cd /opt/docker/dev-itravel-web/tmp;
+            sshScript remote: remote, script: '''
+                cd /opt/docker/dev-itravel-web/tmp
 
-                sudo rm -rf  ../html/*; # 清除
+                # 清除
+                sudo rm -rf  ../html/*
 
-                echo "info: 远程解压";
+                echo "info: 远程解压"
 
-                sudo tar -zxvf ./dist.tar.gz -C ./html --strip-components=1; # 解压，跳过头层
+                # 解压，跳过头层
+                sudo tar -zxvf ./tmp/dist.tar.gz -C ./html --strip-components=1
 
-                # docker restart dev-itravel-web; # 无需重启
+                # 无需重启
+                # docker restart dev-itravel-web
+
+                exit 0
             '''
         }
     }
@@ -48,7 +53,7 @@ pipeline {
         nodejs "Node18.14.0"
     }
     stages {
-        stage('Empty_Commit') {
+        stage('Empty') {
             // 针对于非git触发的操作
             when {
                 not {
