@@ -1,6 +1,6 @@
 {
-  "name": "itravel",
-  "description": "ITravel Project",
+  "name": "@itravel/web",
+  "description": "Itravel Web",
   "version": "1.0.0",
   "private": true,
   "author": "Az",
