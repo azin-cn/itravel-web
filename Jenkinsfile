@@ -1,4 +1,6 @@
-@Library('ssh-pipeline-steps') _
+plugins {
+    id 'ssh-pipeline'
+}
 
 pipeline {
     agent any
