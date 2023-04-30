@@ -1,0 +1,1 @@
+pnpm install --no-frozen-lockfile --ignore-scripts && pnpm run build --mode development
