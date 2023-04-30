@@ -10,12 +10,23 @@ def buildWebPackage() {
         sh 'pnpm run build'
         // 打包，打包文件名，打包文件路径
         sh 'tar -czvf dist.tar.gz dist/'
-        // 上传服务器，arm
-        // sh 'scp dist.tar.gz root@172.17.0.1:/opt/docker/dev-itravel-web/tmp'
-        sshPut remote: [host: '172.17.0.1', user: 'root', name: 'arm', allowAnyHosts: true], from: 'dist.tar.gz', into: '/opt/docker/dev-itravel-web/tmp'
-        // 执行其他任务
-        sshagent(credentials: ['306954f3-2646-4a2e-bfc5-bfde07403643']) {
-            sshScript remote: [host: '172.17.0.1', user: 'root', name: 'arm', allowAnyHosts: true], script: '''
+        // 获取凭据
+        withCredentials([usernamePassword(
+            credentialsId: '306954f3-2646-4a2e-bfc5-bfde07403643',
+            passwordVariable: 'password',
+            usernameVariable: 'username'
+        )]) {
+            def remote = [:]
+            remote.name = 'arm'
+            remote.host = '172.17.0.1'
+            remote.user = username
+            remote.password = password
+            remote.allowAnyHosts = true
+            // 上传服务器，arm
+            // sh 'scp dist.tar.gz root@172.17.0.1:/opt/docker/dev-itravel-web/tmp'
+            sshPut remote: remote, from: 'dist.tar.gz', into: '/opt/docker/dev-itravel-web/tmp'
+            // 执行其他任务
+            sshScript remote: remote, script: '''
                 cd /opt/docker/dev-itravel-web/tmp
 
                 # 清除
