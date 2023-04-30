@@ -19,6 +19,7 @@ def buildWebPackage() {
             def remote = [:]
             remote.name = 'arm'
             remote.host = '172.17.0.1'
+            remote.port = 10011
             remote.user = username
             remote.password = password
             remote.allowAnyHosts = true
