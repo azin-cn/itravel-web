@@ -6,16 +6,28 @@ pipeline {
         nodejs "Node18.14.0"
     }
     stages {
-        stage('Prune Branch') {
+        stage('Prune_Branch') {
             when {
-                changeset '/**'
+                changeset '**/*'
             }
             steps {
                 // 避免分支错误如 bugfix/list 和 bugfix/list/header 形式，需要Jenkins本地分支与远程保持一致
                 sh 'git remote update origin --prune'
             }
         }
-        stage('Build Web Package') {
+        stage('Build_All_Package') {
+            // 根目录文件发生了变化，所有项目重新打包
+            when {
+                changeset '**/*'
+                not {
+                    changeset 'packages/**'
+                }
+            }
+            // 自动执行
+            // dependsOn 'Build_Web_Package, Build_Admin_Package'
+            dependsOn 'Build_Web_Package'
+        }
+        stage('Build_Web_Package') {
             when {
                 changeset 'packages/web/**'
             }
