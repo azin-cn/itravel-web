@@ -2,6 +2,7 @@
   "name": "itravel-web",
   "version": "1.0.0",
   "description": "itravel-web",
+  "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "admin:dev": "pnpm --filter @itravel/admin dev",
@@ -36,5 +37,8 @@
     "@commitlint/config-conventional": "^17.1.0",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3"
+  },
+  "engines": {
+    "node": ">=14.18.0"
   }
 }
