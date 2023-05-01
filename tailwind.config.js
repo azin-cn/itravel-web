@@ -2,6 +2,7 @@
  * daisyui: https://daisyui.com/docs/config/
  */
 module.exports = {
+  important: 'body',
   content: ['./src/**/*.{vue,js,ts}'],
   // add daisyUI plugin
   plugins: [require('daisyui')],
