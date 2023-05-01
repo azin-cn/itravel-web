@@ -1,4 +1,4 @@
-def buildPackage(dirPath, serverPath, dockerName) {
+def buildPackage(dirPath, serverPath, dockerName, params) {
     dir(dirPath) {
         // 清除dist
         sh 'rm -rf ./dist'
@@ -7,7 +7,7 @@ def buildPackage(dirPath, serverPath, dockerName) {
         // 安装依赖
         sh 'pnpm install --no-frozen-lockfile --ignore-scripts'
         // 构建
-        sh 'pnpm run build'
+        sh "pnpm run build --mode ${params.NODE_ENV}"
         // 打包，打包文件名，打包文件路径
         sh 'tar -czvf dist.tar.gz dist/'
         // 获取凭据
@@ -52,7 +52,7 @@ def buildPackage(dirPath, serverPath, dockerName) {
 
                 sudo tar -zxvf ./tmp/dist.tar.gz -C ./html --strip-components=1; # 解压，跳过头层
 
-                #docker restart ${dockerName} # 重启docker
+                docker restart ${dockerName} # 重启docker
             """
         }
     }
@@ -71,6 +71,18 @@ pipeline {
         DOCKER_WEB = 'dev-itravel-web-web'
         DOCKER_ADMIN = 'dev-itravel-web-admin'
     }
+    parameters {
+        choice(
+            name: 'PACKAGE',
+            choices: ['all', 'packages/web', 'packages/admin'],
+            description: '指定项目打包'
+        )
+        choice(
+            name: 'NODE_ENV',
+            choices: ['production', 'development'],
+            description: '指定环境打包'
+        )
+    }
     // 处于workspace中
     stages {
         stage('Empty_Commit') {
@@ -81,8 +93,16 @@ pipeline {
                 }
             }
             steps {
-                buildPackage(env.PACKAGE_WEB_DIR, env.SERVER_PATH_WEB, env.DOCKER_WEB)
-                buildPackage(env.PACKAGE_ADMIN_DIR, env.SERVER_PATH_ADMIN, env.DOCKER_ADMIN)
+                script {
+                    if (params.PACKAGE == 'all') {
+                        buildPackage(env.PACKAGE_WEB_DIR, env.SERVER_PATH_WEB, env.DOCKER_WEB, params)
+                        buildPackage(env.PACKAGE_ADMIN_DIR, env.SERVER_PATH_ADMIN, env.DOCKER_ADMIN, params)
+                    } else if (params.PACKAGE == env.PACKAGE_WEB_DIR) {
+                        buildPackage(env.PACKAGE_WEB_DIR, env.SERVER_PATH_WEB, env.DOCKER_WEB, params)
+                    } else if (params.PACKAGE == env.PACKAGE_ADMIN_DIR) {
+                        buildPackage(env.PACKAGE_ADMIN_DIR, env.SERVER_PATH_ADMIN, env.DOCKER_ADMIN, params)
+                    }
+                }
             }
         }
         stage('Build_All_Package') {
@@ -94,8 +114,8 @@ pipeline {
                 }
             }
             steps {
-                buildPackage(env.PACKAGE_WEB_DIR, env.SERVER_PATH_WEB, env.DOCKER_WEB)
-                buildPackage(env.PACKAGE_ADMIN_DIR, env.SERVER_PATH_ADMIN, env.DOCKER_ADMIN)
+                buildPackage(env.PACKAGE_WEB_DIR, env.SERVER_PATH_WEB, env.DOCKER_WEB, params)
+                buildPackage(env.PACKAGE_ADMIN_DIR, env.SERVER_PATH_ADMIN, env.DOCKER_ADMIN, params)
             }
         }
         stage('Build_Web_Package') {
@@ -107,7 +127,7 @@ pipeline {
                 }
             }
             steps {
-                buildPackage(env.PACKAGE_WEB_DIR, env.SERVER_PATH_WEB, env.DOCKER_WEB)
+                buildPackage(env.PACKAGE_WEB_DIR, env.SERVER_PATH_WEB, env.DOCKER_WEB, params)
             }
         }
         stage('Build_Admin_Package') {
@@ -119,7 +139,7 @@ pipeline {
                 }
             }
             steps {
-                buildPackage(env.PACKAGE_ADMIN_DIR, env.SERVER_PATH_ADMIN, env.DOCKER_ADMIN)
+                buildPackage(env.PACKAGE_ADMIN_DIR, env.SERVER_PATH_ADMIN, env.DOCKER_ADMIN, params)
             }
         }
     }
