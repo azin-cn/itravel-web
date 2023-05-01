@@ -90,6 +90,24 @@ pipeline {
     }
     // 处于workspace中
     stages {
+        stage('Clean_Workspace') {
+            steps {
+                script {
+                    if (params.CLEAN_WORKSPACE == true) {
+                        cleanWs(
+                            cleanWhenAborted: true,
+                            cleanWhenFailure: true,
+                            cleanWhenNotBuilt: true,
+                            cleanWhenSuccess: true,
+                            cleanWhenUnstable: true,
+                            cleanupMatrixParent: true,
+                            disableDeferredWipeout: true,
+                            deleteDirs: true
+                        )
+                    }
+                }
+            }
+        }
         stage('Empty_Commit') {
             // 针对于非git触发的操作，commit无任何变化
             when {
@@ -145,24 +163,6 @@ pipeline {
             }
             steps {
                 buildPackage(env.PACKAGE_ADMIN_DIR, env.SERVER_PATH_ADMIN, env.DOCKER_ADMIN, params)
-            }
-        }
-        stage('Clean_Workspace') {
-            steps {
-                script {
-                    if (params.CLEAN_WORKSPACE == true) {
-                        cleanWs(
-                            cleanWhenAborted: true,
-                            cleanWhenFailure: true,
-                            cleanWhenNotBuilt: true,
-                            cleanWhenSuccess: true,
-                            cleanWhenUnstable: true,
-                            cleanupMatrixParent: true,
-                            disableDeferredWipeout: true,
-                            deleteDirs: true
-                        )
-                    }
-                }
             }
         }
     }
