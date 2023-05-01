@@ -1,5 +1,5 @@
-def buildPackage(dirPath, serverPath, dockerName) {
-    dir(dirPath) {
+def buildWebPackage() {
+    dir('packages/web') {
         // 清除dist
         sh 'rm -rf ./dist'
         // echo
@@ -23,37 +23,21 @@ def buildPackage(dirPath, serverPath, dockerName) {
             remote.user = username
             remote.password = password
             remote.allowAnyHosts = true
-            // 判断目录是否存在
-            sshCommand remote: remote, command: """
-                if [[ -d "${serverPath}/tmp" ]]; then 
-                    echo "info: ${serverPath}/tmp folder already exist, skip"
-                else
-                    echo "info: ${serverPath}/tmp folder not exist, create"
-                    mkdir -p ${serverPath}/tmp
-                fi
-            """
-            // 上传服务器，arm sh 'scp dist.tar.gz root@172.17.0.1:/opt/docker/dev-itravel-web/tmp'
-            sshPut remote: remote, from: 'dist.tar.gz', into: "${serverPath}/tmp"
+            // 上传服务器，arm
+            // sh 'scp dist.tar.gz root@172.17.0.1:/opt/docker/dev-itravel-web/tmp'
+            sshPut remote: remote, from: 'dist.tar.gz', into: '/opt/docker/dev-itravel-web/tmp'
             // 执行其他任务
-            sshCommand  remote: remote, command: """
-                cd ${serverPath}
+            sshCommand  remote: remote, command: '''
+                cd /opt/docker/dev-itravel-web;
 
-                echo "info: cd into \$(pwd)"
-
-                if [[ -e './html' ]]; then
-                    echo "info: html folder already exist, delete html folder"
-                    rm -rf './html'
-                else
-                    echo "info: html folder not exist, create html folder"
-                    mkdir -p './html'
-                fi
+                sudo rm -rf  ./html/*; # 清除
 
                 echo "info: 远程解压";
 
                 sudo tar -zxvf ./tmp/dist.tar.gz -C ./html --strip-components=1; # 解压，跳过头层
 
-                #docker restart "${dockerName}" # 重启docker
-            """
+                # docker restart dev-itravel-web; # 无需重启
+            '''
         }
     }
 }
@@ -63,30 +47,20 @@ pipeline {
     tools {
         nodejs "Node18.14.0"
     }
-    environment {
-        PACKAGE_WEB_DIR = 'packages/web'
-        PACKAGE_ADMIN_DIR = 'packages/admin'
-        SERVER_PATH_WEB = '/opt/docker/dev-itravel-web/web'
-        SERVER_PATH_ADMIN = '/opt/docker/dev-itravel-web/admin'
-        DOCKER_WEB = 'dev-itravel-web-web'
-        DOCKER_ADMIN = 'dev-itravel-web-admin'
-    }
-    // 处于workspace中
     stages {
         stage('Empty_Commit') {
-            // 针对于非git触发的操作，commit无任何变化
+            // 针对于非git触发的操作
             when {
                 not {
                     changeset '**/*'
                 }
             }
             steps {
-                buildPackage(env.PACKAGE_WEB_DIR, env.SERVER_PATH_WEB, env.DOCKER_WEB)
-                buildPackage(env.PACKAGE_ADMIN_DIR, env.SERVER_PATH_ADMIN, env.DOCKER_ADMIN)
+                buildWebPackage()
             }
         }
         stage('Build_All_Package') {
-            // 当只有根目录文件发生变化时，重新打包所有项目
+            // 根目录文件发生了变化，所有项目重新打包
             when {
                 changeset '**/*'
                 not {
@@ -94,12 +68,11 @@ pipeline {
                 }
             }
             steps {
-                buildPackage(env.PACKAGE_WEB_DIR, env.SERVER_PATH_WEB, env.DOCKER_WEB)
-                buildPackage(env.PACKAGE_ADMIN_DIR, env.SERVER_PATH_ADMIN, env.DOCKER_ADMIN)
+                // 自动执行
+                buildWebPackage()
             }
         }
         stage('Build_Web_Package') {
-            // 当packages/web发生变化，只打包web项目
             when {
                 changeset 'packages/web/**'
                 not {
@@ -107,19 +80,7 @@ pipeline {
                 }
             }
             steps {
-                buildPackage(env.PACKAGE_WEB_DIR, env.SERVER_PATH_WEB, env.DOCKER_WEB)
-            }
-        }
-        stage('Build_Admin_Package') {
-            // 当packages/admin发生了变化，只打包admin
-            when {
-                changeset 'packages/admin/**'
-                not {
-                    changeset '**/packages/admin'
-                }
-            }
-            steps {
-                buildPackage(env.PACKAGE_ADMIN_DIR, env.SERVER_PATH_ADMIN, env.DOCKER_ADMIN)
+                buildWebPackage()
             }
         }
     }
