@@ -82,6 +82,11 @@ pipeline {
             choices: ['production', 'development'],
             description: '指定环境打包'
         )
+        choice(
+            name: 'CLEAN_WORKSPACE',
+            choices: [true, false],
+            description: '是否删除工作空间'
+        )
     }
     // 处于workspace中
     stages {
@@ -140,6 +145,24 @@ pipeline {
             }
             steps {
                 buildPackage(env.PACKAGE_ADMIN_DIR, env.SERVER_PATH_ADMIN, env.DOCKER_ADMIN, params)
+            }
+        }
+        stage('Clean_Workspace') {
+            steps {
+                script {
+                    if (params.CLEAN_WORKSPACE == true) {
+                        cleanWs(
+                            cleanWhenAborted: true,
+                            cleanWhenFailure: true,
+                            cleanWhenNotBuilt: true,
+                            cleanWhenSuccess: true,
+                            cleanWhenUnstable: true,
+                            cleanupMatrixParent: true,
+                            disableDeferredWipeout: true,
+                            deleteDirs: true
+                        )
+                    }
+                }
             }
         }
     }
