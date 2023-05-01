@@ -7,7 +7,7 @@ def buildPackage(dirPath, serverPath, dockerName, params) {
         // 安装依赖
         sh 'pnpm install --no-frozen-lockfile --ignore-scripts'
         // 构建
-        sh "pnpm run build --mode ${params.NODE_ENV}"
+        sh "pnpm run build --mode ${params.CUSTOMER_NODE_ENV}"
         // 打包，打包文件名，打包文件路径
         sh 'tar -czvf dist.tar.gz dist/'
         // 获取凭据
@@ -78,7 +78,7 @@ pipeline {
             description: '指定项目打包'
         )
         choice(
-            name: 'NODE_ENV',
+            name: 'CUSTOMER_NODE_ENV',
             choices: ['production', 'development'],
             description: '指定环境打包'
         )
