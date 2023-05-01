@@ -135,7 +135,10 @@ pipeline {
             }
         }
         stage('Build_All_Package') {
-            // 当只有根目录文件发生变化时，重新打包所有项目
+            // 当packages外的目录有发生变化时（配置文件），重新打包所有项目
+            // TODO 目前还是有一个逻辑bug，当提交的内容包含非packages内的内容和packages/admin的内容，只触发了admin的打包，正确的做法是打包所有
+            // TODO 只要包含非packages的内容就打包所有，只有web发生了变化才打包web（排除了其他的变化），admin同理，语法难以表达，not表达不包含
+            // TODO 目前如果涉及到根目录手动打包一次
             when {
                 changeset '**/*'
                 not {
@@ -148,24 +151,18 @@ pipeline {
             }
         }
         stage('Build_Web_Package') {
-            // 当packages/web发生变化，只打包web项目
+            // 当packages/web发生变化，只打包web项目，避免二次打包需要设置根目录不发生变化
             when {
                 changeset 'packages/web/**'
-                not {
-                    changeset '**/packages/web'
-                }
             }
             steps {
                 buildPackage(env.PACKAGE_WEB_DIR, env.SERVER_PATH_WEB, env.DOCKER_WEB, params)
             }
         }
         stage('Build_Admin_Package') {
-            // 当packages/admin发生了变化，只打包admin
+            // 当packages/admin发生了变化，只打包admin，避免二次打包需要设置根目录不发生变化
             when {
                 changeset 'packages/admin/**'
-                not {
-                    changeset '**/packages/admin'
-                }
             }
             steps {
                 buildPackage(env.PACKAGE_ADMIN_DIR, env.SERVER_PATH_ADMIN, env.DOCKER_ADMIN, params)
