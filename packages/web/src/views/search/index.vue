@@ -202,7 +202,7 @@
 
   .hover-card,
   .hover-img {
-    transition: all 0.3s;
+    transition: all 0.33s;
   }
 
   .hover-card:hover {
