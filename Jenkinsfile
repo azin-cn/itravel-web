@@ -90,7 +90,7 @@ pipeline {
         )
         choice(
             name: 'CLEAN_WORKSPACE',
-            choices: [true, false],
+            choices: [false, true],
             description: '是否删除工作空间'
         )
     }
