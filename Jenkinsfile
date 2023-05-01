@@ -135,12 +135,9 @@ pipeline {
             }
         }
         stage('Build_All_Package') {
-            // 当只有根目录文件发生变化时，重新打包所有项目
+            // 当有根目录文件发生变化时，重新打包所有项目
             when {
-                changeset '**/*'
-                not {
-                    changeset 'packages/**'
-                }
+                changeset '/*'
             }
             steps {
                 buildPackage(env.PACKAGE_WEB_DIR, env.SERVER_PATH_WEB, env.DOCKER_WEB, params)
@@ -148,11 +145,11 @@ pipeline {
             }
         }
         stage('Build_Web_Package') {
-            // 当packages/web发生变化，只打包web项目
+            // 当packages/web发生变化，只打包web项目，避免二次打包需要设置根目录不发生变化
             when {
                 changeset 'packages/web/**'
                 not {
-                    changeset '**/packages/web'
+                    changeset '/*'
                 }
             }
             steps {
@@ -160,11 +157,11 @@ pipeline {
             }
         }
         stage('Build_Admin_Package') {
-            // 当packages/admin发生了变化，只打包admin
+            // 当packages/admin发生了变化，只打包admin，避免二次打包需要设置根目录不发生变化
             when {
                 changeset 'packages/admin/**'
                 not {
-                    changeset '**/packages/admin'
+                    changeset '/*'
                 }
             }
             steps {
