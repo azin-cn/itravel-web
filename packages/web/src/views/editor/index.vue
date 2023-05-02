@@ -72,8 +72,8 @@
          */
         const current = categoryOptions.value?.find(
           (item) => item.id === form.value.category
-        ) as BaseModel;
-        categoryOptions.value = [...data, current];
+        );
+        categoryOptions.value = current ? [...data, current] : data;
       } finally {
         states.value.categoryLoading = false;
       }
@@ -89,8 +89,8 @@
          */
         const current = tagOptions.value?.filter((item) =>
           form.value.tags?.includes(item.id)
-        ) as BaseModel[];
-        categoryOptions.value = [...data, ...current];
+        );
+        categoryOptions.value = current ? [...data, ...current] : data;
       } finally {
         states.value.tagLoading = false;
       }
@@ -105,8 +105,8 @@
        */
       const current = spotOptions.value?.find(
         (item) => item.id === form.value.spot
-      ) as BaseModel;
-      spotOptions.value = [...data, current];
+      );
+      spotOptions.value = current ? [...data, current] : data;
     } finally {
       states.value.spotLoading = false;
     }
