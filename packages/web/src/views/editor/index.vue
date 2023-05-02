@@ -181,7 +181,8 @@
       form.value.tags = article.tags?.map((item) => item.id);
       form.value.images = article.images;
 
-      vditorRef.value?.setValue(article.content);
+      // onMounted setValue，currentNode not exist
+      // vditorRef.value?.setValue(article.content);
 
       setDocumentTitle(`编辑文章 - ${article.title}`);
       return;
