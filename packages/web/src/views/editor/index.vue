@@ -182,9 +182,12 @@
       form.value.images = article.images;
 
       // onMounted setValue，currentNode not exist
-      // vditorRef.value?.setValue(article.content);
+      try {
+        vditorRef.value?.setValue(article.content);
+      } finally {
+        setDocumentTitle(`编辑文章 - ${article.title}`);
+      }
 
-      setDocumentTitle(`编辑文章 - ${article.title}`);
       return;
     }
 
