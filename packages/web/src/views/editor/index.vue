@@ -210,6 +210,7 @@
   init();
 
   onMounted(() => {
+    Message.info('编辑器加载中，请稍后');
     vditorRef.value = new Vditor('vditor', {
       height: 492,
       minHeight: 100,
@@ -442,7 +443,6 @@
     }
 
     // TODO 权重不够未生效，等之后完整了解UI框架原理再想优雅的解决方案
-
     .arco-checkbox.arco-checkbox-checked
       span.arco-icon-hover.arco-icon-hover-disabled.arco-checkbox-icon-hover
       .arco-checkbox-icon {
