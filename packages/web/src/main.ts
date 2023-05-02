@@ -1,5 +1,3 @@
-import '@/assets/style/tailwind.css';
-import '@/assets/style/global.less';
 import { createApp } from 'vue';
 import ArcoVue from '@arco-design/web-vue';
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';
@@ -11,6 +9,8 @@ import directive from './directive';
 import './mock';
 import App from './App.vue';
 import '@arco-design/web-vue/dist/arco.css';
+import '@/assets/style/tailwind.css';
+import '@/assets/style/global.less';
 import '@/api/interceptor';
 
 const app = createApp(App);
