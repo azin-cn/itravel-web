@@ -90,15 +90,12 @@
       </div>
     </section>
 
-    <section v-if="!onlyShowMainTour">
+    <section v-if="onlyShowMainTour">
       <div
         class="flex justify-around p-12 max-w-screen-xl mx-auto"
         style="height: 340px"
       >
-        <template
-          v-for="(item, index) in secondaryTours as ITour[]"
-          :key="item.id"
-        >
+        <template v-for="(item, index) in secondaryTours" :key="item.id">
           <!-- 前两个 -->
           <div
             v-if="index < 2"
@@ -143,10 +140,7 @@
         class="flex justify-around p-12 max-w-screen-xl mx-auto"
         style="height: 340px"
       >
-        <template
-          v-for="(item, index) in secondaryTours as ITour[]"
-          :key="item.id"
-        >
+        <template v-for="(item, index) in secondaryTours" :key="item.id">
           <!-- 后两个 -->
           <div
             v-if="index > 1"
