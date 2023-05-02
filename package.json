@@ -11,9 +11,9 @@
     "web:dev": "pnpm --filter @itravel/web dev",
     "web:build": "pnpm --filter @itravel/web build",
     "web:build:dev": "pnpm --filter @itravel/web build:dev",
-    "mobile:dev": "pnpm --filter @itravel/web dev",
-    "mobile:build": "pnpm --filter @itravel/web build",
-    "mobile:build:dev": "pnpm --filter @itravel/web build:dev",
+    "mobile:dev": "pnpm --filter @itravel/mobile dev",
+    "mobile:build": "pnpm --filter @itravel/mobile build",
+    "mobile:build:dev": "pnpm --filter @itravel/mobile build:dev",
     "prepare": "husky install",
     "lint-staged": "npx lint-staged"
   },
