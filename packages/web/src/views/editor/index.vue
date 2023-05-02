@@ -360,6 +360,7 @@
                   :options="spotOptions"
                   :field-names="fieldNames"
                   :loading="states.spotLoading"
+                  :filter-option="false"
                   scrollbar
                   allow-search
                   placeholder="请输入关联景点"
@@ -385,6 +386,7 @@
                   :field-names="fieldNames"
                   :options="categoryOptions"
                   :loading="states.categoryLoading"
+                  :filter-option="false"
                   scrollbar
                   allow-search
                   placeholder="请选择文章分类"
@@ -409,6 +411,7 @@
                   v-model="form.tags"
                   :field-names="fieldNames"
                   :options="tagOptions"
+                  :filter-option="false"
                   :limit="4"
                   :max-tag-count="2"
                   scrollbar
