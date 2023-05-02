@@ -3,6 +3,7 @@
   import { useRoute, useRouter } from 'vue-router';
   import Vditor from 'vditor';
   import 'vditor/dist/index.css';
+  import { promiseTimeout } from '@vueuse/core';
   import { BaseModel } from '@/api/base';
   import { FileItem, Message, SelectFieldNames } from '@arco-design/web-vue';
   import {
@@ -13,10 +14,12 @@
     postArticle,
     getCategoriesByIds,
     getTagsByIds,
+    ArticleBriefInfo,
   } from '@/api/article';
   import { getSpotsByWords, getSpotsByIds } from '@/api/spot';
   import { useUserStore } from '@/store';
   import { setDocumentTitle } from '@/utils/window';
+  import { redirectHome } from '@/router/utils';
   import SiderLayout from '../components/layout/sider-layout.vue';
   import useUpload from './use-upload';
   import ModalForm from './component/modal-form.vue';
@@ -151,7 +154,19 @@
     if (articleId) {
       isUpdated.value = true;
 
-      const { data: article } = await getArticleById(articleId as string);
+      let article: ArticleBriefInfo;
+      try {
+        const { data } = await getArticleById(articleId as string);
+        article = data;
+      } catch (error) {
+        await promiseTimeout(1000);
+        redirectHome();
+        return;
+      }
+      if (!article) {
+        return;
+      }
+
       fileList.value = article.images?.map(
         (item) =>
           ({
