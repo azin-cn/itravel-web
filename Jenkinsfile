@@ -70,17 +70,20 @@ pipeline {
         nodejs "Node18.14.0"
     }
     environment {
-        PACKAGE_WEB_DIR = 'packages/web'
-        PACKAGE_ADMIN_DIR = 'packages/admin'
+        PACKAGE_DIR_WEB = 'packages/web'
+        PACKAGE_DIR_ADMIN = 'packages/admin'
+        PACKAGE_DIR_MOBILE = 'packages/mobile'
         SERVER_PATH_WEB = '/opt/docker/dev-itravel-web/web'
         SERVER_PATH_ADMIN = '/opt/docker/dev-itravel-web/admin'
-        DOCKER_WEB = 'dev-itravel-web-web'
-        DOCKER_ADMIN = 'dev-itravel-web-admin'
+        SERVER_PATH_MOBILE = '/opt/docker/dev-itravel-web/mobile'
+        DOCKER_NAME_WEB = 'dev-itravel-web-web'
+        DOCKER_NAME_ADMIN = 'dev-itravel-web-admin'
+        DOCKER_NAME_MOBILE = 'dev-itravel-web-mobile'
     }
     parameters {
         choice(
             name: 'PACKAGE',
-            choices: ['all', 'packages/web', 'packages/admin'],
+            choices: ['all', 'packages/web', 'packages/admin', 'packages/mobile'],
             description: '指定项目打包'
         )
         choice(
@@ -124,12 +127,15 @@ pipeline {
             steps {
                 script {
                     if (params.PACKAGE == 'all') {
-                        buildPackage(env.PACKAGE_WEB_DIR, env.SERVER_PATH_WEB, env.DOCKER_WEB, params)
-                        buildPackage(env.PACKAGE_ADMIN_DIR, env.SERVER_PATH_ADMIN, env.DOCKER_ADMIN, params)
-                    } else if (params.PACKAGE == env.PACKAGE_WEB_DIR) {
-                        buildPackage(env.PACKAGE_WEB_DIR, env.SERVER_PATH_WEB, env.DOCKER_WEB, params)
-                    } else if (params.PACKAGE == env.PACKAGE_ADMIN_DIR) {
-                        buildPackage(env.PACKAGE_ADMIN_DIR, env.SERVER_PATH_ADMIN, env.DOCKER_ADMIN, params)
+                        buildPackage(env.PACKAGE_DIR_WEB, env.SERVER_PATH_WEB, env.DOCKER_NAME_WEB, params)
+                        buildPackage(env.PACKAGE_DIR_ADMIN, env.SERVER_PATH_ADMIN, env.DOCKER_NAME_ADMIN, params)
+                        buildPackage(env.PACKAGE_DIR_MOBILE, env.SERVER_PATH_MOBILE, env.DOCKER_NAME_MOBILE, params)
+                    } else if (params.PACKAGE == env.PACKAGE_DIR_WEB) {
+                        buildPackage(env.PACKAGE_DIR_WEB, env.SERVER_PATH_WEB, env.DOCKER_ADMIN_WEB, params)
+                    } else if (params.PACKAGE == env.PACKAGE_DIR_ADMIN) {
+                        buildPackage(env.PACKAGE_DIR_ADMIN, env.SERVER_PATH_ADMIN, env.DOCKER_NAME_ADMIN, params)
+                    } else if (params.PACKAGE == env.PACKAGE_DIR_MOBILE) {
+                        buildPackage(env.PACKAGE_DIR_MOBILE, env.SERVER_PATH_MOBILE, env.DOCKER_NAME_MOBILE, params)
                     }
                 }
             }
@@ -146,8 +152,9 @@ pipeline {
                 }
             }
             steps {
-                buildPackage(env.PACKAGE_WEB_DIR, env.SERVER_PATH_WEB, env.DOCKER_WEB, params)
-                buildPackage(env.PACKAGE_ADMIN_DIR, env.SERVER_PATH_ADMIN, env.DOCKER_ADMIN, params)
+                buildPackage(env.PACKAGE_DIR_WEB, env.SERVER_PATH_WEB, env.DOCKER_NAME_WEB, params)
+                buildPackage(env.PACKAGE_DIR_ADMIN, env.SERVER_PATH_ADMIN, env.DOCKER_NAME_ADMIN, params)
+                buildPackage(env.PACKAGE_DIR_MOBILE, env.SERVER_PATH_MOBILE, env.DOCKER_NAME_MOBILE, params)
             }
         }
         stage('Build_Web_Package') {
@@ -156,7 +163,7 @@ pipeline {
                 changeset 'packages/web/**'
             }
             steps {
-                buildPackage(env.PACKAGE_WEB_DIR, env.SERVER_PATH_WEB, env.DOCKER_WEB, params)
+                buildPackage(env.PACKAGE_DIR_WEB, env.SERVER_PATH_WEB, env.DOCKER_NAME_WEB, params)
             }
         }
         stage('Build_Admin_Package') {
@@ -165,7 +172,16 @@ pipeline {
                 changeset 'packages/admin/**'
             }
             steps {
-                buildPackage(env.PACKAGE_ADMIN_DIR, env.SERVER_PATH_ADMIN, env.DOCKER_ADMIN, params)
+                buildPackage(env.PACKAGE_DIR_ADMIN, env.SERVER_PATH_ADMIN, env.DOCKER_NAME_ADMIN, params)
+            }
+        }
+        stage('Build_Mobile_Package') {
+            // 当packages/admin发生了变化，只打包admin，避免二次打包需要设置根目录不发生变化
+            when {
+                changeset 'packages/mobile/**'
+            }
+            steps {
+                buildPackage(env.PACKAGE_DIR_MOBILE, env.SERVER_PATH_MOBILE, env.DOCKER_NAME_MOBILE, params)
             }
         }
     }
