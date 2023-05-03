@@ -131,7 +131,7 @@ pipeline {
                         buildPackage(env.PACKAGE_DIR_ADMIN, env.SERVER_PATH_ADMIN, env.DOCKER_NAME_ADMIN, params)
                         buildPackage(env.PACKAGE_DIR_MOBILE, env.SERVER_PATH_MOBILE, env.DOCKER_NAME_MOBILE, params)
                     } else if (params.PACKAGE == env.PACKAGE_DIR_WEB) {
-                        buildPackage(env.PACKAGE_DIR_WEB, env.SERVER_PATH_WEB, env.DOCKER_ADMIN_WEB, params)
+                        buildPackage(env.PACKAGE_DIR_WEB, env.SERVER_PATH_WEB, env.DOCKER_NAME_WEB, params)
                     } else if (params.PACKAGE == env.PACKAGE_DIR_ADMIN) {
                         buildPackage(env.PACKAGE_DIR_ADMIN, env.SERVER_PATH_ADMIN, env.DOCKER_NAME_ADMIN, params)
                     } else if (params.PACKAGE == env.PACKAGE_DIR_MOBILE) {
