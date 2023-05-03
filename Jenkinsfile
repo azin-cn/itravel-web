@@ -40,7 +40,7 @@ def buildPackage(dirPath, serverPath, dockerName, params) {
             """
             // 上传服务器，arm sh 'scp dist.tar.gz root@172.17.0.1:/opt/docker/dev-itravel-web/tmp'
             sshPut remote: remote, from: 'dist.tar.gz', into: "${serverPath}/tmp"
-            // 执行其他任务
+            // 执行其他任务，远程的\$需要转义
             sshCommand  remote: remote, command: """
                 cd ${serverPath}
 
@@ -58,8 +58,8 @@ def buildPackage(dirPath, serverPath, dockerName, params) {
 
                 sudo tar -zxvf ./tmp/dist.tar.gz -C ./html --strip-components=1; # 解压，跳过头层
 
-                # 重启docker | 新建docker
-                if [ "$(docker ps -a -q -f name=^${dockerName}$)" ]; then
+                # 重启docker | 新建docker 远程的\$需要转义
+                if [ "\$(docker ps -a -q -f name=^${dockerName}\$)" ]; then
                     docker restart ${dockerName}
                 else
                     sudo bash ~/docker-script/docker-${dockerName}.sh
