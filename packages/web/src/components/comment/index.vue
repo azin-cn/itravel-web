@@ -241,6 +241,7 @@
           <Comment
             v-if="showChildCommentMap?.get(comment.id)"
             ref="childRef"
+            :browser="browser"
             :comments="comment.children"
             @action="onAction"
           />
