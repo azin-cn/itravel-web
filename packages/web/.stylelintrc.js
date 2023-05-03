@@ -26,5 +26,12 @@ module.exports = {
         ignorePseudoClasses: ['deep'],
       },
     ],
+    'selector-anb-no-unmatchable': null,
+    'declaration-block-no-duplicate-properties': [
+      true,
+      {
+        ignore: ['consecutive-duplicates'],
+      },
+    ],
   },
 };
