@@ -14,9 +14,9 @@ import App from './App.vue';
 import '@/assets/style/global.less';
 import '@/api/interceptor';
 // vant ui global css
-import 'vant/es/toast/style';
-import 'vant/es/dialog/style';
-import 'vant/es/image-preview/style';
+import 'vant/es/toast/style/index.mjs';
+import 'vant/es/dialog/style/index.mjs';
+import 'vant/es/image-preview/style/index.mjs';
 
 const app = createApp(App);
 
