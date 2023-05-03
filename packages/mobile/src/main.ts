@@ -13,6 +13,10 @@ import App from './App.vue';
 // https://arco.design/docs/designlab/use-theme-package
 import '@/assets/style/global.less';
 import '@/api/interceptor';
+// vant ui global css
+import 'vant/es/toast/style';
+import 'vant/es/dialog/style';
+import 'vant/es/image-preview/style';
 
 const app = createApp(App);
 
