@@ -14,6 +14,7 @@ declare module '@vue/runtime-core' {
     Chart: typeof import('./src/components/chart/index.vue')['default'];
     Footer: typeof import('./src/components/footer/index.vue')['default'];
     FormWrapper: typeof import('./src/components/global-setting/form-wrapper.vue')['default'];
+    FullScreenRefresh: typeof import('./src/components/full-screen-refresh/index.vue')['default'];
     GlobalSetting: typeof import('./src/components/global-setting/index.vue')['default'];
     List: typeof import('./src/components/message-box/list.vue')['default'];
     Menu: typeof import('./src/components/menu/index.vue')['default'];
@@ -23,5 +24,10 @@ declare module '@vue/runtime-core' {
     RouterView: typeof import('vue-router')['RouterView'];
     TabBar: typeof import('./src/components/tab-bar/index.vue')['default'];
     TabItem: typeof import('./src/components/tab-bar/tab-item.vue')['default'];
+    VanButton: typeof import('vant/es')['Button'];
+    VanNavBar: typeof import('vant/es')['NavBar'];
+    VanPullRefresh: typeof import('vant/es')['PullRefresh'];
+    VanTab: typeof import('vant/es')['Tab'];
+    VanTabs: typeof import('vant/es')['Tabs'];
   }
 }
