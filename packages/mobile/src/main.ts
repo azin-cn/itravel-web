@@ -20,6 +20,7 @@ import 'vant/es/image-preview/style/index.mjs';
 import '@/api/interceptor';
 import '@/assets/style/global.less';
 import '@/assets/style/variables.less';
+import '@/assets/style/tailwind.css';
 
 // uno
 // import 'virtual:uno.css';
