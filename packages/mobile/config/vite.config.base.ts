@@ -18,7 +18,7 @@ export default defineConfig({
       resolvers: [VantResolver()],
     }),
     // 使用monorepo形式时，git 提交请在当前项目的根目录下，否则根目录需要配置uno.config.ts
-    UnoCSS(),
+    // UnoCSS(),
   ],
   resolve: {
     alias: [
