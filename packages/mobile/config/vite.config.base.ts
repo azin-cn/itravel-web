@@ -5,6 +5,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx';
 import svgLoader from 'vite-svg-loader';
 import Components from 'unplugin-vue-components/vite';
 import { VantResolver } from 'unplugin-vue-components/resolvers';
+import UnoCSS from 'unocss/vite';
 import configArcoStyleImportPlugin from './plugin/arcoStyleImport';
 
 export default defineConfig({
@@ -16,6 +17,8 @@ export default defineConfig({
     Components({
       resolvers: [VantResolver()],
     }),
+    // 使用monorepo形式时，git 提交请在当前项目的根目录下，否则根目录需要配置uno.config.ts
+    UnoCSS(),
   ],
   resolve: {
     alias: [
