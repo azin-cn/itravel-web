@@ -57,19 +57,30 @@
       <a-col :span="22">
         <a-row justify="space-between" align="center">
           <a-col :span="12">
-            <a-avatar-group :size="24" :max-count="3" z-index-ascend>
-              <a-avatar :style="{ backgroundColor: '#7BC616' }">A</a-avatar>
-              <a-avatar :style="{ backgroundColor: '#14C9C9' }">B</a-avatar>
-              <a-avatar :style="{ backgroundColor: '#168CFF' }">C</a-avatar>
-              <a-avatar :style="{ backgroundColor: '#FF7D00' }">Arco</a-avatar>
-              <a-avatar :style="{ backgroundColor: '#FFC72E' }"
-                >Design</a-avatar
-              >
-            </a-avatar-group>
-            <span class="align-middle">等喜欢</span>
+            <a-row align="center">
+              <a-avatar-group :size="24" :max-count="3" z-index-ascend>
+                <a-avatar :style="{ backgroundColor: '#7BC616' }">A</a-avatar>
+                <a-avatar :style="{ backgroundColor: '#14C9C9' }">B</a-avatar>
+                <a-avatar :style="{ backgroundColor: '#168CFF' }">C</a-avatar>
+                <a-avatar :style="{ backgroundColor: '#FF7D00' }"
+                  >Arco</a-avatar
+                >
+                <a-avatar :style="{ backgroundColor: '#FFC72E' }">
+                  Design
+                </a-avatar>
+              </a-avatar-group>
+              <span class="align-middle">等喜欢</span>
+            </a-row>
+            <a-row class="mt-1" style="color: var(--itravel-text-third-color)">
+              共{{ Math.floor(Math.random() * 1000) }}评论
+            </a-row>
           </a-col>
           <a-col :span="12">
-            <a-space fill class="float-right">
+            <a-space
+              fill
+              class="float-right"
+              style="color: var(--itravel-text-third-color)"
+            >
               <IconFont type="icon-xihuan" :size="16"></IconFont>
               <IconFont type="icon-shoucang" :size="16"></IconFont>
               <IconFont type="icon-pinglun" :size="16"></IconFont>
@@ -78,7 +89,7 @@
           </a-col>
         </a-row>
 
-        <a-row class="mt-1">
+        <!-- <a-row class="mt-1">
           <a-col>
             <a-row
               v-for="item in 2"
@@ -92,7 +103,7 @@
               </a-col>
             </a-row>
           </a-col>
-        </a-row>
+        </a-row> -->
 
         <a-row justify="center" class="mt-2 text-center">
           <a-col>查看更多评论 ></a-col>
