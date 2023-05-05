@@ -5,32 +5,32 @@
 // Read more: https://github.com/vuejs/core/pull/3399
 import '@vue/runtime-core'
 
-export {};
+export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
-    Block: typeof import('./src/components/global-setting/block.vue')['default'];
-    Breadcrumb: typeof import('./src/components/breadcrumb/index.vue')['default'];
-    Chart: typeof import('./src/components/chart/index.vue')['default'];
-    Footer: typeof import('./src/components/footer/index.vue')['default'];
-    FormWrapper: typeof import('./src/components/global-setting/form-wrapper.vue')['default'];
-    FullScreenRefresh: typeof import('./src/components/full-screen-refresh/index.vue')['default'];
-    GlobalSetting: typeof import('./src/components/global-setting/index.vue')['default'];
-    List: typeof import('./src/components/message-box/list.vue')['default'];
-    Menu: typeof import('./src/components/menu/index.vue')['default'];
-    MessageBox: typeof import('./src/components/message-box/index.vue')['default'];
-    Navbar: typeof import('./src/components/navbar/index.vue')['default'];
-    RouterLink: typeof import('vue-router')['RouterLink'];
-    RouterView: typeof import('vue-router')['RouterView'];
-    TabBar: typeof import('./src/components/tab-bar/index.vue')['default'];
-    TabItem: typeof import('./src/components/tab-bar/tab-item.vue')['default'];
-    VanButton: typeof import('vant/es')['Button'];
-    VanCol: typeof import('vant/es')['Col'];
-    VanField: typeof import('vant/es')['Field'];
-    VanNavBar: typeof import('vant/es')['NavBar'];
-    VanPullRefresh: typeof import('vant/es')['PullRefresh'];
-    VanRow: typeof import('vant/es')['Row'];
-    VanTab: typeof import('vant/es')['Tab'];
-    VanTabs: typeof import('vant/es')['Tabs'];
+    Block: typeof import('./src/components/global-setting/block.vue')['default']
+    Breadcrumb: typeof import('./src/components/breadcrumb/index.vue')['default']
+    Chart: typeof import('./src/components/chart/index.vue')['default']
+    Footer: typeof import('./src/components/footer/index.vue')['default']
+    FormWrapper: typeof import('./src/components/global-setting/form-wrapper.vue')['default']
+    FullScreenRefresh: typeof import('./src/components/full-screen-refresh/index.vue')['default']
+    GlobalSetting: typeof import('./src/components/global-setting/index.vue')['default']
+    List: typeof import('./src/components/message-box/list.vue')['default']
+    Menu: typeof import('./src/components/menu/index.vue')['default']
+    MessageBox: typeof import('./src/components/message-box/index.vue')['default']
+    Navbar: typeof import('./src/components/navbar/index.vue')['default']
+    RouterLink: typeof import('vue-router')['RouterLink']
+    RouterView: typeof import('vue-router')['RouterView']
+    TabBar: typeof import('./src/components/tab-bar/index.vue')['default']
+    TabItem: typeof import('./src/components/tab-bar/tab-item.vue')['default']
+    VanButton: typeof import('vant/es')['Button']
+    VanCol: typeof import('vant/es')['Col']
+    VanField: typeof import('vant/es')['Field']
+    VanNavBar: typeof import('vant/es')['NavBar']
+    VanPullRefresh: typeof import('vant/es')['PullRefresh']
+    VanRow: typeof import('vant/es')['Row']
+    VanTab: typeof import('vant/es')['Tab']
+    VanTabs: typeof import('vant/es')['Tabs']
   }
 }
