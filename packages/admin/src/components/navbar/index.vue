@@ -33,35 +33,6 @@
         </a-tooltip>
       </li>
       <li>
-        <a-tooltip :content="$t('settings.language')">
-          <a-button
-            class="nav-btn"
-            type="outline"
-            :shape="'circle'"
-            @click="setDropDownVisible"
-          >
-            <template #icon>
-              <icon-language />
-            </template>
-          </a-button>
-        </a-tooltip>
-        <a-dropdown trigger="click" @select="changeLocale as any">
-          <div ref="triggerBtn" class="trigger-btn"></div>
-          <template #content>
-            <a-doption
-              v-for="item in locales"
-              :key="item.value"
-              :value="item.value"
-            >
-              <template #icon>
-                <icon-check v-show="item.value === currentLocale" />
-              </template>
-              {{ item.label }}
-            </a-doption>
-          </template>
-        </a-dropdown>
-      </li>
-      <li>
         <a-tooltip
           :content="
             theme === 'light'
@@ -108,41 +79,6 @@
             <message-box />
           </template>
         </a-popover>
-      </li>
-      <li>
-        <a-tooltip
-          :content="
-            isFullscreen
-              ? $t('settings.navbar.screen.toExit')
-              : $t('settings.navbar.screen.toFull')
-          "
-        >
-          <a-button
-            class="nav-btn"
-            type="outline"
-            :shape="'circle'"
-            @click="toggleFullScreen"
-          >
-            <template #icon>
-              <icon-fullscreen-exit v-if="isFullscreen" />
-              <icon-fullscreen v-else />
-            </template>
-          </a-button>
-        </a-tooltip>
-      </li>
-      <li>
-        <a-tooltip :content="$t('settings.title')">
-          <a-button
-            class="nav-btn"
-            type="outline"
-            :shape="'circle'"
-            @click="setVisible"
-          >
-            <template #icon>
-              <icon-settings />
-            </template>
-          </a-button>
-        </a-tooltip>
       </li>
       <li>
         <a-dropdown trigger="click">
@@ -206,9 +142,6 @@
   const appStore = useAppStore();
   const userStore = useUserStore();
   const { logout } = useUser();
-  const { changeLocale, currentLocale } = useLocale();
-  const { isFullscreen, toggle: toggleFullScreen } = useFullscreen();
-  const locales = [...LOCALE_OPTIONS];
   const avatar = computed(() => {
     return userStore.avatar;
   });
