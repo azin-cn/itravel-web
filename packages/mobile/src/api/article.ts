@@ -204,3 +204,9 @@ export function getTagsByNameAndUserId(s: string, id: string) {
 // export function postComment(data: CommentModel) {
 //   return axios.post(`${prefix}/comment`, data);
 // }
+
+export function getRecomMobileArticles(params: IPaginationOpton) {
+  return axios.get<ArticleBriefInfo[]>(`${prefix}/article/mobile/index/recom`, {
+    params,
+  });
+}
