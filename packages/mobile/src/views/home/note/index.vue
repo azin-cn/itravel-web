@@ -5,7 +5,7 @@
   import ArticleCard from '@/views/components/article-card/index.vue';
   import { ArticleBriefInfo, getRecomMobileArticles } from '@/api/article';
   import { DEFAULT_PAGINATION_LIMIT } from '@/api/constant';
-  import { redirectArticle } from '@/router/utils';
+  import { redirectArticle, redirect3D } from '@/router/utils';
 
   const { loading, setLoading } = useLoading();
   const counter = ref(1);
@@ -32,7 +32,8 @@
   };
 
   const onRedirectArticle = (id: string) => {
-    redirectArticle(id);
+    // redirectArticle(id);
+    redirect3D(id);
   };
 
   const init = async () => {
@@ -48,7 +49,7 @@
         v-for="article in articles"
         :key="article.id"
         :article="article"
-        @click.stop="onRedirectArticle(article.id)"
+        @click.stop="onRedirectArticle(article.spot.id as string)"
       />
     </div>
   </van-pull-refresh>
