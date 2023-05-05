@@ -2,16 +2,23 @@ import { defineStore } from 'pinia';
 import {
   login as userLogin,
   logout as userLogout,
+  register as userRegister,
   getUserInfo,
-  LoginData,
+  AuthData,
 } from '@/api/user';
-import { setToken, clearToken } from '@/utils/auth';
+import {
+  setToken,
+  clearToken,
+  setUserID,
+  getUserID,
+  clearUserID,
+} from '@/utils/auth';
 import { removeRouteListener } from '@/utils/route-listener';
 import { UserState } from './types';
-import useAppStore from '../app';
 
 const useUserStore = defineStore('user', {
   state: (): UserState => ({
+    id: undefined,
     name: undefined,
     avatar: undefined,
     job: undefined,
@@ -55,28 +62,52 @@ const useUserStore = defineStore('user', {
 
     // Get user's information
     async info() {
-      const res = await getUserInfo();
-
+      const id = getUserID();
+      const res = await getUserInfo(id as string);
       this.setInfo(res.data);
     },
 
-    // Login
-    async login(loginForm: LoginData) {
+    /**
+     * 注册
+     */
+    async register(form: AuthData) {
       try {
-        const res = await userLogin(loginForm);
-        setToken(res.data.token);
+        const res = await userRegister(form);
+        return res;
       } catch (err) {
         clearToken();
+        clearUserID();
         throw err;
       }
     },
+
+    // Login
+    async login(loginForm: AuthData) {
+      try {
+        const { data } = await userLogin(loginForm);
+        setToken(data.token);
+        setUserID(data.user.id as string);
+      } catch (err) {
+        clearToken();
+        clearUserID();
+        throw err;
+      }
+    },
+
+    /**
+     * 第三方登录
+     */
+    async loginWithThird() {
+      //
+    },
+
     logoutCallBack() {
-      const appStore = useAppStore();
       this.resetInfo();
       clearToken();
+      clearUserID();
       removeRouteListener();
-      appStore.clearServerMenu();
     },
+
     // Logout
     async logout() {
       try {
