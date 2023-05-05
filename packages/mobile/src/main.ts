@@ -1,18 +1,10 @@
 import { createApp } from 'vue';
 import ArcoVue from '@arco-design/web-vue';
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';
-import globalComponents from '@/components';
-import router from './router';
-import store from './store';
-import i18n from './locale';
-import directive from './directive';
-import './mock';
-import App from './App.vue';
 
 // vant ui global css
-import 'vant/es/toast/style/index.mjs';
-import 'vant/es/dialog/style/index.mjs';
-import 'vant/es/image-preview/style/index.mjs';
+import Vant from 'vant';
+import 'vant/lib/index.css';
 
 // Styles are imported via arco-plugin. See config/plugin/arcoStyleImport.ts in the directory for details
 // 样式通过 arco-plugin 插件导入。详见目录文件 config/plugin/arcoStyleImport.ts
@@ -22,6 +14,14 @@ import '@/assets/style/global.less';
 import '@/assets/style/variables.less';
 import '@/assets/style/tailwind.css';
 
+import globalComponents from '@/components';
+import router from './router';
+import store from './store';
+import i18n from './locale';
+import directive from './directive';
+import './mock';
+import App from './App.vue';
+
 // uno
 // import 'virtual:uno.css';
 
@@ -29,6 +29,8 @@ const app = createApp(App);
 
 app.use(ArcoVue, {});
 app.use(ArcoVueIcon);
+
+app.use(Vant);
 
 app.use(router);
 app.use(store);
