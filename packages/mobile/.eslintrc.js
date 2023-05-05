@@ -27,7 +27,7 @@ module.exports = {
     'plugin:import/typescript',
     'plugin:vue/vue3-recommended',
     'plugin:prettier/recommended',
-    '@unocss',
+    // '@unocss',
   ],
   settings: {
     'import/resolver': {
