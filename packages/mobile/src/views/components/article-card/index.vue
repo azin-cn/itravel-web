@@ -86,6 +86,7 @@
             show-loader
             :src="article.thumbUrl || article.spot.thumbUrl"
             style="border-radius: var(--itravel-secondary-radius)"
+            @click.stop="() => {}"
           />
         </a-row>
       </a-col>
