@@ -2,7 +2,7 @@
   <a-col class="banner">
     <a-col :span="8">
       <a-typography-title :heading="5" style="margin-top: 0">
-        {{ $t('workplace.welcome') }} {{ userInfo.name }}
+        {{ $t('workplace.welcome') }} {{ userInfo.username || userInfo.name }}
       </a-typography-title>
     </a-col>
     <a-divider class="panel-border" />
@@ -14,11 +14,7 @@
   import { useUserStore } from '@/store';
 
   const userStore = useUserStore();
-  const userInfo = computed(() => {
-    return {
-      name: userStore.name,
-    };
-  });
+  const userInfo = computed(() => userStore.userInfo);
 </script>
 
 <style scoped lang="less">
