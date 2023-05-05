@@ -3,24 +3,48 @@
   import useLoading from '@/hooks/loading';
   import { promiseTimeout } from '@vueuse/core';
   import ArticleCard from '@/views/components/article-card/index.vue';
+  import { ArticleBriefInfo, getRecomMobileArticles } from '@/api/article';
+  import { DEFAULT_PAGINATION_LIMIT } from '@/api/constant';
+  import { IPaginationOpton } from '@/api/base';
 
   const { loading, setLoading } = useLoading();
+  const counter = ref(1);
+  const articles = ref<ArticleBriefInfo[]>();
 
-  const count = ref(0);
+  const onPageChange = async (page = 0) => {
+    const { data } = await getRecomMobileArticles({
+      page: page || counter.value,
+      limit: DEFAULT_PAGINATION_LIMIT,
+    });
+    counter.value += 1;
+
+    if (page === 1) {
+      articles.value = data;
+    } else {
+      articles.value = articles.value ? [...articles.value, ...data] : data;
+    }
+  };
 
   const onRefresh = async () => {
     setLoading(true);
-    count.value += 1;
-    await promiseTimeout(2000);
+    await onPageChange(1);
     setLoading(false);
   };
+
+  const init = async () => {
+    onPageChange(1);
+  };
+  init();
 </script>
 
 <template>
   <van-pull-refresh v-model="loading" class="flex-1" @refresh="onRefresh">
-    <div>
-      <ArticleCard v-for="item in 2" :key="item"></ArticleCard>
-      <p style="height: 200px">刷新次数: {{ count }}</p>
+    <div v-if="articles?.length">
+      <ArticleCard
+        v-for="article in articles"
+        :key="article.id"
+        :article="article"
+      />
     </div>
   </van-pull-refresh>
 </template>
