@@ -9,6 +9,7 @@ import {
   DataZoomComponent,
   GraphicComponent,
 } from 'echarts/components';
+import { Icon } from '@arco-design/web-vue';
 import Chart from './chart/index.vue';
 import Breadcrumb from './breadcrumb/index.vue';
 
@@ -27,9 +28,19 @@ use([
   GraphicComponent,
 ]);
 
+// custom global options type
+export interface IGlobalInstallOptions {
+  iconfont: string;
+  [p: string]: unknown;
+}
+
 export default {
-  install(Vue: App) {
+  install(Vue: App, opts?: IGlobalInstallOptions) {
     Vue.component('Chart', Chart);
     Vue.component('Breadcrumb', Breadcrumb);
+    const IconFont = Icon.addFromIconFontCn({
+      src: opts?.iconfont || '',
+    });
+    Vue.component('IconFont', IconFont);
   },
 };
