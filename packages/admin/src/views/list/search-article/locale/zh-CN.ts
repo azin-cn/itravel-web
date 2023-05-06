@@ -1,4 +1,5 @@
 export default {
+  'menu.list.searchTable': 'Search Table',
   'menu.list.searchSpot': '查询景点',
   'menu.list.searchArticle': '查询文章',
   'menu.list.searchUser': '查询用户',
