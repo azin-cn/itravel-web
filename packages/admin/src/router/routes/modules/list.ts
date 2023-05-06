@@ -16,7 +16,7 @@ const LIST: AppRouteRecordRaw = {
     {
       path: 'search-spot', // The midline path complies with SEO specifications
       name: 'SearchSpot',
-      component: () => import('@/views/list/search-table/index.vue'),
+      component: () => import('@/views/list/search-spot/index.vue'),
       meta: {
         locale: 'menu.list.searchSpot',
         requiresAuth: true,
@@ -26,7 +26,7 @@ const LIST: AppRouteRecordRaw = {
     {
       path: 'search-article', // The midline path complies with SEO specifications
       name: 'SearchArticle',
-      component: () => import('@/views/list/search-table/index.vue'),
+      component: () => import('@/views/list/search-article/index.vue'),
       meta: {
         locale: 'menu.list.searchArticle',
         requiresAuth: true,
@@ -36,7 +36,7 @@ const LIST: AppRouteRecordRaw = {
     {
       path: 'search-user', // The midline path complies with SEO specifications
       name: 'SearchUser',
-      component: () => import('@/views/list/search-table/index.vue'),
+      component: () => import('@/views/list/search-user/index.vue'),
       meta: {
         locale: 'menu.list.searchUser',
         requiresAuth: true,
@@ -46,7 +46,7 @@ const LIST: AppRouteRecordRaw = {
     {
       path: 'search-comment', // The midline path complies with SEO specifications
       name: 'SearchComment',
-      component: () => import('@/views/list/search-table/index.vue'),
+      component: () => import('@/views/list/search-comment/index.vue'),
       meta: {
         locale: 'menu.list.searchComment',
         requiresAuth: true,
