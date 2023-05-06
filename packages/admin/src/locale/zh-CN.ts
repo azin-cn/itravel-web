@@ -36,7 +36,7 @@ export default {
   'menu.server.dashboard': '仪表盘-服务端',
   'menu.server.workplace': '工作台-服务端',
   'menu.server.monitor': '实时监控-服务端',
-  'menu.list': '数据查询',
+  'menu.list': '数据管理',
   'menu.exception': '异常页',
   'menu.profile': '详情页',
   'menu.visualization': '数据可视化',
