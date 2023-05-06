@@ -4,6 +4,11 @@ import localeLogin from '@/views/login/locale/zh-CN';
 import localeWorkplace from '@/views/dashboard/workplace/locale/zh-CN';
 
 import localeMonitor from '@/views/dashboard/monitor/locale/zh-CN';
+
+import localeSpotList from '@/views/list/search-spot/locale/zh-CN';
+import localeArticleList from '@/views/list/search-article/locale/zh-CN';
+import localeUserList from '@/views/list/search-user/locale/zh-CN';
+import localeCommentList from '@/views/list/search-comment/locale/zh-CN';
 import localeCardList from '@/views/list/card/locale/zh-CN';
 
 import localeStepForm from '@/views/form/step/locale/zh-CN';
@@ -44,8 +49,10 @@ export default {
   ...localeLogin,
   ...localeWorkplace,
 
-  ...localeMonitor,
-  ...localeCardList,
+  ...localeSpotList,
+  ...localeArticleList,
+  ...localeUserList,
+  ...localeCommentList,
   ...localeStepForm,
   ...localeGroupForm,
   ...localeBasicProfile,
