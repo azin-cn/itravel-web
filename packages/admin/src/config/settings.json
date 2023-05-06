@@ -13,5 +13,7 @@
   "device": "desktop",
   "tabBar": false,
   "menuFromServer": false,
-  "serverMenu": []
+  "serverMenu": [],
+  "title": "Itravel",
+  "authorUrl": "https://github.com/azin-cn"
 }
