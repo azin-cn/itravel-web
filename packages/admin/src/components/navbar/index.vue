@@ -1,3 +1,66 @@
+<script lang="ts" setup>
+  import { computed, ref, inject } from 'vue';
+  import { Message } from '@arco-design/web-vue';
+  import { useDark, useToggle, useFullscreen } from '@vueuse/core';
+  import { useAppStore, useUserStore } from '@/store';
+  import useUser from '@/hooks/user';
+  import Menu from '@/components/menu/index.vue';
+  import MessageBox from '../message-box/index.vue';
+
+  const appStore = useAppStore();
+  const userStore = useUserStore();
+  const { logout } = useUser();
+  const theme = computed(() => {
+    return appStore.theme;
+  });
+  const userInfo = computed(() => userStore.userInfo);
+  const topMenu = computed(() => appStore.topMenu && appStore.menu);
+  const isDark = useDark({
+    selector: 'body',
+    attribute: 'arco-theme',
+    valueDark: 'dark',
+    valueLight: 'light',
+    storageKey: 'arco-theme',
+    onChanged(dark: boolean) {
+      // overridden default behavior
+      appStore.toggleTheme(dark);
+    },
+  });
+  const toggleTheme = useToggle(isDark);
+  const handleToggleTheme = () => {
+    toggleTheme();
+  };
+  const setVisible = () => {
+    appStore.updateSettings({ globalSettings: true });
+  };
+  const refBtn = ref();
+  const triggerBtn = ref();
+  const setPopoverVisible = () => {
+    const event = new MouseEvent('click', {
+      view: window,
+      bubbles: true,
+      cancelable: true,
+    });
+    refBtn.value.dispatchEvent(event);
+  };
+  const handleLogout = () => {
+    logout();
+  };
+  const setDropDownVisible = () => {
+    const event = new MouseEvent('click', {
+      view: window,
+      bubbles: true,
+      cancelable: true,
+    });
+    triggerBtn.value.dispatchEvent(event);
+  };
+  const switchRoles = async () => {
+    const res = await userStore.switchRoles();
+    Message.success(res as string);
+  };
+  const toggleDrawerMenu = inject('toggleDrawerMenu') as () => void;
+</script>
+
 <template>
   <div class="navbar">
     <div class="left-side">
@@ -86,17 +149,9 @@
             :size="32"
             :style="{ marginRight: '8px', cursor: 'pointer' }"
           >
-            <img alt="avatar" :src="avatar" />
+            <img alt="avatar" :src="userInfo.avatar" />
           </a-avatar>
           <template #content>
-            <a-doption>
-              <a-space @click="switchRoles">
-                <icon-tag />
-                <span>
-                  {{ $t('messageBox.switchRoles') }}
-                </span>
-              </a-space>
-            </a-doption>
             <a-doption>
               <a-space @click="$router.push({ name: 'Info' })">
                 <icon-user />
@@ -127,73 +182,6 @@
     </ul>
   </div>
 </template>
-
-<script lang="ts" setup>
-  import { computed, ref, inject } from 'vue';
-  import { Message } from '@arco-design/web-vue';
-  import { useDark, useToggle, useFullscreen } from '@vueuse/core';
-  import { useAppStore, useUserStore } from '@/store';
-  import { LOCALE_OPTIONS } from '@/locale';
-  import useLocale from '@/hooks/locale';
-  import useUser from '@/hooks/user';
-  import Menu from '@/components/menu/index.vue';
-  import MessageBox from '../message-box/index.vue';
-
-  const appStore = useAppStore();
-  const userStore = useUserStore();
-  const { logout } = useUser();
-  const avatar = computed(() => {
-    return userStore.avatar;
-  });
-  const theme = computed(() => {
-    return appStore.theme;
-  });
-  const topMenu = computed(() => appStore.topMenu && appStore.menu);
-  const isDark = useDark({
-    selector: 'body',
-    attribute: 'arco-theme',
-    valueDark: 'dark',
-    valueLight: 'light',
-    storageKey: 'arco-theme',
-    onChanged(dark: boolean) {
-      // overridden default behavior
-      appStore.toggleTheme(dark);
-    },
-  });
-  const toggleTheme = useToggle(isDark);
-  const handleToggleTheme = () => {
-    toggleTheme();
-  };
-  const setVisible = () => {
-    appStore.updateSettings({ globalSettings: true });
-  };
-  const refBtn = ref();
-  const triggerBtn = ref();
-  const setPopoverVisible = () => {
-    const event = new MouseEvent('click', {
-      view: window,
-      bubbles: true,
-      cancelable: true,
-    });
-    refBtn.value.dispatchEvent(event);
-  };
-  const handleLogout = () => {
-    logout();
-  };
-  const setDropDownVisible = () => {
-    const event = new MouseEvent('click', {
-      view: window,
-      bubbles: true,
-      cancelable: true,
-    });
-    triggerBtn.value.dispatchEvent(event);
-  };
-  const switchRoles = async () => {
-    const res = await userStore.switchRoles();
-    Message.success(res as string);
-  };
-  const toggleDrawerMenu = inject('toggleDrawerMenu') as () => void;
-</script>
 
 <style scoped lang="less">
   .navbar {
