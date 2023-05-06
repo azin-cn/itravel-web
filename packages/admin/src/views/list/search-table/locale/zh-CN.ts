@@ -1,5 +1,8 @@
 export default {
-  'menu.list.searchTable': '查询表格',
+  'menu.list.searchSpot': '查询景点',
+  'menu.list.searchArticle': '查询文章',
+  'menu.list.searchUser': '查询用户',
+  'menu.list.searchComment': '查询评论',
   'searchTable.form.number': '集合编号',
   'searchTable.form.number.placeholder': '请输入集合编号',
   'searchTable.form.name': '集合名称',
