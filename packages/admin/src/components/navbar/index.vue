@@ -5,6 +5,7 @@
   import { useAppStore, useUserStore } from '@/store';
   import useUser from '@/hooks/user';
   import Menu from '@/components/menu/index.vue';
+  import * as settings from '@/config/settings.json';
   import MessageBox from '../message-box/index.vue';
 
   const appStore = useAppStore();
@@ -73,7 +74,7 @@
           :style="{ margin: 0, fontSize: '18px' }"
           :heading="5"
         >
-          Arco Pro
+          {{ settings.title }}
         </a-typography-title>
         <icon-menu-fold
           v-if="!topMenu && appStore.device === 'mobile'"
