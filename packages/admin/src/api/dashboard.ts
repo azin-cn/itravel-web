@@ -10,31 +10,27 @@ export interface WorkplacePanelCount {
    * 文章数量
    */
   articleCount: number;
+  todayArticleCount: number;
+  yesterdayArticleCount: number;
   /**
-   * 评论总数量
+   * 评论数量
    */
   commentCount: number;
-  /**
-   * 日新增数量
-   */
   todayCommentCount: number;
-  /**
-   * 昨日新增数量
-   */
   yesterdayCommentCount: number;
 }
 
 export interface WorkplaceModel {
-  banner: WorkplacePanelCount;
+  counter: WorkplacePanelCount;
 }
 
-export interface ContentDataRecord {
+export interface ContentDataModel {
   x: string;
   y: number;
 }
 
 export function queryContentData() {
-  return axios.get<ContentDataRecord[]>('/api/content-data');
+  return axios.get<ContentDataModel[]>('/api/content-data');
 }
 
 export interface PopularRecord {
