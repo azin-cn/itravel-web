@@ -1,21 +1,3 @@
-<template>
-  <a-spin :loading="loading" style="width: 100%">
-    <a-card
-      class="general-card"
-      :header-style="{ paddingBottom: 0 }"
-      :body-style="{
-        paddingTop: '20px',
-      }"
-      :title="$t('workplace.contentData')"
-    >
-      <template #extra>
-        <a-link>{{ $t('workplace.viewMore') }}</a-link>
-      </template>
-      <Chart height="289px" :option="chartOption" />
-    </a-card>
-  </a-spin>
-</template>
-
 <script lang="ts" setup>
   import { ref } from 'vue';
   import { graphic } from 'echarts';
@@ -196,5 +178,23 @@
   };
   fetchData();
 </script>
+
+<template>
+  <a-spin :loading="loading" style="width: 100%">
+    <a-card
+      class="general-card"
+      :header-style="{ paddingBottom: 0 }"
+      :body-style="{
+        paddingTop: '20px',
+      }"
+      :title="$t('workplace.contentData')"
+    >
+      <template #extra>
+        <a-link>{{ $t('workplace.viewMore') }}</a-link>
+      </template>
+      <Chart height="289px" :option="chartOption" />
+    </a-card>
+  </a-spin>
+</template>
 
 <style scoped lang="less"></style>
