@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+  import { queryContentData } from '@/api/dashboard';
   import Banner from './components/banner.vue';
   import DataPanel from './components/data-panel.vue';
   import ContentChart from './components/content-chart.vue';

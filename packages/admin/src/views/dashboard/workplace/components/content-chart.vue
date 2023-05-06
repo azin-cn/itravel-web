@@ -2,7 +2,7 @@
   import { ref } from 'vue';
   import { graphic } from 'echarts';
   import useLoading from '@/hooks/loading';
-  import { queryContentData, ContentDataRecord } from '@/api/dashboard';
+  import { queryContentData, ContentDataModel } from '@/api/dashboard';
   import useChartOption from '@/hooks/chart-option';
   import { ToolTipFormatterParams } from '@/types/echarts';
   import { AnyObject } from '@/types/global';
@@ -160,7 +160,7 @@
     setLoading(true);
     try {
       const { data: chartData } = await queryContentData();
-      chartData.forEach((el: ContentDataRecord, idx: number) => {
+      chartData.forEach((el: ContentDataModel, idx: number) => {
         xAxis.value.push(el.x);
         chartsData.value.push(el.y);
         if (idx === 0) {
