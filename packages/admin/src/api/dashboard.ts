@@ -1,5 +1,6 @@
 import axios from 'axios';
 import type { TableData } from '@arco-design/web-vue/es/table/interface';
+import { prefix } from './base';
 
 export interface WorkplacePanelCount {
   /**
@@ -27,6 +28,10 @@ export interface WorkplaceModel {
 export interface ContentDataModel {
   x: string;
   y: number;
+}
+
+export function getWorkspaceCounter() {
+  return axios.get<WorkplacePanelCount>(`${prefix}/admin/workspace/counter`);
 }
 
 export function queryContentData() {
