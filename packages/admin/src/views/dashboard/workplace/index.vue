@@ -35,8 +35,8 @@
       <div class="panel">
         <Banner />
         <DataPanel :counter="workspaceData.counter" />
-        <ContentChart />
-        <ContentChart />
+        <ContentChart title="文章数据" />
+        <ContentChart title="评论数据" />
       </div>
     </div>
     <div class="right-side">
