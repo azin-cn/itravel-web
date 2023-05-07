@@ -1,0 +1,15 @@
+export default {
+  'form.input.placeholder': '请输入',
+  'form.select.placeholder': '请选择',
+  'form.select.search.placeholder': '请输入关键字搜索并选择',
+  'form.select.actions.check': '全选',
+  'form.actions.submit': '确定',
+  'form.actions.cancel': '取消',
+  'form.actions.reset': '重置',
+  'form.actions.close': '关闭',
+  'form.actions.filter': '筛选',
+  'form.actions.submit.success': '操作成功',
+  'form.steps.prev': '上一步',
+  'form.steps.next': '下一步',
+  'form.loading': '加载数据中...',
+};

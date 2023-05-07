@@ -1,0 +1,15 @@
+export default {
+  'form.input.placeholder': 'Please Enter',
+  'form.select.placeholder': 'Please Select',
+  'form.select.search.placeholder': 'Please Enter Keyword to Search Select',
+  'form.select.actions.check': 'Check All',
+  'form.actions.submit': 'Submit',
+  'form.actions.cancel': 'Cancel',
+  'form.actions.reset': 'Reset',
+  'form.actions.close': 'Close',
+  'form.actions.filter': 'Filter',
+  'form.actions.submit.success': 'Success',
+  'form.steps.prev': 'Prev',
+  'form.steps.next': 'Next',
+  'form.loading': 'Loading Data...',
+};
