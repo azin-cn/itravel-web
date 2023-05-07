@@ -116,7 +116,7 @@
   };
 
   const initOptions = async () => {
-    const { col } = props; // col: { filters, filterRequest }
+    const { col } = props as any; // col: { filters, filterRequest }
     const { filterRequest } = col;
 
     setLoading(true);
@@ -171,7 +171,7 @@
         :placeholder="`${$t('list.list-filter.input.placeholder.prefix')}${$t(
           col.title
         )}${$t('list.list-filter.input.placeholder.suffix')}`"
-        @input="(keyword) => handleSearchOptions(keyword)"
+        @input="(keyword: string) => handleSearchOptions(keyword)"
         @clear="() => handleSearchOptions()"
         allow-clear
         size="mini"

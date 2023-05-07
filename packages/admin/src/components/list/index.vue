@@ -75,7 +75,7 @@
     return (
       !permission ||
       (Array.isArray(permission) ? permission : [permission]).some((el) =>
-        userStore.permissions.includes(el)
+        userStore.permissions?.includes(el)
       )
     );
   };
@@ -154,7 +154,7 @@
 
   const renderedCols = computed(() => {
     return props.columns.filter((el) =>
-      checkedColKeys.value[props.storageKey].includes(el.prop)
+      (checkedColKeys.value as any)[props.storageKey].includes(el.prop)
     );
   });
 
@@ -449,7 +449,7 @@
                 <template #content>
                   <div class="list-toolbar-trigger__content columns-check">
                     <a-checkbox-group
-                      v-model="checkedColKeys[props.storageKey]"
+                      v-model="(checkedColKeys as any)[props.storageKey]"
                       direction="vertical"
                     >
                       <a-checkbox
