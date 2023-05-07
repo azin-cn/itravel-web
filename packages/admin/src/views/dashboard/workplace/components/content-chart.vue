@@ -7,6 +7,16 @@
   import { ToolTipFormatterParams } from '@/types/echarts';
   import { AnyObject } from '@/types/global';
 
+  export interface IProps {
+    title: string;
+    showMore: boolean;
+  }
+
+  const props = withDefaults(defineProps<IProps>(), {
+    title: '内容数据',
+    showMore: true,
+  });
+
   function graphicFactory(side: AnyObject) {
     return {
       type: 'text',
@@ -80,8 +90,7 @@
         },
         axisLabel: {
           formatter(value: any, idx: number) {
-            if (idx === 0) return value;
-            return `${value}k`;
+            return value;
           },
         },
         splitLine: {
@@ -96,11 +105,15 @@
         trigger: 'axis',
         formatter(params) {
           const [firstElement] = params as ToolTipFormatterParams[];
-          return `<div>
+          return `
+          <div>
             <p class="tooltip-title">${firstElement.axisValueLabel}</p>
-            <div class="content-panel"><span>总内容量</span><span class="tooltip-value">${(
-              Number(firstElement.value) * 10000
-            ).toLocaleString()}</span></div>
+            <div class="content-panel">
+              <span>总内容量</span>
+              <span class="tooltip-value">
+                ${Number(firstElement.value).toLocaleString()}
+              </span>
+            </div>
           </div>`;
         },
         className: 'echarts-tooltip-diy',
@@ -161,17 +174,15 @@
     try {
       const { data: chartData } = await queryContentData();
       chartData.forEach((el: ContentDataModel, idx: number) => {
-        xAxis.value.push(el.x);
-        chartsData.value.push(el.y);
+        xAxis.value.push(el.date);
+        chartsData.value.push(el.value);
         if (idx === 0) {
-          graphicElements.value[0].style.text = el.x;
+          graphicElements.value[0].style.text = el.date;
         }
         if (idx === chartData.length - 1) {
-          graphicElements.value[1].style.text = el.x;
+          graphicElements.value[1].style.text = el.date;
         }
       });
-    } catch (err) {
-      // you can report use errorHandler or other
     } finally {
       setLoading(false);
     }
@@ -187,10 +198,10 @@
       :body-style="{
         paddingTop: '20px',
       }"
-      :title="$t('workplace.contentData')"
+      :title="title"
     >
       <template #extra>
-        <a-link>{{ $t('workplace.viewMore') }}</a-link>
+        <a-link v-if="showMore">{{ $t('workplace.viewMore') }}</a-link>
       </template>
       <Chart height="289px" :option="chartOption" />
     </a-card>
