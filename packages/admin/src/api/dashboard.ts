@@ -26,8 +26,8 @@ export interface WorkplaceModel {
 }
 
 export interface ContentDataModel {
-  x: string;
-  y: number;
+  date: string;
+  value: number;
 }
 
 export function getWorkspaceCounter() {
