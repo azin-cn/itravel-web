@@ -6,10 +6,4 @@
 
 <script lang="ts" setup></script>
 
-<script lang="ts">
-  export default {
-    name: 'SearchTable',
-  };
-</script>
-
 <style scoped lang="less"></style>
