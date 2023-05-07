@@ -209,7 +209,7 @@
     const params = {
       ...handleSortQuery(),
       ...queryForm.filter,
-      offset: (current - 1) * pageSize,
+      page: (current - 1) * pageSize,
       limit: pageSize,
     };
     try {
