@@ -28,6 +28,10 @@ import locale500 from '@/views/exception/500/locale/zh-CN';
 import localeUserInfo from '@/views/user/info/locale/zh-CN';
 import localeUserSetting from '@/views/user/setting/locale/zh-CN';
 
+// components
+import localeComponentList from '@/components/list/locale/zh-CN';
+import localeComponentForm from '@/components/form/locale/zh-CN';
+
 import localeSettings from './zh-CN/settings';
 
 export default {
@@ -64,4 +68,7 @@ export default {
   ...locale500,
   ...localeUserInfo,
   ...localeUserSetting,
+
+  ...localeComponentList,
+  ...localeComponentForm,
 };
