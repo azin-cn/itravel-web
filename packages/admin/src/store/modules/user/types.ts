@@ -13,6 +13,7 @@ export interface UserState {
   accountId?: string;
   certification?: number;
   role: RoleType;
+  permissions?: number[];
 
   // itravel
   id?: string;
