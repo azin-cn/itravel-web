@@ -3,10 +3,6 @@ import localeLogin from '@/views/login/locale/en-US';
 
 import localeWorkplace from '@/views/dashboard/workplace/locale/en-US';
 
-import localeMonitor from '@/views/dashboard/monitor/locale/en-US';
-
-import localeCardList from '@/views/list/card/locale/en-US';
-
 import localeStepForm from '@/views/form/step/locale/en-US';
 import localeGroupForm from '@/views/form/group/locale/en-US';
 
@@ -48,8 +44,6 @@ export default {
   ...localeLogin,
   ...localeWorkplace,
 
-  ...localeMonitor,
-  ...localeCardList,
   ...localeStepForm,
   ...localeGroupForm,
   ...localeBasicProfile,
