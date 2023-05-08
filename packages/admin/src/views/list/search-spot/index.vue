@@ -19,11 +19,13 @@
     getSpotsByConditions,
   } from '@/api/list';
   import { Message } from '@arco-design/web-vue';
+  import SpotUpdateForm from './components/spot-update/index.vue';
 
   const router = useRouter();
   const { query, path } = router.currentRoute.value;
 
   const listRef = ref<InstanceType<typeof List>>();
+  const spotUpdateRef = ref<InstanceType<typeof SpotUpdateForm>>();
   const listParams = ref<Record<string, any>>({});
   const formParams = ref<Record<string, any>>({});
 
@@ -56,7 +58,6 @@
       options: [],
     },
   ]);
-
   const columns: IColumn[] = [
     {
       title: 'ID',
@@ -72,11 +73,13 @@
       title: '创建时间',
       prop: 'createdTime',
       width: 180,
+      formatter: (raw, rowIndex, record) => new Date(raw).toLocaleString(),
     },
     {
       title: '更新时间',
       prop: 'updatedTime',
       width: 180,
+      formatter: (raw, rowIndex, record) => new Date(raw).toLocaleString(),
     },
     {
       title: '所属区域',
@@ -164,6 +167,7 @@
         window.open(`https://itravel.todayto.com/#/3d/${id}`);
         break;
       case 'update':
+        spotUpdateRef.value?.init(id);
         break;
       case 'delete':
         Message.success('删除成功(为了数据安全，暂不允许删除)');
@@ -173,10 +177,15 @@
     }
   };
 
+  const onSuccess = () => {
+    listRef.value?.reload();
+  };
+
   const request = async (params?: Record<string, any>) => {
     listParams.value = {
       ...(params || {}),
       ...formParams.value,
+      offset: undefined,
     };
 
     if (!query.id) {
@@ -222,6 +231,7 @@
         <a-tag>{{ record.district?.name }}</a-tag>
       </template>
     </List>
+    <SpotUpdateForm ref="spotUpdateRef" @success="onSuccess"></SpotUpdateForm>
   </div>
 </template>
 
