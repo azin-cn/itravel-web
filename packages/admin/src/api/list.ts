@@ -142,7 +142,7 @@ export function getAllFeature() {
 export function patchSpot(form: Partial<AdminSpotRecord>) {
   const { id, months, features } = form;
   delete form.id;
-  return axios.patch(`${prefix}/admin/spot/${id}`, {
+  return axios.patch(`${prefix}/spot/${id}`, {
     ...form,
     months: months?.join(),
     features: features?.join(),
