@@ -43,7 +43,7 @@
 </script>
 
 <template>
-  <van-pull-refresh v-model="loading" class="flex-1" @refresh="onRefresh">
+  <van-pull-refresh v-model="loading" class="flex-1 pb-10" @refresh="onRefresh">
     <div v-if="articles?.length">
       <ArticleCard
         v-for="article in articles"
