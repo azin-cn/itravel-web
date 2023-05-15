@@ -144,3 +144,12 @@ export function patchSpot(form: Partial<AdminSpotRecord>) {
   delete form.id;
   return axios.patch(`${prefix}/admin/spot/update/${id}`, form);
 }
+
+/**
+ * 返回spot的months和features
+ * @param id
+ * @returns
+ */
+export function getSpotFM(id: string) {
+  return axios.get<AdminSpotModel>(`${prefix}/spot/fm`, { params: { id } });
+}
