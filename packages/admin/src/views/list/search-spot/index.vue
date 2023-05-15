@@ -70,16 +70,9 @@
       width: 180,
     },
     {
-      title: '创建时间',
-      prop: 'createdTime',
+      title: '景点简介',
+      prop: 'description',
       width: 180,
-      formatter: (raw, rowIndex, record) => new Date(raw).toLocaleString(),
-    },
-    {
-      title: '更新时间',
-      prop: 'updatedTime',
-      width: 180,
-      formatter: (raw, rowIndex, record) => new Date(raw).toLocaleString(),
     },
     {
       title: '所属区域',
@@ -95,6 +88,18 @@
       title: '全景图URL',
       prop: 'panorama',
       width: 180,
+    },
+    {
+      title: '创建时间',
+      prop: 'createdTime',
+      width: 180,
+      formatter: (raw, rowIndex, record) => new Date(raw).toLocaleString(),
+    },
+    {
+      title: '更新时间',
+      prop: 'updatedTime',
+      width: 180,
+      formatter: (raw, rowIndex, record) => new Date(raw).toLocaleString(),
     },
   ];
   const actions: IAction[] = [
