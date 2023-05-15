@@ -140,9 +140,13 @@ export function getAllFeature() {
  * @returns
  */
 export function patchSpot(form: Partial<AdminSpotRecord>) {
-  const { id } = form;
+  const { id, months, features } = form;
   delete form.id;
-  return axios.patch(`${prefix}/admin/spot/update/${id}`, form);
+  return axios.patch(`${prefix}/admin/spot/${id}`, {
+    ...form,
+    months: months?.join(),
+    features: features?.join(),
+  });
 }
 
 /**
@@ -151,5 +155,5 @@ export function patchSpot(form: Partial<AdminSpotRecord>) {
  * @returns
  */
 export function getSpotFM(id: string) {
-  return axios.get<AdminSpotModel>(`${prefix}/spot/fm`, { params: { id } });
+  return axios.get<AdminSpotModel>(`${prefix}/spot/fm/${id}`);
 }
