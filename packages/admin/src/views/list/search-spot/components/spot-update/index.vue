@@ -10,8 +10,12 @@
     getSpotById,
     getAllFeature,
     getAllMonth,
+    getSpotFM,
+    patchSpot,
   } from '@/api/list';
   import { BaseModel } from '@/api/base';
+
+  const emits = defineEmits(['success']);
 
   const { visible, setVisible } = useVisible();
   const { loading, setLoading } = useLoading();
@@ -45,9 +49,28 @@
   const onComfirm = async () => {
     setLoading(true);
     try {
-      // form.images = await uploadFile();
+      const { thumbUrlFiles, panoramaFiles } = states.value;
+      const formData = new FormData();
+      if (thumbUrlFiles?.length) {
+        formData.append('file', thumbUrlFiles[0].file as File);
+        const {
+          data: { url },
+        } = await uploadFile(formData);
+        form.value.thumbUrl = url;
+      }
+
+      if (panoramaFiles?.length) {
+        formData.set('file', panoramaFiles[0].file as File);
+        const {
+          data: { url },
+        } = await uploadFile(formData);
+        form.value.panorama = url;
+      }
       Message.info('提交中...');
+      await patchSpot(form.value);
       Message.info('提交成功');
+      onClose();
+      emits('success');
     } finally {
       setLoading(false);
     }
@@ -61,8 +84,18 @@
         { data: spotInfo },
         { data: featureOptions },
         { data: monthOptions },
-      ] = await Promise.all([getSpotById(id), getAllFeature(), getAllMonth()]);
+        {
+          data: { features: featuresInfo, months: monthsInfo },
+        },
+      ] = await Promise.all([
+        getSpotById(id),
+        getAllFeature(),
+        getAllMonth(),
+        getSpotFM(id),
+      ]);
       origin.value = spotInfo;
+      form.value.months = monthsInfo.map((item) => item.id);
+      form.value.features = featuresInfo.map((item) => item.id);
       features.value = featureOptions;
       months.value = monthOptions;
       setLoading(false);
@@ -84,6 +117,7 @@
       borderRadius: '12px',
     }"
     unmount-on-close
+    @close="onClose"
   >
     <a-form :model="form" auto-label-width>
       <a-form-item field="id" disabled label="ID">
@@ -102,8 +136,8 @@
       </a-form-item>
       <a-form-item field="description" label="简介" required>
         <a-textarea
-          :max-length="{ length: 300, errorOnly: true }"
           v-model="form.description"
+          :max-length="{ length: 300, errorOnly: true }"
           :default-value="(form.description ??= origin?.description)"
           :placeholder="origin?.description"
           :auto-size="{
