@@ -59,15 +59,18 @@
   const init = (
     data: ArticleModel,
     _isUpdated: boolean,
+
     _uploadImages: () => Promise<string[]>
   ) => {
     form = cloneDeep(data);
     isUpdated = _isUpdated;
     uploadImages = _uploadImages;
-    if (!isUpdated) {
+    if (isUpdated) {
+      const url = form.thumbUrl || form.images?.[0];
       states.value.fileList = [
-        { uid: form.thumbUrl as string, name: '缩略图', url: form.thumbUrl },
+        { uid: form.thumbUrl as string, name: '缩略图', url },
       ];
+      console.log(states.value.fileList);
     }
     setVisible(true);
   };
@@ -84,6 +87,7 @@
     }"
     unmount-on-close
     simple
+    @close="onClose"
   >
     <a-form :model="states" auto-label-width>
       <!-- <a-form-item tooltip="选择第一张作为缩略图"></a-form-item> -->
