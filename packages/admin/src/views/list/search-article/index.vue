@@ -16,7 +16,10 @@
   import {
     IQueryParams,
     AdminSpotModel,
+    ArticleBriefInfo,
     getSpotsByConditions,
+    getArticlesByConditions,
+    ARTICLE_STATUS,
   } from '@/api/list';
   import { Message } from '@arco-design/web-vue';
 
@@ -36,7 +39,7 @@
       options: [],
     },
     {
-      field: 'title',
+      field: 'keywords',
       label: '文章关键字',
       defaultValue: query.name || '',
       comp: 'input',
@@ -44,7 +47,14 @@
     },
     {
       field: 'username',
-      label: '用户名',
+      label: '作者',
+      defaultValue: query.region || '',
+      comp: 'input',
+      options: [],
+    },
+    {
+      field: 'spot',
+      label: '景点关键字',
       defaultValue: query.region || '',
       comp: 'input',
       options: [],
@@ -52,6 +62,12 @@
     {
       field: 'create_date',
       label: '创建时间',
+      comp: 'range-picker',
+      options: [],
+    },
+    {
+      field: 'update_date',
+      label: '更新时间',
       comp: 'range-picker',
       options: [],
     },
@@ -63,19 +79,60 @@
       width: 80,
     },
     {
-      title: '景点名称',
-      prop: 'name',
+      title: '文章标题',
+      prop: 'title',
       width: 180,
     },
     {
-      title: '景点简介',
+      title: '文章简介',
       prop: 'description',
-      width: 180,
+      width: 80,
+      formatter: (raw: string) => raw || '-',
     },
     {
-      title: '所属区域',
-      prop: 'region',
-      width: 180,
+      title: '状态',
+      prop: 'status',
+      width: 120,
+      formatter: (raw: 0 | 1) => ARTICLE_STATUS[raw].label,
+    },
+    {
+      title: '作者',
+      prop: 'author',
+      width: 120,
+      formatter: (raw: ArticleBriefInfo['author']) => raw.username || '-',
+    },
+    {
+      title: '关联景点',
+      prop: 'spot',
+      width: 120,
+      formatter: (raw: ArticleBriefInfo['spot']) => raw.name || '-',
+    },
+    {
+      title: '分类',
+      prop: 'category',
+      width: 120,
+      formatter: (raw: ArticleBriefInfo['category']) => raw?.name || '-',
+    },
+    {
+      title: '标签',
+      prop: 'tags',
+      width: 120,
+      formatter: (raw: ArticleBriefInfo['tags']) => raw.join(',') || '-',
+    },
+    {
+      title: '收藏量',
+      prop: 'favCount',
+      width: 120,
+    },
+    {
+      title: '阅读量',
+      prop: 'viewCount',
+      width: 120,
+    },
+    {
+      title: '点赞量',
+      prop: 'likeCount',
+      width: 120,
     },
     {
       title: '缩略图',
@@ -114,15 +171,6 @@
       icon: IconDelete,
       confirm: true,
       confirmText: '是否确认删除',
-    },
-    {
-      key: 'more',
-      icon: IconMore,
-      actions: [
-        {
-          key: 'preview3d',
-        },
-      ],
     },
   ];
 
@@ -164,10 +212,7 @@
     const { id } = record as AdminSpotModel;
     switch (key) {
       case 'preview':
-        window.open(`https://itravel.todayto.com/#/spot/${id}`);
-        break;
-      case 'preview3d':
-        window.open(`https://itravel.todayto.com/#/3d/${id}`);
+        window.open(`https://itravel.todayto.com/#/article/${id}`);
         break;
       case 'update':
         // spotUpdateRef.value?.init(id);
@@ -195,7 +240,7 @@
       replaceQuery(listParams.value);
     }
 
-    const { data } = await getSpotsByConditions(
+    const { data } = await getArticlesByConditions(
       listParams.value as IQueryParams
     );
     return {
