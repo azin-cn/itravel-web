@@ -24,6 +24,7 @@
   const onComfirm = async () => {
     setLoading(true);
     try {
+      Message.info('提交中...');
       form.images = await uploadImages();
       const { hasThumbUrl, fileList } = states.value;
       if (hasThumbUrl) {
@@ -38,7 +39,6 @@
         form.thumbUrl = form.images?.[0];
       }
 
-      Message.info('提交中...');
       if (isUpdated) {
         const {
           data: { id },
