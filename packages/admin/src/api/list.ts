@@ -1,5 +1,6 @@
 import axios from 'axios';
 import qs from 'query-string';
+import { UserState } from '@/store/modules/user/types';
 import type { DescData } from '@arco-design/web-vue/es/descriptions/interface';
 import { ListResult } from '@/types/global';
 import { BaseModel, prefix } from './base';
@@ -57,12 +58,14 @@ export function queryRulesPresetList() {
   return axios.get('/api/list/rules-preset');
 }
 
-export interface ISpotQueryParams {
+export interface IQueryParams {
   id: string;
   name: string;
   region: string;
   create_date_before: string;
   create_date_after: string;
+  update_date_before?: string;
+  update_date_after?: string;
 }
 
 export interface RegionModel {
@@ -95,7 +98,7 @@ export interface AdminSpotModel extends AdminSpotBaseModel {
   district: RegionModel;
 }
 
-export function getSpotsByConditions(params: ISpotQueryParams) {
+export function getSpotsByConditions(params: IQueryParams) {
   return axios.get<ListResult<AdminSpotModel>>(`${prefix}/admin/spot/query`, {
     params,
   });
@@ -156,4 +159,34 @@ export function patchSpot(form: Partial<AdminSpotRecord>) {
  */
 export function getSpotFM(id: string) {
   return axios.get<AdminSpotModel>(`${prefix}/spot/fm/${id}`);
+}
+
+type Author = UserState;
+
+export interface ArticleBriefInfo {
+  id: string;
+  title: string;
+  thumbUrl: string;
+  summary: string;
+  content: string;
+  category: BaseModel;
+  tags: BaseModel[];
+  viewCount: number;
+  likeCount: number;
+  favCount: number;
+  commentCount: number;
+  status: number;
+  publishTime: string;
+  createdTime: string;
+  updatedTime: string;
+  spot: Partial<AdminSpotModel>;
+  author: Partial<Author>;
+  images: string[];
+}
+
+export function getArticlesByConditions(params: IQueryParams) {
+  return axios.get<ListResult<ArticleBriefInfo>>(
+    `${prefix}/admin/article/query`,
+    { params }
+  );
 }
