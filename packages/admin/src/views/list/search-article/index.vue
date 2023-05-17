@@ -7,8 +7,9 @@
   import Form from '@/components/form/index.vue';
   import { IField } from '@/components/form';
   import {
+    IconArrowDown,
+    IconArrowUp,
     IconDelete,
-    IconEdit,
     IconEye,
     IconMore,
     IconPlus,
@@ -20,6 +21,7 @@
     getSpotsByConditions,
     getArticlesByConditions,
     ARTICLE_STATUS,
+    STATUS,
   } from '@/api/list';
   import { Message } from '@arco-design/web-vue';
 
@@ -163,21 +165,38 @@
       icon: IconEye,
     },
     {
-      key: 'update',
-      icon: IconEdit,
-    },
-    {
       key: 'delete',
       icon: IconDelete,
       confirm: true,
       confirmText: '是否确认删除',
     },
+    {
+      key: 'more',
+      icon: IconMore,
+      actions: [
+        {
+          key: 'online',
+          icon: IconArrowUp,
+          hidden: (record: ArticleBriefInfo) =>
+            record.status === STATUS.PUBLISH,
+        },
+        {
+          key: 'offline',
+          icon: IconArrowDown,
+          hidden: (record: ArticleBriefInfo) => record.status === STATUS.DRAFT,
+        },
+      ],
+    },
   ];
 
   const toolbar = computed<IAction[]>(() => [
     {
-      key: 'create',
-      icon: IconPlus,
+      key: 'bulk-delete',
+      icon: IconDelete,
+      type: 'secondary',
+      bulk: true,
+      confirm: true,
+      confirmText: '确认删除已选数据？',
     },
   ]);
 
@@ -209,15 +228,20 @@
 
   const onAction = async ({ action, selectedKeys, record }: IActionRecord) => {
     const { key } = action;
-    const { id } = record as AdminSpotModel;
+    const { id } = (record || {}) as AdminSpotModel;
     switch (key) {
       case 'preview':
         window.open(`https://itravel.todayto.com/#/article/${id}`);
         break;
-      case 'update':
+      case 'online':
+      case 'offline':
         // spotUpdateRef.value?.init(id);
         break;
       case 'delete':
+        Message.success('删除成功(为了数据安全，暂不允许删除)');
+        listRef.value?.reload();
+        break;
+      case 'bulk-delete':
         Message.success('删除成功(为了数据安全，暂不允许删除)');
         listRef.value?.reload();
         break;
