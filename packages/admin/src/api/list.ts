@@ -213,3 +213,13 @@ export function getArticlesByConditions(params: IQueryParams) {
     { params }
   );
 }
+
+/**
+ * 更新文章状态
+ * @param id
+ * @param status 0 | 1
+ * @returns
+ */
+export function patchArticleStatus(id: string, status: number) {
+  return axios.patch(`${prefix}/admin/article_status/${id}/${status}`);
+}
