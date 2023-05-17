@@ -20,6 +20,7 @@
     ArticleBriefInfo,
     getSpotsByConditions,
     getArticlesByConditions,
+    patchArticleStatus,
     ARTICLE_STATUS,
     STATUS,
   } from '@/api/list';
@@ -234,8 +235,12 @@
         window.open(`https://itravel.todayto.com/#/article/${id}`);
         break;
       case 'online':
+        await patchArticleStatus(id, STATUS.PUBLISH);
+        listRef.value?.reload();
+        break;
       case 'offline':
-        // spotUpdateRef.value?.init(id);
+        await patchArticleStatus(id, STATUS.DRAFT);
+        listRef.value?.reload();
         break;
       case 'delete':
         Message.success('删除成功(为了数据安全，暂不允许删除)');
