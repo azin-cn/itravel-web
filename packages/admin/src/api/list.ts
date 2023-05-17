@@ -184,6 +184,29 @@ export interface ArticleBriefInfo {
   images: string[];
 }
 
+export const STATUS = {
+  /**
+   * 草稿箱、未发布
+   */
+  DRAFT: 0,
+
+  /**
+   * 已发布
+   */
+  PUBLISH: 1,
+};
+
+export const ARTICLE_STATUS = {
+  [STATUS.DRAFT]: {
+    label: '草稿',
+    value: STATUS.DRAFT,
+  },
+  [STATUS.PUBLISH]: {
+    label: '已发布',
+    value: STATUS.PUBLISH,
+  },
+};
+
 export function getArticlesByConditions(params: IQueryParams) {
   return axios.get<ListResult<ArticleBriefInfo>>(
     `${prefix}/admin/article/query`,
