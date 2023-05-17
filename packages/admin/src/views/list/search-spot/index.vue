@@ -14,7 +14,7 @@
     IconPlus,
   } from '@arco-design/web-vue/es/icon';
   import {
-    ISpotQueryParams,
+    IQueryParams,
     AdminSpotModel,
     getSpotsByConditions,
   } from '@/api/list';
@@ -198,7 +198,7 @@
     }
 
     const { data } = await getSpotsByConditions(
-      listParams.value as ISpotQueryParams
+      listParams.value as IQueryParams
     );
     return {
       data: data.list,
