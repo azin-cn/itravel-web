@@ -157,7 +157,7 @@
     window.history.replaceState(
       { replace: true, current: path },
       '',
-      `${router.currentRoute.value.path}${urlQuery ? `?${urlQuery}` : ''}`
+      `#${router.currentRoute.value.path}${urlQuery ? `?${urlQuery}` : ''}`
     );
   };
 
