@@ -1,7 +1,6 @@
 <template>
   <div class="login-form-wrapper">
-    <div class="login-form-title">{{ $t('login.form.title') }}</div>
-    <div class="login-form-sub-title">{{ $t('login.form.title') }}</div>
+    <div class="login-form-title">登录 {{ settings.title }}</div>
     <div class="login-form-error-msg">{{ errorMessage }}</div>
     <a-form
       ref="loginForm"
@@ -55,9 +54,6 @@
         <a-button type="primary" html-type="submit" long :loading="loading">
           {{ $t('login.form.login') }}
         </a-button>
-        <a-button type="text" long class="login-form-register-btn">
-          {{ $t('login.form.register') }}
-        </a-button>
       </a-space>
     </a-form>
   </div>
@@ -73,6 +69,7 @@
   import { useUserStore } from '@/store';
   import useLoading from '@/hooks/loading';
   import type { LoginData } from '@/api/user';
+  import * as settings from '@/config/settings.json';
 
   const router = useRouter();
   const { t } = useI18n();
