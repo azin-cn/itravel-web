@@ -11,7 +11,7 @@
 export const isProd = process.env.NODE_ENV === 'production';
 export const prefix = isProd
   ? 'https://itravel.todayto.com/api/v1'
-  : 'http://localhost:7000/api/v1';
+  : 'https://itravel.todayto.com/api/v1';
 
 /**
  * 基础数据类型
