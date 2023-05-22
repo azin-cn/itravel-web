@@ -15,7 +15,9 @@
     "mobile:build": "pnpm --filter @itravel/mobile build",
     "mobile:build:dev": "pnpm --filter @itravel/mobile build:dev",
     "prepare": "husky install",
-    "lint-staged": "npx lint-staged"
+    "lint-staged": "npx lint-staged",
+    "lint": "npx eslint packages",
+    "lint-fix": "npx eslint packages --fix"
   },
   "lint-staged": {
     "*.{js,ts,jsx,tsx}": [
