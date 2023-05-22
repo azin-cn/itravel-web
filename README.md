@@ -51,6 +51,8 @@ pnpm mobile:dev
 pnpm mobile:build
 ```
 
+[🚀 查看 MobileReadme](packages/mobile/README.md)
+
 ## pnpm monorepo 改造原有项目记录
 
 解决方案
