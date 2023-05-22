@@ -4,8 +4,7 @@ import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import svgLoader from 'vite-svg-loader';
 import Components from 'unplugin-vue-components/vite';
-import { VantResolver } from 'unplugin-vue-components/resolvers';
-import UnoCSS from 'unocss/vite';
+import { VantResolver } from 'unplugin-vue-components/resolvers';w
 import configArcoStyleImportPlugin from './plugin/arcoStyleImport';
 
 export default defineConfig({
