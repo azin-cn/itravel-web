@@ -8,9 +8,21 @@
 ### amin
 
 ```sh
+cd itravel-web
+
 pnpm admin:dev
 
 pnpm admin:build
+```
+
+或者，以下同理
+
+```shell
+cd itravel-web/packages/admin
+
+pnpm dev
+
+pnpm build
 ```
 
 [🚀 查看 AdminReadme](packages/admin/README.md)
@@ -18,6 +30,8 @@ pnpm admin:build
 ### web
 
 ```sh
+cd itravel-web
+
 pnpm web:dev
 
 pnpm web:build
@@ -26,6 +40,16 @@ pnpm web:build:dev
 ```
 
 [🚀 查看 WebReadme](packages/web/README.md)
+
+### mobile
+
+```shell
+cd itravel-web
+
+pnpm mobile:dev
+
+pnpm mobile:build
+```
 
 ## pnpm monorepo 改造原有项目记录
 
