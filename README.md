@@ -5,7 +5,7 @@
 - admin
 - web
 
-### amin
+### admin
 
 ```sh
 cd itravel-web
@@ -202,3 +202,9 @@ location ^~ / {
     }
 }
 ```
+
+## 排期
+
+- AR
+- VR 可切换视角与前进点击
+- WebSocket（视频直播、聊天）
